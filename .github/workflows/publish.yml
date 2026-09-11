@@ -40,7 +40,13 @@ env:
   # Where the site actually lives, for canonical/Open Graph/sitemap URLs. The
   # workflow can't discover the Pages custom domain on its own, so it's written
   # down once here — change it here if the domain ever moves.
-  SITE_URL: 'https://nastet.se'
+  #
+  # Punycode, not nästet.se: sitemaps.org requires ASCII URLs, and it's the form
+  # GitHub Pages stores a custom IDN domain under. Browsers and search engines
+  # both display it back to a reader as nästet.se, so nobody sees this spelling.
+  # Note nastet.se WITHOUT the a-umlaut is a different owner's domain entirely —
+  # pointing canonical at it would hand them this site's search identity.
+  SITE_URL: 'https://xn--nstet-gra.se'
 
 jobs:
   build:

@@ -11,7 +11,7 @@ one map instead of four separate queue portals.
 It is read-only and asks nothing of you: no account, no sign-up, nothing
 tracked. If you want to support the work, there's a Ko-fi link in the header.
 
-**Live version:** [nastet.se](https://nastet.se) — published from this repo and
+**Live version:** [nästet.se](https://nästet.se) — published from this repo and
 re-scraped every two hours. Read-only; run it locally for desktop notifications
 and an on-demand Refresh. See section 4.
 
@@ -172,7 +172,7 @@ listings from.
 There's a **live read-only copy** of the dashboard published from this repo, so
 you can look at current listings without running anything:
 
-> **https://nastet.se**
+> **https://nästet.se**
 
 A GitHub Actions workflow (`.github/workflows/publish.yml`) scrapes every
 provider **every two hours**, writes one `listings-<city>.json` next to the
