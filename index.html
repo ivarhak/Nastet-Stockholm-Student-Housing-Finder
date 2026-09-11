@@ -502,6 +502,17 @@
        flex:1 each gives ~100px columns and every label breaks mid-word. */
     flex-wrap:wrap;
   }
+  .stats-toggle{
+    display:flex;align-items:center;gap:5px;
+    margin-top:9px;padding:0;
+    background:none;border:none;cursor:pointer;
+    font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--dim);
+  }
+  .stats-toggle:hover{color:var(--ink);}
+  .stats-toggle:focus-visible{outline:2px solid var(--leaf);outline-offset:2px;}
+  .stats-toggle .chev{font-size:10px;line-height:1;}
+  .panel-header .stats-toggle + .stats-row{margin-top:7px;}
   .gauge{
     flex:1 1 calc(50% - 5px);
     min-width:0;
@@ -1201,6 +1212,38 @@ const I18N = { sv: {
   total: 'totalt',
   no_match: 'Inga bostäder matchar',
   areas: 'Områden',
+  distances: 'Avstånd',
+  per_month: ' kr/mån · ',
+  queue_days_f: 'ködagar',
+  back_all: '← Alla bostäder',
+  back_map: '← Tillbaka till kartan',
+  group_North: 'Norr',
+  group_South: 'Söder',
+  group_noun: 'område',
+  days: ' dgr',
+  days_unknown: '— dgr',
+  applied: 'sökande',
+  open_now: 'öppen nu',
+  apply_by: 'sök senast ',
+  novice: 'novischförtur',
+  ground_floor: 'bottenvåning',
+  floor: 'våning ',
+  elevator: 'hiss',
+  balcony: 'balkong',
+  away: ' bort',
+  no_listings: '0 bostäder',
+  updated: 'uppdaterad ',
+  sorted_queue: 'sorterat efter ködagar',
+  new_badge: 'NY',
+  first_seen: 'Först sedd {ago} — bostäder är märkta NY i {h} h',
+  within: 'inom {n} min från {s}',
+  updates_every: 'Uppdateras var {n}:e timme',
+  updates_often: 'Uppdateras några gånger om dagen',
+  unofficial: ' · inofficiell vy av ',
+  listed_providers: 'de listade källorna',
+  apply_there: ' — sök där.',
+  data_owner: 'Äger du datan? Hör av dig.',
+  auto_checking: '● kollar automatiskt var {n}:e min',
   commutes_to: 'restid till',
   wip: 'Under arbete',
   campus_title: 'Centrera kartan och mät restiden härifrån',
@@ -1214,6 +1257,9 @@ let lang = 'en';
 // English is passed in at every call site, so a missing key degrades to English
 // rather than to a bare key name on screen.
 function t(key, en){ return (lang === 'sv' && I18N.sv[key] !== undefined) ? I18N.sv[key] : en; }
+
+// Swedish groups thousands with a space (4 968), English with a comma.
+function num(n){ return Number(n).toLocaleString(lang === 'sv' ? 'sv-SE' : undefined); }
 
 function langFromUrl(){
   return new URLSearchParams(location.search).get('lang') === 'sv' ? 'sv' : 'en';
@@ -1236,11 +1282,16 @@ function applyLang(next, rerender){
   document.getElementById('langToggleLabel').textContent = lang === 'sv' ? 'SV' : 'EN';
   const action = lang === 'sv' ? 'Switch to English' : 'Byt till svenska';
   btn.title = action; btn.setAttribute('aria-label', action);
-  if (!rerender) return;
   // Everything above is markup the HTML owns. These are the parts JS writes,
-  // so they only change language when their renderer runs again.
+  // so they only change language when their renderer runs again — and both of
+  // these are written during startup, before this function first runs, so they
+  // are re-applied on every call rather than only on a toggle.
+  // Safe unguarded: the only caller below runs after these are declared, and a
+  // typeof guard wouldn't help anyway — reading a const in its temporal dead
+  // zone throws rather than returning 'undefined'.
   applyTheme(currentTheme);
   [maxQueueSlider, maxRentSlider, ...advSliders].forEach(s => s.apply());
+  if (!rerender) return;
   if (typeof currentData !== 'undefined' && currentData) {
     applyProviderChrome();
     render();
@@ -1728,14 +1779,18 @@ function applySourceAlert(){
 // Builds both chip rows from the payload and seeds the filters to "everything
 // on". Runs on every data load, so switching city swaps the providers and the
 // area groups rather than carrying Stockholm's over.
-const groupNoun = () => (currentData && currentData.area_group_noun) || 'area';
+const groupNoun = () => t('group_noun', (currentData && currentData.area_group_noun) || 'area');
+// North/South/City arrive as data, so they need a lookup rather than a key per
+// city. "City" is left alone on purpose — central Stockholm is called City in
+// Swedish too, so translating it would be inventing a name nobody uses.
+const groupLabel = (g) => t('group_' + g, g);
 
 // Describes the sort in the same terms the badges use, so the footer can't claim
 // an ordering the data doesn't support.
 function sortNote(){
   const parts = Object.entries(providerInfo).map(([name, info]) => {
     const abbr = info.abbr || name;
-    if (info.statesQueue) return `${abbr} sorted by queue days`;
+    if (info.statesQueue) return `${abbr} ${t('sorted_queue', 'sorted by queue days')}`;
     if (info.statesApplicants) return `${abbr} by fewest applicants`;
     if (info.statesDeadline) return `${abbr} by deadline`;
     return `${abbr} by rent`;
@@ -1797,7 +1852,7 @@ function applyProviderChrome(){
     sw.className = 'sw';
     sw.style.background = groupColor(g);
     b.appendChild(sw);
-    b.appendChild(document.createTextNode(g));
+    b.appendChild(document.createTextNode(groupLabel(g)));
     legend.appendChild(b);
   });
   // One group is not a filter — the same reasoning that hides the Shops chip
@@ -1888,19 +1943,20 @@ function applyDataSourceChrome(){
   if (isStatic) {
     const every = currentData.update_every_hours;
     src.innerHTML =
-      'Updates'
-      + (every ? ` every ${every} ${every === 1 ? 'hour' : 'hours'}` : ' a few times a day')
-      + ' · unofficial view of '
+      (lang === 'sv'
+         ? (every ? t('updates_every', '').replace('{n}', every) : t('updates_often', ''))
+         : 'Updates' + (every ? ` every ${every} ${every === 1 ? 'hour' : 'hours'}` : ' a few times a day'))
+      + t('unofficial', ' · unofficial view of ')
       + ((currentData ? sourcesFor(currentData) : []).map(src =>
            `<a href="${src.url}" target="_blank" rel="noopener noreferrer">${src.label}</a>`
-         ).join(' + ') || 'the listed providers')
-      + ' — apply there.'
+         ).join(' + ') || t('listed_providers', 'the listed providers'))
+      + t('apply_there', ' — apply there.')
       // A route for the other side. If a landlord would rather their listings
       // weren't shown here, they should be able to say so without having to
       // work out who runs this, and a takedown honoured quickly is the whole
       // difference between a polite email and a problem.
       + ' <a href="https://github.com/ivarhak/Stockholm-Student-Housing-Finder/issues"'
-      + ' target="_blank" rel="noopener noreferrer">Data owner? Get in touch.</a>';
+      + ' target="_blank" rel="noopener noreferrer">' + t('data_owner', 'Data owner? Get in touch.') + '</a>';
   }
 }
 
@@ -2042,7 +2098,8 @@ function renderMeta(){
   const d = currentData;
   const updated = document.getElementById('lastUpdated');
   updated.textContent =
-    'updated ' + new Date(d.generated_at).toLocaleString([], {hour:'2-digit', minute:'2-digit', month:'short', day:'numeric'});
+    t('updated', 'updated ') + new Date(d.generated_at)
+      .toLocaleString(lang === 'sv' ? 'sv-SE' : [], {hour:'2-digit', minute:'2-digit', month:'short', day:'numeric'});
   // Data more than an hour old means no scrape has landed in a while — worth
   // flagging, because "updated <a date>" reads as current at a glance and stale
   // listings look exactly like real ones.
@@ -2055,10 +2112,13 @@ function renderMeta(){
   const bySrc = {};
   d.listings.forEach(l => bySrc[l.provider] = (bySrc[l.provider]||0)+1);
   document.getElementById('listingCount').textContent =
-    Object.entries(bySrc).map(([p,n]) => `${n} ${(providerInfo[p] || {}).abbr || p}`).join(' · ') || '0 listings';
+    Object.entries(bySrc).map(([p,n]) => `${n} ${(providerInfo[p] || {}).abbr || p}`).join(' · ') || t('no_listings', '0 listings');
   document.getElementById('autoStatus').textContent = d.demo
     ? ''
-    : (d.poll_interval_min ? `● auto-checking every ${d.poll_interval_min}min` : '');
+    : (d.poll_interval_min
+        ? (lang === 'sv' ? t('auto_checking', '').replace('{n}', d.poll_interval_min)
+                         : `● auto-checking every ${d.poll_interval_min}min`)
+        : '');
 }
 
 function visibleAreaNames(){
@@ -2317,8 +2377,8 @@ function renderMap(){
           });
           const marker = L.marker(at, { icon, zIndexOffset: 200 }).addTo(leafletMap);
           const line = l => [l.type, l.size_sqm ? l.size_sqm + ' m²' : null,
-                             l.rent_sek ? Number(l.rent_sek).toLocaleString() + ' kr' : null,
-                             l.queue_days != null ? l.queue_days.toLocaleString() + ' d' : null]
+                             l.rent_sek ? num(l.rent_sek) + ' kr' : null,
+                             l.queue_days != null ? num(l.queue_days) + ' d' : null]
                             .filter(Boolean).join(' · ');
           const shown = rows.slice(0, 4).map(line);
           if (rows.length > shown.length) shown.push(`+${rows.length - shown.length} more`);
@@ -2430,6 +2490,26 @@ function clearListingSelection(){
   renderSidebar();
 }
 
+// The readouts take a chunk of a 340px sidebar — worth having, but once you
+// know an area's numbers you mostly want the list under them. Collapsed state
+// is module-level so it survives a re-render (dragging a slider re-renders
+// constantly); it deliberately isn't in the URL or storage, being a view
+// preference rather than something worth sharing or persisting.
+let statsCollapsed = false;
+
+function toggleStats(){
+  statsCollapsed = !statsCollapsed;
+  renderSidebar();
+}
+
+function statsBlock(obj){
+  const body = fmtCommute(obj);
+  if (!body) return '';
+  return `<button class="stats-toggle" onclick="toggleStats()" aria-expanded="${!statsCollapsed}">`
+       + `${t('distances', 'Distances')} <span class="chev" aria-hidden="true">${statsCollapsed ? '▸' : '▾'}</span></button>`
+       + (statsCollapsed ? '' : `<div class="stats-row">${body}</div>`);
+}
+
 function fmtCommute(obj){
   const m = schoolMetrics(obj);
   if (!m) return '';
@@ -2484,15 +2564,15 @@ function providerTag(l){
 function badgeFor(l){
   const info = providerInfo[l.provider] || {};
   if (info.statesQueue) {
-    return l.queue_days != null ? l.queue_days.toLocaleString() + ' days' : '— days';
+    return l.queue_days != null ? num(l.queue_days) + t('days', ' days') : t('days_unknown', '— days');
   }
   if (info.statesApplicants) {
-    return l.applicants != null ? l.applicants + ' applied' : 'open now';
+    return l.applicants != null ? `${l.applicants} ${t('applied', 'applied')}` : t('open_now', 'open now');
   }
   if (info.statesDeadline) {
-    return l.deadline ? 'apply by ' + String(l.deadline).slice(0,10) : 'open now';
+    return l.deadline ? t('apply_by', 'apply by ') + String(l.deadline).slice(0,10) : t('open_now', 'open now');
   }
-  return 'open now';
+  return t('open_now', 'open now');
 }
 
 // Providers keep their registry order, and within a provider the sort key is
@@ -2523,7 +2603,9 @@ function newTagTitle(l){
   const ago = mins < 60 ? `${mins} min ago`
             : mins < 1440 ? `${Math.round(mins / 60)}h ago`
             : `${Math.round(mins / 1440)}d ago`;
-  return `First seen ${ago} — listings stay marked NEW for ${hours}h`;
+  return lang === 'sv'
+    ? t('first_seen', '').replace('{ago}', ago).replace('{h}', hours)
+    : `First seen ${ago} — listings stay marked NEW for ${hours}h`;
 }
 
 function rowHtml(l, newIds){
@@ -2540,29 +2622,29 @@ function rowHtml(l, newIds){
     .filter(Boolean).map(v => v + ' · ').join('');
   // Only what the listing actually states — a silent card shows neither.
   const extras = [];
-  if (l.applicants != null) extras.push(`${l.applicants} applied`);
-  if (l.novice_priority) extras.push('novice priority');
-  if (l.floor != null) extras.push(Number(l.floor) === 0 ? 'ground floor' : 'floor ' + l.floor);
+  if (l.applicants != null) extras.push(`${l.applicants} ${t('applied', 'applied')}`);
+  if (l.novice_priority) extras.push(t('novice', 'novice priority'));
+  if (l.floor != null) extras.push(Number(l.floor) === 0 ? t('ground_floor', 'ground floor') : t('floor', 'floor ') + l.floor);
   if (l.el_included === true) extras.push('el ingår');
   // Elevator and balcony come from Bostadsförmedlingen's feed, which states
   // them; SSSB's list page never does, so these are display-only and there is
   // deliberately no filter for them — see the notes on el_included.
-  if (l.elevator === true) extras.push('elevator');
-  if (l.balcony === true) extras.push('balcony');
+  if (l.elevator === true) extras.push(t('elevator', 'elevator'));
+  if (l.balcony === true) extras.push(t('balcony', 'balcony'));
   if (l.max_years != null) extras.push('max ' + l.max_years + ' år');
   // Area-level, so it only applies to SSSB rows; BF ads carry their own coords
   // and aren't grouped into an area with a precomputed figure.
   const near = areaRow && !selectedArea && commuteRef && commuteRef.nearest_grocery;
   if (near) extras.push(`${near.chain} ${near.distance_m >= 1000
-    ? (near.distance_m / 1000).toFixed(1) + ' km' : near.distance_m + ' m'} away`);
+    ? (near.distance_m / 1000).toFixed(1) + ' km' : near.distance_m + ' m'}${t('away', ' away')}`);
   return `
     <div class="listing-row" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
-      ${newIds.has(l.id) ? `<span class="new-tag" title="${newTagTitle(l)}">NEW</span>` : ''}
+      ${newIds.has(l.id) ? `<span class="new-tag" title="${newTagTitle(l)}">${t('new_badge', 'NEW')}</span>` : ''}
       <div class="row-top">
         <span class="area-name">${title}</span>
         <span class="queue-badge">${badgeFor(l)}</span>
       </div>
-      <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${l.rent_sek ? Number(l.rent_sek).toLocaleString() + ' kr/mo · ' : ''}${commute}</div>
+      <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${l.rent_sek ? num(l.rent_sek) + t('per_month', ' kr/mo · ') : ''}${commute}</div>
       ${extras.length ? `<div class="details">${extras.join(' · ')}</div>` : ''}
       ${providerTag(l)}
     </div>
@@ -2631,7 +2713,7 @@ function renderSidebar(){
 
   if (browseAll) {
     header.innerHTML = `
-      <button class="back" onclick="toggleBrowseAll()">← Back to map view</button>
+      <button class="back" onclick="toggleBrowseAll()">${t('back_map', '← Back to map view')}</button>
       <h2 id="panelTitle">${t('all_listings', 'All listings')} <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${currentData.listings.length} ${t('total', 'total')}</span></h2>
       <input type="text" id="searchInput" class="search-input" placeholder="Search area, rent, size, queue days…">
     `;
@@ -2663,17 +2745,17 @@ function renderSidebar(){
     // row and the single row shown below it in agreement.
     const commuteRef = currentData.areas[pickedListing.area] || pickedListing;
     header.innerHTML = `
-      <button class="back" onclick="clearListingSelection()">← All listings</button>
+      <button class="back" onclick="clearListingSelection()">${t('back_all', '← All listings')}</button>
       <h2 id="panelTitle">${pickedListing.address || pickedListing.area}</h2>
-      <div class="stats-row">${fmtCommute(commuteRef)}</div>
+      ${statsBlock(commuteRef)}
     `;
     rows = [pickedListing];
   } else if (selectedArea) {
     const area = currentData.areas[selectedArea];
     header.innerHTML = `
-      <button class="back" onclick="clearSelection()">← All listings</button>
+      <button class="back" onclick="clearSelection()">${t('back_all', '← All listings')}</button>
       <h2 id="panelTitle">${selectedArea} <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${area.group} ${groupNoun()} · ${areaProviderName() || ''}</span></h2>
-      <div class="stats-row">${fmtCommute(area)}</div>
+      ${statsBlock(area)}
     `;
     rows = listingsInArea(selectedArea);
   } else {
@@ -2684,9 +2766,11 @@ function renderSidebar(){
         && visibleAreas.has(l.area) && passesFilters(l))
       || pinVisible.has(l.id)
     );
-    const bits = [`within ${maxCommuteMin} min of ${selectedSchool}`];
-    if (maxQueueDays !== null) bits.push(`≤${maxQueueDays.toLocaleString()} queue days`);
-    if (maxRentSek !== null) bits.push(`≤${maxRentSek.toLocaleString()} kr`);
+    const bits = [lang === 'sv'
+      ? t('within', '').replace('{n}', maxCommuteMin).replace('{s}', selectedSchool)
+      : `within ${maxCommuteMin} min of ${selectedSchool}`];
+    if (maxQueueDays !== null) bits.push(`≤${num(maxQueueDays)} ${t('queue_days_f', 'queue days')}`);
+    if (maxRentSek !== null) bits.push(`≤${num(maxRentSek)} kr`);
     if (minSizeSqm !== null) bits.push(`≥${minSizeSqm} m²`);
     if (minFloor !== null && maxFloor !== null) bits.push(`floor ${floorLabel(minFloor)}–${floorLabel(maxFloor)}`);
     else if (minFloor !== null) bits.push(`floor ${floorLabel(minFloor)}+`);
@@ -2754,9 +2838,9 @@ function bindLimitSlider(inputId, labelId, opts){
 }
 
 const maxQueueSlider = bindLimitSlider('maxQueue', 'maxQueueLabel',
-  { kind:'max', format: v => v.toLocaleString() + ' d', set: v => { maxQueueDays = v; } });
+  { kind:'max', format: v => num(v) + ' d', set: v => { maxQueueDays = v; } });
 const maxRentSlider = bindLimitSlider('maxRent', 'maxRentLabel',
-  { kind:'max', format: v => v.toLocaleString() + ' kr', set: v => { maxRentSek = v; } });
+  { kind:'max', format: v => num(v) + ' kr', set: v => { maxRentSek = v; } });
 
 const advSliders = [
   bindLimitSlider('minSize', 'minSizeLabel',
