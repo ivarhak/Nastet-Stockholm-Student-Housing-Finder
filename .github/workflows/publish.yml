@@ -37,6 +37,10 @@ env:
   # Kept in step with the cron above; the dashboard prints it so the page can
   # say how often it updates without hardcoding the number in two places.
   UPDATE_EVERY_HOURS: '2'
+  # Where the site actually lives, for canonical/Open Graph/sitemap URLs. The
+  # workflow can't discover the Pages custom domain on its own, so it's written
+  # down once here — change it here if the domain ever moves.
+  SITE_URL: 'https://nastet.se'
 
 jobs:
   build:
@@ -129,7 +133,7 @@ jobs:
           mkdir -p _site
           cp index.html _site/index.html
           python - <<'PY'
-          import json, os, pathlib, sys
+          import html, json, os, pathlib, sys
           sys.path.insert(0, ".")
           from monitor import CITIES, DEFAULT_CITY, listings_file
 
@@ -182,6 +186,65 @@ jobs:
           pathlib.Path("_site/cities.json").write_text(json.dumps(
               {"default": DEFAULT_CITY, "cities": index}, ensure_ascii=False))
           print(f"publishing {published} city/cities: {', '.join(index)}")
+
+          # ── What a search engine, and a pasted link, actually see ──────────
+          # The dashboard is a JS app: until listings-<city>.json arrives its
+          # <body> is an empty shell, so the only prose in the source is the
+          # QUEUES TO JOIN panel — and none of it was described anywhere. These
+          # are built here rather than written into index.html by hand because
+          # the counts are only true at the moment the site is assembled.
+          site = (os.environ.get("SITE_URL") or "").rstrip("/")
+          if not site:
+              raise SystemExit("SITE_URL is empty — canonical and sitemap URLs need it")
+          total = sum(c["listings"] for c in index.values())
+          names = [c["name"] for c in index.values()]
+          where = names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
+          providers = sorted({p for c in index.values() for p in c["providers"]})
+          desc = (f"{total} student homes available right now in {where}, from "
+                  f"{', '.join(providers)} — queue days, rent and the commute to "
+                  f"your campus, on one map.")
+
+          def attr(s):
+              return html.escape(s, quote=True)
+
+          ld = {"@context": "https://schema.org", "@type": "WebApplication",
+                "name": "Nästet", "url": f"{site}/", "description": desc,
+                "applicationCategory": "BrowserApplication",
+                "operatingSystem": "Any", "isAccessibleForFree": True,
+                "inLanguage": "en", "areaServed": names}
+
+          head = (
+              f'<meta name="description" content="{attr(desc)}" />\n'
+              f'<link rel="canonical" href="{site}/" />\n'
+              '<meta property="og:type" content="website" />\n'
+              '<meta property="og:site_name" content="Nästet" />\n'
+              '<meta property="og:title" content="Nästet — student housing in Sweden" />\n'
+              f'<meta property="og:description" content="{attr(desc)}" />\n'
+              f'<meta property="og:url" content="{site}/" />\n'
+              '<meta name="twitter:card" content="summary" />\n'
+              '<script type="application/ld+json">'
+              f'{json.dumps(ld, ensure_ascii=False)}</script>\n')
+
+          page = pathlib.Path("_site/index.html")
+          src = page.read_text()
+          if "</head>" not in src:
+              raise SystemExit("index.html has no </head> to inject metadata into")
+          page.write_text(src.replace("</head>", head + "</head>", 1))
+          print(f"page description: {desc}")
+
+          # Cities are URL *fragments* (…/#lund), not separate documents, so
+          # there is exactly one canonical URL to list. A sitemap naming #lund
+          # would be submitting the same page three times.
+          newest = max((c["generated_at"] or "" for c in index.values()), default="")
+          lastmod = f"<lastmod>{newest[:10]}</lastmod>" if newest[:10] else ""
+          pathlib.Path("_site/robots.txt").write_text(
+              f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n")
+          pathlib.Path("_site/sitemap.xml").write_text(
+              '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+              f'  <url><loc>{site}/</loc>{lastmod}</url>\n'
+              '</urlset>\n')
+          print(f"robots.txt + sitemap.xml written for {site}")
           PY
 
       - name: Save scrape caches

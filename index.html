@@ -2322,7 +2322,17 @@ function fmtCommute(obj){
   parts.push(`<div class="gauge"><div class="g-label">${routed ? 'By bike (route)' : 'Straight-line'}</div>` +
     `<div class="g-value">${routed ? m.bike_km : m.distance_km}` +
     `<small> km · ${bikeLabel(m)}</small></div></div>`);
-  parts.push(`<div class="gauge"><div class="g-label">Transit (real)</div><div class="g-value">${typeof m.transit_min === 'number' ? m.transit_min + '<small> min</small>' : '<small>no API key set</small>'}</div></div>`);
+  // Only shown when there is a real number to show. Transit times need a
+  // Trafiklab key, which the published site deliberately doesn't carry — so
+  // this gauge used to read "no API key set" to every visitor, which is a note
+  // to whoever runs the scraper, not information for someone finding a flat.
+  // Same rule as the Shops chip and the city switcher: a readout that can't
+  // say anything shouldn't be on screen. The commute filter is unaffected —
+  // commuteMinutes() already falls back to the bike figure.
+  if (typeof m.transit_min === 'number') {
+    parts.push(`<div class="gauge"><div class="g-label">Transit (real)</div>` +
+      `<div class="g-value">${m.transit_min}<small> min</small></div></div>`);
+  }
   // Straight-line, like the distance gauge above it — labelled so, since a
   // 300 m crow-flies shop can still be a 700 m walk.
   const g = obj && obj.nearest_grocery;
