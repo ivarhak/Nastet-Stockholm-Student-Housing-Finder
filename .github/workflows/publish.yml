@@ -221,6 +221,9 @@ jobs:
               '<meta property="og:title" content="Nästet — student housing in Sweden" />\n'
               f'<meta property="og:description" content="{attr(desc)}" />\n'
               f'<meta property="og:url" content="{site}/" />\n'
+              f'<link rel="alternate" hreflang="en" href="{site}/" />\n'
+              f'<link rel="alternate" hreflang="sv" href="{site}/?lang=sv" />\n'
+              f'<link rel="alternate" hreflang="x-default" href="{site}/" />\n'
               '<meta name="twitter:card" content="summary" />\n'
               '<script type="application/ld+json">'
               f'{json.dumps(ld, ensure_ascii=False)}</script>\n')

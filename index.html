@@ -138,7 +138,7 @@
     margin-top:2px;
   }
 
-  #themeToggle{
+  #themeToggle, #langToggle{
     display:flex;align-items:center;gap:7px;
     font-family:var(--mono);
     font-size:10.5px;
@@ -150,8 +150,9 @@
     padding:6px 12px 6px 9px;
     cursor:pointer;
   }
-  #themeToggle:hover{border-color:var(--leaf);color:var(--ink);}
-  #themeToggle:focus-visible{outline:2px solid var(--leaf);outline-offset:2px;}
+  #themeToggle:hover, #langToggle:hover{border-color:var(--leaf);color:var(--ink);}
+  #themeToggle:focus-visible, #langToggle:focus-visible{outline:2px solid var(--leaf);outline-offset:2px;}
+  #langToggle{padding:6px 11px;letter-spacing:0.08em;font-weight:600;}
   .theme-dot{
     width:9px;height:9px;border-radius:50%;
     background:var(--ochre);
@@ -888,8 +889,8 @@
      storage. -->
 <div id="cityPicker" hidden>
   <div class="city-card">
-    <h2>Which city?</h2>
-    <p>Pick where you're studying. You can change it any time from the header.</p>
+    <h2 data-i18n="city_q">Which city?</h2>
+    <p data-i18n="city_help">Pick where you're studying. You can change it any time from the header.</p>
     <div id="cityOptions"></div>
   </div>
 </div>
@@ -926,7 +927,7 @@
   <!-- Reopens the city picker. Hidden whenever there's only one city to pick,
        same idiom as the Shops chip: a control that can't change anything is
        worse than no control. It appears by itself once a second city ships. -->
-  <button id="cityBtn" hidden title="Change city">
+  <button id="cityBtn" hidden title="Change city" data-i18n-title="change_city">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z"/>
@@ -954,6 +955,14 @@
     <span class="theme-dot" aria-hidden="true"></span><span id="themeToggleLabel">Dark</span>
   </button>
 
+  <!-- Sits beside the theme toggle and works the same way: the label is the
+       current state, the tooltip is the action. The choice lives in ?lang=sv
+       rather than storage — same reasoning as the city fragment, and it makes
+       the Swedish page a real URL that can be linked and indexed. -->
+  <button id="langToggle" title="Byt till svenska" aria-label="Byt till svenska">
+    <span id="langToggleLabel">EN</span>
+  </button>
+
   <div id="meta">
     <div id="lastUpdated">—</div>
     <div id="listingCount">—</div>
@@ -966,7 +975,7 @@
       <circle cx="11" cy="11" r="7" stroke-linecap="round"/>
       <path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
     </svg>
-    All listings
+    <span data-i18n="all_listings">All listings</span>
   </button>
 
   <!-- The note hangs below the button while a scrape is running. Anchored to a
@@ -978,7 +987,7 @@
         <path d="M21 12a9 9 0 1 1-2.64-6.36" stroke-linecap="round"/>
         <path d="M21 3v6h-6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span id="refreshLabel">Refresh</span>
+      <span id="refreshLabel" data-i18n="refresh">Refresh</span>
     </button>
     <div id="refreshNote" role="status" aria-live="polite" hidden></div>
   </div>
@@ -991,12 +1000,12 @@
   <div class="map-col">
     <div id="filterBar">
     <div class="control">
-      <label>Campus</label>
+      <label data-i18n="campus">Campus</label>
       <select id="schoolSelect" title="Centre the map and measure commutes from here"></select>
     </div>
 
     <div class="control">
-      <label>Max commute</label>
+      <label data-i18n="max_commute">Max commute</label>
       <div class="slider-row">
         <input type="range" id="maxCommute" min="5" max="90" value="45" step="5">
         <span id="maxCommuteLabel">45 min</span>
@@ -1004,7 +1013,7 @@
     </div>
 
     <div class="control">
-      <label>Max queue days</label>
+      <label data-i18n="max_queue">Max queue days</label>
       <div class="slider-row">
         <input type="range" id="maxQueue" min="0" max="2000" value="2000" step="50">
         <span id="maxQueueLabel" class="any">Any</span>
@@ -1012,7 +1021,7 @@
     </div>
 
     <div class="control">
-      <label>Max rent</label>
+      <label data-i18n="max_rent">Max rent</label>
       <div class="slider-row">
         <input type="range" id="maxRent" min="3000" max="13000" value="13000" step="250">
         <span id="maxRentLabel" class="any">Any</span>
@@ -1020,10 +1029,10 @@
     </div>
 
     <div class="control">
-      <label for="advToggle">More filters</label>
+      <label for="advToggle" data-i18n="more_filters">More filters</label>
       <button id="advToggle" aria-expanded="false" aria-controls="advFilters"
               aria-label="More filters — size, floor and contract length"
-              title="More filters: size, floor and contract length">
+              title="More filters: size, floor and contract length" data-i18n-title="more_filters_t">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="12" cy="12" r="3.2"/>
           <path d="M12 2.6v3.1M12 18.3v3.1M4.3 7.1l2.7 1.55M17 15.35l2.7 1.55M4.3 16.9l2.7-1.55M17 8.65l2.7-1.55" stroke-linecap="round"/>
@@ -1036,25 +1045,25 @@
          query, where the filter strip becomes a two-column grid and these two
          rows of chips need to span both columns. -->
     <div class="control control-wide">
-      <label>Provider</label>
+      <label data-i18n="provider">Provider</label>
       <div class="legend" id="providerChips">
         <!-- Provider chips are built from the payload by applyProviderChrome();
              the Shops chip is markup because it toggles a map layer, not a
              provider, and belongs to the page rather than to any city. -->
         <button id="groceryChip" hidden
-                title="Hide chain supermarkets"><span class="sw"></span>Shops</button>
+                title="Hide chain supermarkets" data-i18n-title="hide_shops"><span class="sw"></span><span data-i18n="shops">Shops</span></button>
       </div>
     </div>
 
     <div class="control control-wide">
-      <label id="groupsLabel">Areas</label>
+      <label id="groupsLabel" data-i18n="areas">Areas</label>
       <div class="legend" id="legend"></div>
     </div>
     </div>
 
     <div id="advFilters">
       <div class="control">
-        <label>Min size</label>
+        <label data-i18n="min_size">Min size</label>
         <div class="slider-row">
           <input type="range" id="minSize" min="0" max="80" value="0" step="2">
           <span id="minSizeLabel" class="any">Any</span>
@@ -1062,7 +1071,7 @@
       </div>
 
       <div class="control">
-        <label>Lowest floor</label>
+        <label data-i18n="min_floor">Lowest floor</label>
         <div class="slider-row">
           <input type="range" id="minFloor" min="0" max="16" value="0" step="1">
           <span id="minFloorLabel" class="any">Any</span>
@@ -1070,7 +1079,7 @@
       </div>
 
       <div class="control">
-        <label>Highest floor</label>
+        <label data-i18n="max_floor">Highest floor</label>
         <div class="slider-row">
           <input type="range" id="maxFloor" min="0" max="16" value="16" step="1">
           <span id="maxFloorLabel" class="any">Any</span>
@@ -1078,16 +1087,16 @@
       </div>
 
       <div class="control">
-        <label>Min contract</label>
+        <label data-i18n="min_contract">Min contract</label>
         <div class="slider-row">
           <input type="range" id="minYears" min="0" max="10" value="0" step="1">
           <span id="minYearsLabel" class="any">Any</span>
         </div>
       </div>
 
-      <button id="advReset">Reset these</button>
+      <button id="advReset" data-i18n="reset_these">Reset these</button>
 
-      <div class="adv-hint">Floor 0 is <em>bottenvåning</em>. "Min contract" only excludes
+      <div class="adv-hint" data-i18n="adv_hint">Floor 0 is <em>bottenvåning</em>. "Min contract" only excludes
         listings that state a <em>Max N år</em> cap below it — no stated cap always passes.</div>
     </div>
 
@@ -1096,12 +1105,12 @@
 
   <div id="sidebar">
     <div class="tabs">
-      <button id="tabListings" class="active" onclick="switchTab('listings')">LISTINGS</button>
-      <button id="tabQueues" onclick="switchTab('queues')">QUEUES TO JOIN</button>
+      <button id="tabListings" class="active" onclick="switchTab('listings')" data-i18n="tab_listings">LISTINGS</button>
+      <button id="tabQueues" onclick="switchTab('queues')" data-i18n="tab_queues">QUEUES TO JOIN</button>
     </div>
     <div id="listingsView">
       <div class="panel-header" id="panelHeader">
-        <h2 id="panelTitle">All available listings</h2>
+        <h2 id="panelTitle" data-i18n="all_available">All available listings</h2>
       </div>
       <div id="sourceAlert" hidden></div>
       <div id="listings"></div>
@@ -1109,22 +1118,22 @@
     <div id="queues">
       <div id="coverageNote" hidden></div>
       <div class="queue-card">
-        <h3><span class="provider-tag sssb" style="margin:0;">SSSB</span> SSSB queue</h3>
-        <div class="covers">Covers: all SSSB areas (Lappkärrsberget, Jerum, Kungshamra, …)</div>
-        <p>Register at <a href="https://sssb.se" target="_blank">sssb.se</a>. You collect one queue day per day, and listings go to whoever applies with the most queue days — that's the number this dashboard sorts by.</p>
-        <p>To actually sign a contract you need to be a member of an SSCO-affiliated student union (or if you aren't registered for classes, an admissions letter works as well) and meet their study-pace requirements — check their current rules on the site.</p>
-        <p class="kv"><b>Do this first:</b> registering is quick and days only start counting from when you register, so every week earlier is a week higher in every future queue. You can collect a maximum of 90 days before registering with a student union (class registration required).</p>
+        <h3 data-i18n="q_sssb_h"><span class="provider-tag sssb" style="margin:0;">SSSB</span> SSSB queue</h3>
+        <div class="covers" data-i18n="q_sssb_c">Covers: all SSSB areas (Lappkärrsberget, Jerum, Kungshamra, …)</div>
+        <p data-i18n="q_p1">Register at <a href="https://sssb.se" target="_blank">sssb.se</a>. You collect one queue day per day, and listings go to whoever applies with the most queue days — that's the number this dashboard sorts by.</p>
+        <p data-i18n="q_p2">To actually sign a contract you need to be a member of an SSCO-affiliated student union (or if you aren't registered for classes, an admissions letter works as well) and meet their study-pace requirements — check their current rules on the site.</p>
+        <p data-i18n="q_p3" class="kv"><b>Do this first:</b> registering is quick and days only start counting from when you register, so every week earlier is a week higher in every future queue. You can collect a maximum of 90 days before registering with a student union (class registration required).</p>
       </div>
       <div class="queue-card">
-        <h3><span class="provider-tag bf" style="margin:0;">BOSTADSFÖRM.</span> Bostadsförmedlingen (bostad.stockholm.se)</h3>
-        <div class="covers">Covers: Svenska Bostäder student apartments + other landlords' student housing across Stockholm</div>
-        <p>This is Stockholm's city housing agency — Svenska Bostäder doesn't run its own student queue, their listings are advertised here. Register at <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; there's a yearly queue fee, and offers go by queue time.</p>
-        <p>Student listings here often have much shorter effective queues than regular apartments — and unlike SSSB there's no student-union requirement to register, though student listings require you to be studying when you sign.</p>
-        <p class="kv"><b>Note:</b> ads here show an application deadline ("sista ansökningsdag") rather than a required queue-days figure — you apply and the longest-queued applicant wins, so it costs nothing to try even with few days.</p>
+        <h3 data-i18n="q_bf_h"><span class="provider-tag bf" style="margin:0;">BOSTADSFÖRM.</span> Bostadsförmedlingen (bostad.stockholm.se)</h3>
+        <div class="covers" data-i18n="q_bf_c">Covers: Svenska Bostäder student apartments + other landlords' student housing across Stockholm</div>
+        <p data-i18n="q_p4">This is Stockholm's city housing agency — Svenska Bostäder doesn't run its own student queue, their listings are advertised here. Register at <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; there's a yearly queue fee, and offers go by queue time.</p>
+        <p data-i18n="q_p5">Student listings here often have much shorter effective queues than regular apartments — and unlike SSSB there's no student-union requirement to register, though student listings require you to be studying when you sign.</p>
+        <p data-i18n="q_p6" class="kv"><b>Note:</b> ads here show an application deadline ("sista ansökningsdag") rather than a required queue-days figure — you apply and the longest-queued applicant wins, so it costs nothing to try even with few days.</p>
       </div>
       <div class="queue-card">
-        <h3>Strategy</h3>
-        <p>Join both queues ASAP, long before moving — they're independent and both reward early registration. Use SSSB queue days for the areas closest to most university areas (Lappkärrsberget, Jerum, Kungshamra are the classic first-year picks), and treat Bostadsförmedlingen as a good backup plan, as on average those offers are more expensive.</p>
+        <h3 data-i18n="q_strat_h">Strategy</h3>
+        <p data-i18n="q_p7">Join both queues ASAP, long before moving — they're independent and both reward early registration. Use SSSB queue days for the areas closest to most university areas (Lappkärrsberget, Jerum, Kungshamra are the classic first-year picks), and treat Bostadsförmedlingen as a good backup plan, as on average those offers are more expensive.</p>
       </div>
     </div>
   </div>
@@ -1132,6 +1141,112 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
+// ── Språk / language ───────────────────────────────────────────────────────
+// English is the source of truth and stays in the HTML, so a no-JS visitor and
+// any crawler that doesn't run scripts still get a readable page; Swedish is
+// applied over it. The choice lives in ?lang=sv rather than storage — the
+// localStorage ban applies here as much as anywhere, and a query parameter is
+// linkable and indexable besides, which a client-side-only switch would not be.
+// Values are author-written constants, never user input, which is why the ones
+// carrying markup (links, <em>) are applied as innerHTML.
+const I18N = { sv: {
+  city_q: 'Vilken stad?',
+  city_help: 'Välj var du pluggar. Du kan byta när som helst i toppmenyn.',
+  change_city: 'Byt stad',
+  all_listings: 'Alla bostäder',
+  refresh: 'Uppdatera',
+  campus: 'Campus',
+  max_commute: 'Max restid',
+  max_queue: 'Max ködagar',
+  max_rent: 'Max hyra',
+  more_filters: 'Fler filter',
+  more_filters_t: 'Fler filter: storlek, våning och kontraktslängd',
+  provider: 'Källa',
+  shops: 'Butiker',
+  hide_shops: 'Dölj matbutiker',
+  min_size: 'Min storlek',
+  min_floor: 'Lägsta våning',
+  max_floor: 'Högsta våning',
+  min_contract: 'Min kontraktstid',
+  reset_these: 'Återställ',
+  adv_hint: 'Våning 0 är <em>bottenvåning</em>. ”Min kontraktstid” utesluter bara bostäder som anger ett <em>Max N år</em>-tak under den — saknas tak släpps bostaden alltid igenom.',
+  tab_listings: 'BOSTÄDER',
+  tab_queues: 'KÖER ATT GÅ MED I',
+
+  q_sssb_h: '<span class="provider-tag sssb" style="margin:0;">SSSB</span> SSSB-kön',
+  q_sssb_c: 'Omfattar: alla SSSB-områden (Lappkärrsberget, Jerum, Kungshamra, …)',
+  q_p1: 'Registrera dig på <a href="https://sssb.se" target="_blank">sssb.se</a>. Du samlar en ködag per dag, och bostäderna går till den som söker med flest ködagar — det är siffran den här sidan sorterar efter.',
+  q_p2: 'För att faktiskt skriva kontrakt måste du vara medlem i en studentkår ansluten till SSCO (eller, om du inte är registrerad på kurser, ha ett antagningsbesked) och uppfylla deras krav på studietakt — kolla deras aktuella regler på sajten.',
+  q_p3: '<b>Gör det här först:</b> att registrera sig går snabbt, och ködagarna börjar räknas först när du registrerar dig — varje vecka tidigare är en vecka högre i varje framtida kö. Du kan samla högst 90 dagar innan du måste bli medlem i en studentkår (kräver kursregistrering).',
+  q_bf_h: '<span class="provider-tag bf" style="margin:0;">BOSTADSFÖRM.</span> Bostadsförmedlingen (bostad.stockholm.se)',
+  q_bf_c: 'Omfattar: Svenska Bostäders studentlägenheter + andra hyresvärdars studentbostäder i Stockholm',
+  q_p4: 'Det här är Stockholms stads bostadsförmedling — Svenska Bostäder har ingen egen studentkö, deras bostäder annonseras här. Registrera dig på <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; det finns en årlig köavgift, och erbjudanden går efter kötid.',
+  q_p5: 'Studentbostäderna här har ofta betydligt kortare faktisk kö än vanliga lägenheter — och till skillnad från SSSB krävs inget kårmedlemskap för att registrera sig, även om du måste studera när du skriver på.',
+  q_p6: '<b>Obs:</b> annonserna här visar sista ansökningsdag i stället för ett krav på antal ködagar — du söker, och den med längst kötid vinner, så det kostar inget att prova även med få dagar.',
+  q_strat_h: 'Strategi',
+  q_p7: 'Gå med i båda köerna så fort som möjligt, långt innan du ska flytta — de är oberoende av varandra och båda belönar tidig registrering. Använd SSSB-ködagarna till områdena närmast de flesta campus (Lappkärrsberget, Jerum och Kungshamra är de klassiska förstaårsvalen), och se Bostadsförmedlingen som en bra reservplan, eftersom de erbjudandena i snitt är dyrare.',
+
+  // written by JS rather than sitting in the HTML
+  any: 'Alla',
+  dark: 'Mörkt',
+  light: 'Ljust',
+  to_light: 'Byt till ljust läge',
+  to_dark: 'Byt till mörkt läge',
+  min_bike: ' min cykel',
+  by_bike_route: 'Med cykel (rutt)',
+  straight_line: 'Fågelvägen',
+  transit: 'Kollektivtrafik',
+  nearest_shop: 'Närmaste butik',
+  all_available: 'Alla lediga bostäder',
+  total: 'totalt',
+  no_match: 'Inga bostäder matchar',
+  areas: 'Områden',
+  commutes_to: 'restid till',
+  wip: 'Under arbete',
+  campus_title: 'Centrera kartan och mät restiden härifrån',
+  campus_title_lc: 'centrera kartan och mät restiden härifrån',
+  shops_show: 'Visa matbutiker på kartan',
+  shops_zoom: 'Zooma in till minst nivå {z} för att se butikerna',
+
+} };
+
+let lang = 'en';
+// English is passed in at every call site, so a missing key degrades to English
+// rather than to a bare key name on screen.
+function t(key, en){ return (lang === 'sv' && I18N.sv[key] !== undefined) ? I18N.sv[key] : en; }
+
+function langFromUrl(){
+  return new URLSearchParams(location.search).get('lang') === 'sv' ? 'sv' : 'en';
+}
+
+function applyLang(next, rerender){
+  lang = next === 'sv' ? 'sv' : 'en';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    if (el.dataset.i18nEn === undefined) el.dataset.i18nEn = el.innerHTML;
+    el.innerHTML = t(el.dataset.i18n, el.dataset.i18nEn);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    if (el.dataset.i18nTitleEn === undefined) el.dataset.i18nTitleEn = el.getAttribute('title') || '';
+    const v = t(el.dataset.i18nTitle, el.dataset.i18nTitleEn);
+    el.setAttribute('title', v);
+    if (el.hasAttribute('aria-label')) el.setAttribute('aria-label', v);
+  });
+  const btn = document.getElementById('langToggle');
+  document.getElementById('langToggleLabel').textContent = lang === 'sv' ? 'SV' : 'EN';
+  const action = lang === 'sv' ? 'Switch to English' : 'Byt till svenska';
+  btn.title = action; btn.setAttribute('aria-label', action);
+  if (!rerender) return;
+  // Everything above is markup the HTML owns. These are the parts JS writes,
+  // so they only change language when their renderer runs again.
+  applyTheme(currentTheme);
+  [maxQueueSlider, maxRentSlider, ...advSliders].forEach(s => s.apply());
+  if (typeof currentData !== 'undefined' && currentData) {
+    applyProviderChrome();
+    render();
+  }
+}
+
 // Campuses you can centre on. The server sends this list (so it can compute
 // the commute to each one) — this copy is the fallback for the demo data and
 // for opening this file without the server.
@@ -1691,8 +1806,9 @@ function applyProviderChrome(){
   if (groupsControl) groupsControl.hidden = areaGroups.length < 2;
   const noun = (currentData && currentData.area_group_noun) || 'area';
   const owner = areaProviderName();
-  document.getElementById('groupsLabel').textContent =
-    owner ? `${owner} ${noun}s` : 'Areas';
+  document.getElementById('groupsLabel').textContent = owner
+    ? (lang === 'sv' ? `${owner}-områden` : `${owner} ${noun}s`)
+    : t('areas', 'Areas');
 
   // Everything starts on. Rebuilt per city rather than persisted, since a
   // provider filter from another city would mean nothing here.
@@ -1735,7 +1851,7 @@ function openCityPicker(){
       // name (caught in a real-browser screenshot before this fix).
       const tag = document.createElement('span');
       tag.className = 'wip-tag';
-      tag.textContent = 'Work in progress';
+      tag.textContent = t('wip', 'Work in progress');
       b.querySelector('.city-name').appendChild(tag);
     }
     b.querySelector('.city-meta').textContent = bits.join(' · ');
@@ -1798,7 +1914,7 @@ function commuteMinutes(obj){
 
 // "12 min bike" for a real routed time, "~12 min bike" for a guess.
 function bikeLabel(m){
-  return (m.bike_source === 'route' ? '' : '~') + m.bike_min + ' min bike';
+  return (m.bike_source === 'route' ? '' : '~') + m.bike_min + t('min_bike', ' min bike');
 }
 
 function listingCommute(l){
@@ -1898,8 +2014,8 @@ function renderSchoolPicker(){
   sel.value = selectedSchool;
   const chosen = available[selectedSchool];
   sel.title = chosen
-    ? `${chosen.name} — centre the map and measure commutes from here`
-    : 'Centre the map and measure commutes from here';
+    ? `${chosen.name} — ${t('campus_title_lc', 'centre the map and measure commutes from here')}`
+    : t('campus_title', 'Centre the map and measure commutes from here');
   // The brand is a fixed word now, so the h1 is left alone entirely — city,
   // providers and the selected campus are the parts that change, and they all
   // live in the subtitle. Filtering empties keeps a city with no providers yet
@@ -1907,7 +2023,7 @@ function renderSchoolPicker(){
   const providers = Object.keys(providerInfo);
   const cityName = (currentData && currentData.city_name) || 'Stockholm';
   document.getElementById('brandSub').textContent =
-    [cityName, providers.join(' + '), `commutes to ${selectedSchool}`]
+    [cityName, providers.join(' + '), `${t('commutes_to', 'commutes to')} ${selectedSchool}`]
       .filter(Boolean).join(' · ');
   document.title = `Nästet — ${cityName} · ${selectedSchool}`;
 }
@@ -2116,8 +2232,10 @@ function syncGroceryLayer(){
     // Says why nothing appeared, rather than looking broken when the toggle is
     // on but you're zoomed out too far.
     chip.classList.toggle('zoomed-out', showGroceries && !wanted);
-    chip.title = !showGroceries ? 'Show chain supermarkets on the map'
-      : (wanted ? 'Hide chain supermarkets' : `Zoom in to at least level ${GROCERY_MIN_ZOOM} to see the shops`);
+    chip.title = !showGroceries ? t('shops_show', 'Show chain supermarkets on the map')
+      : (wanted ? t('hide_shops', 'Hide chain supermarkets')
+                : t('shops_zoom', `Zoom in to at least level ${GROCERY_MIN_ZOOM} to see the shops`)
+                    .replace('{z}', GROCERY_MIN_ZOOM));
   }
 }
 
@@ -2319,7 +2437,7 @@ function fmtCommute(obj){
   const routed = m.bike_source === 'route';
   // Label says which it is: a real cycling route, or a straight line with a
   // speed guess on top. Never present the guess as measured.
-  parts.push(`<div class="gauge"><div class="g-label">${routed ? 'By bike (route)' : 'Straight-line'}</div>` +
+  parts.push(`<div class="gauge"><div class="g-label">${routed ? t('by_bike_route', 'By bike (route)') : t('straight_line', 'Straight-line')}</div>` +
     `<div class="g-value">${routed ? m.bike_km : m.distance_km}` +
     `<small> km · ${bikeLabel(m)}</small></div></div>`);
   // Only shown when there is a real number to show. Transit times need a
@@ -2330,7 +2448,7 @@ function fmtCommute(obj){
   // say anything shouldn't be on screen. The commute filter is unaffected —
   // commuteMinutes() already falls back to the bike figure.
   if (typeof m.transit_min === 'number') {
-    parts.push(`<div class="gauge"><div class="g-label">Transit (real)</div>` +
+    parts.push(`<div class="gauge"><div class="g-label">${t('transit', 'Transit (real)')}</div>` +
       `<div class="g-value">${m.transit_min}<small> min</small></div></div>`);
   }
   // Straight-line, like the distance gauge above it — labelled so, since a
@@ -2338,7 +2456,7 @@ function fmtCommute(obj){
   const g = obj && obj.nearest_grocery;
   if (g) {
     const km = g.distance_m >= 1000;
-    parts.push(`<div class="gauge"><div class="g-label">Nearest shop</div>` +
+    parts.push(`<div class="gauge"><div class="g-label">${t('nearest_shop', 'Nearest shop')}</div>` +
       `<div class="g-value">${km ? (g.distance_m / 1000).toFixed(1) : g.distance_m}` +
       `<small> ${km ? 'km' : 'm'} · ${g.chain}</small></div></div>`);
   }
@@ -2496,7 +2614,7 @@ function renderBrowseList(){
   rows = sortListings(rows);
 
   if (rows.length === 0) {
-    list.innerHTML = `<div class="empty-state">No listings match "${searchQuery}".</div>`;
+    list.innerHTML = `<div class="empty-state">${t('no_match', 'No listings match')} "${searchQuery}".</div>`;
     return;
   }
   list.innerHTML = rows.map(l => rowHtml(l, newIds)).join('');
@@ -2514,7 +2632,7 @@ function renderSidebar(){
   if (browseAll) {
     header.innerHTML = `
       <button class="back" onclick="toggleBrowseAll()">← Back to map view</button>
-      <h2 id="panelTitle">All listings <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${currentData.listings.length} total</span></h2>
+      <h2 id="panelTitle">${t('all_listings', 'All listings')} <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${currentData.listings.length} ${t('total', 'total')}</span></h2>
       <input type="text" id="searchInput" class="search-input" placeholder="Search area, rent, size, queue days…">
     `;
     const input = document.getElementById('searchInput');
@@ -2575,7 +2693,7 @@ function renderSidebar(){
     else if (maxFloor !== null) bits.push(`floor ≤${floorLabel(maxFloor)}`);
     if (minYears !== null) bits.push(`${minYears}+ år contract`);
     bits.push(sortNote());
-    header.innerHTML = `<h2 id="panelTitle">All available listings</h2><div style="font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:4px;">${bits.join(' · ')}</div>`;
+    header.innerHTML = `<h2 id="panelTitle">${t('all_available', 'All available listings')}</h2><div style="font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:4px;">${bits.join(' · ')}</div>`;
   }
 
   rows = sortListings(rows);
@@ -2628,7 +2746,7 @@ function bindLimitSlider(inputId, labelId, opts){
     const raw = Number(input.value);
     const unlimited = raw === openEnd();
     set(unlimited ? null : raw);
-    label.textContent = unlimited ? 'Any' : format(raw);
+    label.textContent = unlimited ? t('any', 'Any') : format(raw);
     label.classList.toggle('any', unlimited);
   };
   input.addEventListener('input', () => { apply(); refreshAdvBadge(); render(); });
@@ -2722,10 +2840,10 @@ function applyTheme(theme){
   const light = theme === 'light';
   document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
   const btn = document.getElementById('themeToggle');
-  const next = light ? 'Switch to dark mode' : 'Switch to light mode';
+  const next = light ? t('to_dark', 'Switch to dark mode') : t('to_light', 'Switch to light mode');
   btn.title = next;
   btn.setAttribute('aria-label', next);
-  document.getElementById('themeToggleLabel').textContent = light ? 'Light' : 'Dark';
+  document.getElementById('themeToggleLabel').textContent = light ? t('light', 'Light') : t('dark', 'Dark');
   restyleGroceries();
 }
 
@@ -2735,6 +2853,18 @@ try {
   if (saved === 'light' || saved === 'dark') currentTheme = saved;
 } catch (e) { /* sandboxed preview — stay on the default */ }
 applyTheme(currentTheme);
+
+applyLang(langFromUrl(), false);
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  const next = lang === 'sv' ? 'en' : 'sv';
+  // replaceState keeps the #city fragment and doesn't stack history entries,
+  // and deliberately doesn't fire hashchange — the city handler stays out of it.
+  const u = new URL(location.href);
+  if (next === 'sv') u.searchParams.set('lang', 'sv'); else u.searchParams.delete('lang');
+  history.replaceState(null, '', u);
+  applyLang(next, true);
+});
 
 document.getElementById('themeToggle').addEventListener('click', () => {
   currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
