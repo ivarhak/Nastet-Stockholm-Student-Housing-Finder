@@ -97,8 +97,15 @@ jobs:
             data/geocode_cache.json
             data/grocery_cache.json
             data/grocery_cache_*.json
-          key: sshf-scrape-cache-
-          restore-keys: sshf-scrape-cache-
+          key: nastet-scrape-cache-
+          # Two prefixes, newest match wins. The second is the pre-rebrand key:
+          # without it the first run after the rename starts from an empty
+          # cache, which means every listing reads as NEW and ~180 Valhalla
+          # routes plus 40-odd Nominatim lookups get re-fetched from cold.
+          # Safe to drop once a run has saved under the new prefix.
+          restore-keys: |
+            nastet-scrape-cache-
+            sshf-scrape-cache-
 
       - name: Scrape SSSB + Bostadsförmedlingen
         # Fails the job on a scrape error, on purpose: Pages keeps serving the
@@ -193,7 +200,7 @@ jobs:
             data/geocode_cache.json
             data/grocery_cache.json
             data/grocery_cache_*.json
-          key: sshf-scrape-cache-${{ github.run_id }}
+          key: nastet-scrape-cache-${{ github.run_id }}
 
       - name: Configure Pages
         # This is what enables Pages with "GitHub Actions" as the source, so the

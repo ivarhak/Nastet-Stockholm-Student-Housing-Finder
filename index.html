@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Stockholm Student Housing Finder</title>
+<title>Nästet — student housing in Sweden</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -897,12 +897,16 @@
   <div class="brand">
     <svg class="mark" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--teal)"
          stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-      <path d="M3.5 16.5V8l4.2 3.4L12 5.5l4.3 5.9L20.5 8v8.5z"/>
-      <path d="M3.5 19.5h17"/>
+      <path d="M3.4 15c0 3 3.9 5 8.6 5s8.6-2 8.6-5"/>
+      <path d="M2.2 15h19.6"/>
+      <path d="M9.6 15c0-2 .9-3.6 2.3-4.4"/>
+      <circle cx="14.2" cy="8.6" r="2.7"/>
+      <path d="M16.8 7.9l2.9.8-2.9 1"/>
+      <circle cx="14.8" cy="8" r=".6" fill="var(--teal)" stroke="none"/>
     </svg>
     <div>
-      <h1 id="brandTitle">Stockholm Student Housing Finder</h1>
-      <div class="sub" id="brandSub">SSSB + Bostadsförmedlingen · commutes to KTH</div>
+      <h1 id="brandTitle">Nästet</h1>
+      <div class="sub" id="brandSub">Stockholm · SSSB + Bostadsförmedlingen · commutes to KTH</div>
     </div>
   </div>
 
@@ -1883,14 +1887,16 @@ function renderSchoolPicker(){
   sel.title = chosen
     ? `${chosen.name} — centre the map and measure commutes from here`
     : 'Centre the map and measure commutes from here';
-  // The name stays put and the selected campus lives in the subtitle — the
-  // campus is what changes, so it shouldn't be spliced into the project's name.
+  // The brand is a fixed word now, so the h1 is left alone entirely — city,
+  // providers and the selected campus are the parts that change, and they all
+  // live in the subtitle. Filtering empties keeps a city with no providers yet
+  // from rendering a stray " ·  · ".
   const providers = Object.keys(providerInfo);
   const cityName = (currentData && currentData.city_name) || 'Stockholm';
   document.getElementById('brandSub').textContent =
-    `${providers.join(' + ') || cityName} · commutes to ${selectedSchool}`;
-  document.getElementById('brandTitle').textContent = `${cityName} Student Housing Finder`;
-  document.title = `${cityName} Student Housing Finder — ${selectedSchool}`;
+    [cityName, providers.join(' + '), `commutes to ${selectedSchool}`]
+      .filter(Boolean).join(' · ');
+  document.title = `Nästet — ${cityName} · ${selectedSchool}`;
 }
 
 function setSchool(id){
@@ -2702,7 +2708,7 @@ function applyTheme(theme){
 
 let currentTheme = 'dark';
 try {
-  const saved = localStorage.getItem('sshf-theme');
+  const saved = localStorage.getItem('nastet-theme');
   if (saved === 'light' || saved === 'dark') currentTheme = saved;
 } catch (e) { /* sandboxed preview — stay on the default */ }
 applyTheme(currentTheme);
@@ -2710,7 +2716,7 @@ applyTheme(currentTheme);
 document.getElementById('themeToggle').addEventListener('click', () => {
   currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
   applyTheme(currentTheme);
-  try { localStorage.setItem('sshf-theme', currentTheme); } catch (e) {}
+  try { localStorage.setItem('nastet-theme', currentTheme); } catch (e) {}
 });
 
 document.getElementById('refreshBtn').addEventListener('click', () => {

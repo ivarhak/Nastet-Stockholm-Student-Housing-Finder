@@ -1,22 +1,26 @@
 <img width="1440" height="811" alt="Screenshot 2026-08-08 at 9 30 32 PM" src="https://github.com/user-attachments/assets/c0b398f4-ac31-46c2-b48a-c7dde8380526" />
 
-# Stockholm Student Housing Finder
+# Nästet
 
-A tool that checks what Stockholm student housing is currently available on either SSSB or Bostadsförmedlingens websites,
-works out the commute to your campus for each area, and shows it all on a combined map —
-sorted by whatever the user wants and updates every couple hours. It pulls in Stockholm's
-**Bostadsförmedlingen** listings alongside SSSB's. 
-Site never asks for login or any data.
-Ko-fi link available on site if you want to optionally support me as a dev :P
+**Nästet** ("the nest") is a student housing dashboard for Sweden. It gathers
+every vacancy currently advertised by the major student landlords — SSSB and
+Bostadsförmedlingen in Stockholm, SGS in Göteborg, AF Bostäder in Lund — works
+out the commute from each address to your chosen campus, and puts the result on
+one map instead of four separate queue portals.
 
+It is read-only and asks nothing of you: no account, no sign-up, nothing
+tracked. If you want to support the work, there's a Ko-fi link in the header.
 
-**Live version:** [ivarhak.github.io/Stockholm-Student-Housing-Finder](https://ivarhak.github.io/Stockholm-Student-Housing-Finder/)
-— published from this repo and re-scraped every two hours. Read-only; run it
-locally for desktop notifications and an on-demand Refresh. See section 4.
+**Live version:** [nästet.se](https://nästet.se) — published from this repo and
+re-scraped every two hours. Read-only; run it locally for desktop notifications
+and an on-demand Refresh. See section 4.
 
 Two pieces:
-- `monitor.py` — runs on your machine: Selenium scraping for SSSB, a plain HTTP fetch for Bostadsförmedlingen, commute math, and a small local API.
-- `index.html` — the UI. Served by the script itself locally, and published as-is to GitHub Pages, where it reads a pre-scraped `listings.json` instead of the API.
+- `monitor.py` — runs on your machine: Selenium scraping for SSSB, plain HTTP
+  fetches for the other three providers, commute math, and a small local API.
+- `index.html` — the UI. Served by the script itself locally, and published
+  as-is to GitHub Pages, where it reads a pre-scraped `listings-<city>.json`
+  instead of the API.
 
 
 ## 1. Setup
@@ -55,39 +59,12 @@ every time. In PyCharm or similar, point a run configuration at
 Drag `start.command` onto the Dock, or make an alias on the Desktop:
 
 ```bash
-ln -s "$PWD/start.command" ~/Desktop/Student\ Housing.command
+ln -s "$PWD/start.command" ~/Desktop/Nästet.command
 ```
 
 The alias keeps working when you `git pull`, since it points at the file rather
 than copying it. To give it a nicer icon, select the file in Finder, press
 Cmd+I, and paste an image onto the small icon in the top-left of the Info window.
-</details>
-
-<details>
-<summary>If SSSB ever starts requiring a login again for showing vacant housing</summary>
-
-Pass `--with-login`, and store credentials first with:
-
-```bash
-python monitor.py --login
-```
-
-This prompts for your username and password (password input is hidden) and
-asks if you want to save them to your computer's own secure keychain —
-macOS Keychain, Windows Credential Locker, or Linux Secret Service,
-depending on your OS, via the `keyring` package. They are **never written to
-a file in this project folder**. `--forget-login` removes them again.
-
-For unattended runs where there's no terminal to prompt on and no keyring
-daemon (a headless Linux box, say), set `SSSB_USERNAME`/`SSSB_PASSWORD` as
-environment variables in the crontab entry itself — the script reads those as
-a fallback. That's fine security-wise since your crontab isn't part of this
-project folder; just don't put those `export` lines in a script that lives in
-here.
-
-Note that `login()`'s field selectors have never been verified against SSSB's
-real markup, because nobody has needed this path. If it fails, run
-`--debug --with-login` and fix the selectors from `debug_page.html`.
 </details>
 
 Optional, for **real transit times** (otherwise you'll just get the
@@ -116,9 +93,10 @@ saves the fully-rendered page to `debug_page.html`. Check whether that file
 actually contains `refid=` anywhere (`grep -c "refid=" debug_page.html`) — if
 SSSB changed their link format, that's the thing to update.
 
-If instead the run reports listings but with empty queue days, SSSB may have
-moved the "Ködagar" column behind a login again; try `--with-login` (see the
-collapsed section above). The scrape prints a warning telling you so.
+If instead the run reports listings but with empty queue days, SSSB has
+probably put the "Ködagar" column back behind an account. The scrape prints
+a warning telling you so — the values simply go missing rather than the run
+failing, and every filter treats a missing value as "do not hide this".
 
 Bostadsförmedlingen needs no selector fixing at all, since
 `fetch_bostadsformedlingen()` reads a plain JSON feed rather than scraped
@@ -194,11 +172,11 @@ listings from.
 There's a **live read-only copy** of the dashboard published from this repo, so
 you can look at current listings without running anything:
 
-> **https://ivarhak.github.io/Stockholm-Student-Housing-Finder/**
+> **https://nästet.se**
 
-A GitHub Actions workflow (`.github/workflows/publish.yml`) scrapes both sources
-**every two hours**, writes the result next to the dashboard as `listings.json`,
-and deploys the pair to Pages. The page picks up a new scrape on its own — a tab
+A GitHub Actions workflow (`.github/workflows/publish.yml`) scrapes every
+provider **every two hours**, writes one `listings-<city>.json` next to the
+dashboard, and deploys them to Pages. The page picks up a new scrape on its own — a tab
 left open re-checks the data file every 15 minutes.
 
 It's the **same .html as the local version, not a second
@@ -386,7 +364,7 @@ with "Start in" set to this folder.
   same reason as electricity above, they're display-only, since a filter would
   have hidden every SSSB listing rather than narrowed anything.
 - **Rate limiting**: don't drop the cron interval much below ~15 minutes —
-  there's no need to hammer their login endpoint, and it's not clear how
+  there's no need to hammer their servers, and it's not clear how
   they'd react to it.
 - **Bostadsförmedlingen: student housing only.** The feed
   (`bostad.stockholm.se/AllaAnnonser/`) carries the whole Stockholm rental

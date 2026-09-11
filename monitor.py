@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Stockholm Student Housing Finder
-================================
+Nästet
+======
 
-Scrapes SSSB's currently available student housing (minasidor.sssb.se) plus
-Bostadsförmedlingen's public student ads, works out how far each place is from
-your campus (both a rough straight-line estimate and a real public-transit time
-via Trafiklab's Resrobot API), diffs against the last run to spot newly-published
-listings, fires a desktop notification when something new shows up, and serves
-it all to the dashboard (index.html) over a tiny local API.
+Scrapes what student housing is currently vacant — SSSB and Bostadsförmedlingen
+in Stockholm, SGS in Göteborg, AF Bostäder in Lund — works out how far each
+place is from your campus (both a rough straight-line estimate and a real
+public-transit time via Trafiklab's Resrobot API), diffs against the last run
+to spot newly-published listings, fires a desktop notification when something
+new shows up, and serves it all to the dashboard (index.html) over a tiny
+local API.
 
 NO LOGIN NEEDED: SSSB's vacancy list is public — confirmed 2026-08-06,
 queue days ("Ködagar") included. Nothing here asks for credentials by
@@ -124,7 +125,11 @@ BIKE_ROUTER_URL = "https://valhalla1.openstreetmap.de/route"
 # an identifiable application with a way to make contact.
 PROJECT_URL = "https://github.com/ivarhak/Stockholm-Student-Housing-Finder"
 CONTACT_URL = PROJECT_URL + "/issues"
-USER_AGENT = (f"Stockholm-Student-Housing-Finder/1.0 (personal, non-commercial; "
+# ASCII on purpose. This goes out as an HTTP header, which requests encodes as
+# latin-1, and two of the four providers sit behind a WAF that has no reason to
+# be generous about a non-ASCII byte. "Nästet" is the brand; "Nastet" is what
+# travels safely in a header.
+USER_AGENT = (f"Nastet/1.0 (personal, non-commercial; "
               f"contact: {CONTACT_URL})")
 
 DATA_DIR = Path(__file__).parent / "data"
