@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nästet — student housing in Sweden</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTYuNSAyOS41QzcgNDIuNSAxNi41IDUxLjUgMzIgNTEuNVM1NyA0Mi41IDU3LjUgMjkuNSIgc3Ryb2tlLXdpZHRoPSIzLjQiLz48cGF0aCBkPSJNMTAgMjYuNUMxMiAzNy41IDIwIDQ1LjUgMzEuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48cGF0aCBkPSJNNTQgMjYuNUM1MiAzNy41IDQ0IDQ1LjUgMzIuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48L2c+PHBhdGggZD0iTTEzLjggMjMuNGM0LjQtMSA2LjUtMiA5LTQuNSA0LTQgOS40LTcuNCAxNS02LjEgNS4yIDEuMiA4LjYgNS4yIDguNyAxMCAuMSA1LjgtMy4yIDExLTguNyAxMy02IDIuMi0xMy42LjgtMTguMS0yLjgtMi44LTIuMi00LjktNS45LTUuOS05LjZ6IiBmaWxsPSIjNUM4QUI4Ii8+PHBhdGggZD0iTTQ2LjQgMTkuOSA1My42IDIzIDQ2LjcgMjYuMVoiIGZpbGw9IiNGNEIyM0MiLz48cGF0aCBkPSJNMzQuOCAyMS40YzEtMS45IDMuNy0xLjkgNC44IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLXdpZHRoPSIxLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMC44IDI5LjljNC4zIDQuNCAxMS43IDUuMSAxNy42IDEuNC0zLjIgNi0xMi41IDYuNC0xNy42LTEuNHoiIGZpbGw9IiNmZmYiLz48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTggMzIuNUMxNiA0MS41IDI0IDQ2IDM0LjUgNDYiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTU2IDMyLjVDNDggNDEuNSA0MCA0NiAyOS41IDQ2IiBzdHJva2Utd2lkdGg9IjIuNiIvPjxwYXRoIGQ9Ik0xMS41IDI5LjVDMTkgMzUuNSAyNi41IDM4LjggMzUgMzkuMyIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNNTIuNSAzMEM0NS41IDM2IDM4IDM5LjMgMjkuNSAzOS42IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNCA0My41QzI0IDQ3LjUgMzQgNDguMyA0NiA0NS41IiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -895,14 +896,26 @@
 
 <header>
   <div class="brand">
-    <svg class="mark" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--teal)"
-         stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-      <path d="M3.4 15c0 3 3.9 5 8.6 5s8.6-2 8.6-5"/>
-      <path d="M2.2 15h19.6"/>
-      <path d="M9.6 15c0-2 .9-3.6 2.3-4.4"/>
-      <circle cx="14.2" cy="8.6" r="2.7"/>
-      <path d="M16.8 7.9l2.9.8-2.9 1"/>
-      <circle cx="14.8" cy="8" r=".6" fill="var(--teal)" stroke="none"/>
+    <!-- The bird sits *in* the nest, not on it: three strands are drawn after
+         the bird so they cross in front of its body. Fixed brand colours rather
+         than theme tokens — it's artwork, and it reads on both grounds. -->
+    <svg class="mark" width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke="#96694A" stroke-linecap="round">
+        <path d="M6.5 29.5C7 42.5 16.5 51.5 32 51.5S57 42.5 57.5 29.5" stroke-width="3.4"/>
+        <path d="M10 26.5C12 37.5 20 45.5 31.5 47" stroke-width="2.8"/>
+        <path d="M54 26.5C52 37.5 44 45.5 32.5 47" stroke-width="2.8"/>
+      </g>
+      <path d="M13.8 23.4c4.4-1 6.5-2 9-4.5 4-4 9.4-7.4 15-6.1 5.2 1.2 8.6 5.2 8.7 10 .1 5.8-3.2 11-8.7 13-6 2.2-13.6.8-18.1-2.8-2.8-2.2-4.9-5.9-5.9-9.6z" fill="#5C8AB8"/>
+      <path d="M46.4 19.9 53.6 23 46.7 26.1Z" fill="#F4B23C"/>
+      <path d="M34.8 21.4c1-1.9 3.7-1.9 4.8 0" fill="none" stroke="#231F20" stroke-width="1.9" stroke-linecap="round"/>
+      <path d="M20.8 29.9c4.3 4.4 11.7 5.1 17.6 1.4-3.2 6-12.5 6.4-17.6-1.4z" fill="#fff"/>
+      <g fill="none" stroke="#96694A" stroke-linecap="round">
+        <path d="M8 32.5C16 41.5 24 46 34.5 46" stroke-width="2.6"/>
+        <path d="M56 32.5C48 41.5 40 46 29.5 46" stroke-width="2.6"/>
+        <path d="M11.5 29.5C19 35.5 26.5 38.8 35 39.3" stroke-width="2.2"/>
+        <path d="M52.5 30C45.5 36 38 39.3 29.5 39.6" stroke-width="2.2"/>
+        <path d="M14 43.5C24 47.5 34 48.3 46 45.5" stroke-width="2"/>
+      </g>
     </svg>
     <div>
       <h1 id="brandTitle">Nästet</h1>
