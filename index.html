@@ -1622,6 +1622,7 @@ const I18N = { sv: {
   sorted_applicants: 'efter minst antal sökande',
   sorted_deadline: 'efter sista ansökningsdag',
   sorted_rent: 'efter hyra',
+  then_rent: ' — därefter hyra',
   ground_floor: 'Botten',
   floor_f: 'våning',
   contract_f: 'års kontrakt',
@@ -1895,6 +1896,11 @@ function computeProviderInfo(){
       // Majority rather than "any": one listing with a stray area name shouldn't
       // decide how a whole provider is drawn.
       kind: rows.length && areaBacked > rows.length / 2 ? 'area' : 'pin',
+      // Every states* flag below is inferred from the rows actually present, so
+      // a provider with nothing available reads as stating nothing. Keep the
+      // count so callers can tell "publishes no deadline" from "published
+      // nothing today" — they look identical in the flags alone.
+      count: rows.length,
       statesQueue: rows.some(l => l.queue_days != null),
       statesApplicants: rows.some(l => l.applicants != null),
       statesDeadline: rows.some(l => l.deadline),
@@ -2237,14 +2243,21 @@ const groupLabel = (g) => t('group_' + g, g);
 // Describes the sort in the same terms the badges use, so the footer can't claim
 // an ordering the data doesn't support.
 function sortNote(){
-  const parts = Object.entries(providerInfo).map(([name, info]) => {
+  // Only providers with something in the list. A provider that published
+  // nothing today states nothing either, so it would fall through every branch
+  // below and be described as sorted "by rent" — a sort order for rows that
+  // aren't there, and a wrong one.
+  const parts = Object.entries(providerInfo).filter(([, info]) => info.count).map(([name, info]) => {
     const abbr = info.abbr || name;
     if (info.statesQueue) return `${abbr} ${t('sorted_queue', 'sorted by queue days')}`;
     if (info.statesApplicants) return `${abbr} ${t('sorted_applicants', 'by fewest applicants')}`;
     if (info.statesDeadline) return `${abbr} ${t('sorted_deadline', 'by deadline')}`;
     return `${abbr} ${t('sorted_rent', 'by rent')}`;
   });
-  return parts.join(', ');
+  if (!parts.length) return '';
+  // Said once rather than per provider: rent breaks ties for all of them, and
+  // repeating it turns a one-line summary into two on a phone.
+  return parts.join(', ') + t('then_rent', ' — then by rent');
 }
 
 // A payload written before these fields existed is Stockholm's by definition —
@@ -3122,17 +3135,24 @@ function badgeFor(l){
 // them, else the application deadline, else rent — which every listing has.
 function sortListings(rows){
   const slot = l => (providerInfo[l.provider] || {}).slot ?? 99;
+  // Rent breaks every tie. The primary keys all cluster hard in practice — a
+  // whole batch of Bostadsförmedlingen ads shares one closing date, and queue
+  // days bunch at round numbers — so a single key left long runs in whatever
+  // order the scrape happened to emit them, which is no order at all to a
+  // reader. Cheapest-first within the run is the question you'd ask next.
+  const rent = l => Number(l.rent_sek) || 1e9;
   return rows.slice().sort((a,b) => {
     if (a.provider !== b.provider) return slot(a) - slot(b);
     const info = providerInfo[a.provider] || {};
-    if (info.statesQueue) return (a.queue_days ?? 1e9) - (b.queue_days ?? 1e9);
+    let primary = 0;
+    if (info.statesQueue) primary = (a.queue_days ?? 1e9) - (b.queue_days ?? 1e9);
     // Fewest applicants first where a provider publishes that instead of a
     // queue length — it's the same question ("how gettable is this?") asked the
     // other way round.
-    if (info.statesApplicants) return (a.applicants ?? 1e9) - (b.applicants ?? 1e9);
-    if (info.statesDeadline)
-      return String(a.deadline || '9999').localeCompare(String(b.deadline || '9999'));
-    return (Number(a.rent_sek) || 1e9) - (Number(b.rent_sek) || 1e9);
+    else if (info.statesApplicants) primary = (a.applicants ?? 1e9) - (b.applicants ?? 1e9);
+    else if (info.statesDeadline)
+      primary = String(a.deadline || '9999').localeCompare(String(b.deadline || '9999'));
+    return primary || rent(a) - rent(b);
   });
 }
 
@@ -3346,7 +3366,10 @@ function renderSidebar(){
     else if (minFloor !== null) bits.push(`${fl} ${floorLabel(minFloor)}+`);
     else if (maxFloor !== null) bits.push(`${fl} ≤${floorLabel(maxFloor)}`);
     if (minYears !== null) bits.push(`${minYears}+ ${t('contract_f', 'yr contract')}`);
-    bits.push(sortNote());
+    // Empty when nothing is listed at all — pushing it anyway leaves the
+    // summary ending in a dangling separator.
+    const note = sortNote();
+    if (note) bits.push(note);
     // The number of listings that survived the filters is the most useful
     // thing on the panel, so it is the only thing set large.
     header.innerHTML = `
