@@ -1617,8 +1617,16 @@ const I18N = { sv: {
   legend_roundel: 'Ring = område, storlek = antal, färg = tunnelbanelinje',
   legend_pin: 'Enskild nål = annons hos Bostadsförmedlingen',
   legend_empty: '× = inget som matchar just nu',
-  list_end: 'slut på listan',
+  list_end: 'visade · slut på listan',
   per_month_unit: 'kr / mån',
+  sorted_applicants: 'efter minst antal sökande',
+  sorted_deadline: 'efter sista ansökningsdag',
+  sorted_rent: 'efter hyra',
+  ground_floor: 'Botten',
+  floor_f: 'våning',
+  contract_f: 'års kontrakt',
+  listings_one: 'bostad',
+  listings_many: 'bostäder',
   any: 'Alla',
   dark: 'Mörkt',
   light: 'Ljust',
@@ -1821,7 +1829,7 @@ const METRO_LINES = [
       [59.33520,18.07450],[59.33900,18.09190],[59.34680,18.09990],[59.35730,18.10290],
     ],
     [ // Norsborg direction from Liljeholmen
-      [59.31030,18.02270],[59.30650,18.00990],[59.30530,17.99920],
+      [59.31030,18.02270],[59.30556,18.00083],[59.30556,17.98861],
     ],
   ]},
   { name: 'Blue line (T10–T11)', color: '#0080C8', stops: [
@@ -2232,9 +2240,9 @@ function sortNote(){
   const parts = Object.entries(providerInfo).map(([name, info]) => {
     const abbr = info.abbr || name;
     if (info.statesQueue) return `${abbr} ${t('sorted_queue', 'sorted by queue days')}`;
-    if (info.statesApplicants) return `${abbr} by fewest applicants`;
-    if (info.statesDeadline) return `${abbr} by deadline`;
-    return `${abbr} by rent`;
+    if (info.statesApplicants) return `${abbr} ${t('sorted_applicants', 'by fewest applicants')}`;
+    if (info.statesDeadline) return `${abbr} ${t('sorted_deadline', 'by deadline')}`;
+    return `${abbr} ${t('sorted_rent', 'by rent')}`;
   });
   return parts.join(', ');
 }
@@ -2399,7 +2407,8 @@ function openCityPicker(){
     b.className = 'city-option';
     b.type = 'button';
     const bits = [];
-    if (c.listings != null) bits.push(`${c.listings} listing${c.listings === 1 ? '' : 's'}`);
+    if (c.listings != null) bits.push(`${c.listings} ${c.listings === 1
+      ? t('listings_one', 'listing') : t('listings_many', 'listings')}`);
     if (c.providers && c.providers.length) bits.push(c.providers.join(' + '));
     b.innerHTML = `<span class="city-name"></span><span class="city-meta"></span>`;
     b.querySelector('.city-name').textContent = c.name;
@@ -2519,7 +2528,7 @@ function filtersActive(){
 }
 
 function floorLabel(n){
-  return n === 0 ? 'Ground' : String(n);
+  return n === 0 ? t('ground_floor', 'Ground') : String(n);
 }
 
 function render(){
@@ -3003,18 +3012,11 @@ function clearSelection(){
 function selectListing(id){
   selectedListingId = id;
   selectedArea = null;
-  // Both of these render *instead of* the selected card, so a pin press while
-  // either was up looked like nothing happened.
-  if (browseAll) {
-    browseAll = false;
-    document.getElementById('browseAllBtn').classList.remove('active');
-    searchQuery = '';
-  }
-  if (currentTab !== 'listings') {
-    currentTab = 'listings';
-    document.getElementById('tabListings').classList.add('active');
-    document.getElementById('tabQueues').classList.remove('active');
-  }
+  // Browse-all and the queues tab both render *instead of* the selected card,
+  // so a pin press while either was up looked like nothing happened. Leaving
+  // browse-all also clears its search box, which would otherwise still be
+  // filtering a list the visitor has stopped looking at.
+  if (browseAll) searchQuery = '';
   browseAll = false;
   document.getElementById('browseAllBtn').classList.remove('active');
   switchTab('listings');
@@ -3336,10 +3338,11 @@ function renderSidebar(){
     if (maxQueueDays !== null) bits.push(`≤${num(maxQueueDays)} ${t('queue_days_f', 'queue days')}`);
     if (maxRentSek !== null) bits.push(`≤${num(maxRentSek)} kr`);
     if (minSizeSqm !== null) bits.push(`≥${minSizeSqm} m²`);
-    if (minFloor !== null && maxFloor !== null) bits.push(`floor ${floorLabel(minFloor)}–${floorLabel(maxFloor)}`);
-    else if (minFloor !== null) bits.push(`floor ${floorLabel(minFloor)}+`);
-    else if (maxFloor !== null) bits.push(`floor ≤${floorLabel(maxFloor)}`);
-    if (minYears !== null) bits.push(`${minYears}+ år contract`);
+    const fl = t('floor_f', 'floor');
+    if (minFloor !== null && maxFloor !== null) bits.push(`${fl} ${floorLabel(minFloor)}–${floorLabel(maxFloor)}`);
+    else if (minFloor !== null) bits.push(`${fl} ${floorLabel(minFloor)}+`);
+    else if (maxFloor !== null) bits.push(`${fl} ≤${floorLabel(maxFloor)}`);
+    if (minYears !== null) bits.push(`${minYears}+ ${t('contract_f', 'yr contract')}`);
     bits.push(sortNote());
     // The number of listings that survived the filters is the most useful
     // thing on the panel, so it is the only thing set large.
