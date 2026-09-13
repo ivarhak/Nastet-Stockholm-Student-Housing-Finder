@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTYuNSAyOS41QzcgNDIuNSAxNi41IDUxLjUgMzIgNTEuNVM1NyA0Mi41IDU3LjUgMjkuNSIgc3Ryb2tlLXdpZHRoPSIzLjQiLz48cGF0aCBkPSJNMTAgMjYuNUMxMiAzNy41IDIwIDQ1LjUgMzEuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48cGF0aCBkPSJNNTQgMjYuNUM1MiAzNy41IDQ0IDQ1LjUgMzIuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48L2c+PHBhdGggZD0iTTEzLjggMjMuNGM0LjQtMSA2LjUtMiA5LTQuNSA0LTQgOS40LTcuNCAxNS02LjEgNS4yIDEuMiA4LjYgNS4yIDguNyAxMCAuMSA1LjgtMy4yIDExLTguNyAxMy02IDIuMi0xMy42LjgtMTguMS0yLjgtMi44LTIuMi00LjktNS45LTUuOS05LjZ6IiBmaWxsPSIjNUM4QUI4Ii8+PHBhdGggZD0iTTQ2LjQgMTkuOSA1My42IDIzIDQ2LjcgMjYuMVoiIGZpbGw9IiNGNEIyM0MiLz48cGF0aCBkPSJNMzQuOCAyMS40YzEtMS45IDMuNy0xLjkgNC44IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLXdpZHRoPSIxLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMC44IDI5LjljNC4zIDQuNCAxMS43IDUuMSAxNy42IDEuNC0zLjIgNi0xMi41IDYuNC0xNy42LTEuNHoiIGZpbGw9IiNmZmYiLz48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTggMzIuNUMxNiA0MS41IDI0IDQ2IDM0LjUgNDYiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTU2IDMyLjVDNDggNDEuNSA0MCA0NiAyOS41IDQ2IiBzdHJva2Utd2lkdGg9IjIuNiIvPjxwYXRoIGQ9Ik0xMS41IDI5LjVDMTkgMzUuNSAyNi41IDM4LjggMzUgMzkuMyIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNNTIuNSAzMEM0NS41IDM2IDM4IDM5LjMgMjkuNSAzOS42IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNCA0My41QzI0IDQ3LjUgMzQgNDguMyA0NiA0NS41IiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* ── Palette ─────────────────────────────────────────────
      Two themes, both driven entirely by these tokens: markers, chips and
@@ -780,6 +780,398 @@
     vertical-align:1px;
   }
 
+
+  /* ══ Card-catalogue layer ════════════════════════════════
+     The redesign: same tokens, same two-pane shell, different rhythm. Square
+     corners and hairline rules throughout; ochre is the only loud colour in
+     the chrome, and teal/plum/slate/clay/leaf are demoted to semantics — a
+     provider rail on a card, a T-bana line on the map, nothing else. Sits
+     after the base rules and before the phone block, which still gets the
+     last word. */
+  :root{ --figure:'Archivo', system-ui, sans-serif; }
+
+  /* Masthead: wordmark and dateline, controls as index-card tabs cut into the
+     bottom rule. */
+  header{ align-items:flex-end; gap:14px 22px; padding:16px 24px 0; }
+  .brand{ gap:13px; padding-bottom:15px; }
+  .brand h1{
+    font-family:var(--figure); font-stretch:118%; font-weight:800;
+    font-size:26px; line-height:1; letter-spacing:-0.012em; text-transform:none;
+  }
+  .brand .sub{ font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; margin-top:4px; }
+  .links{ padding-bottom:17px; }
+  #meta{
+    font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+    line-height:1.7; padding-bottom:14px;
+  }
+  #meta #listingCount{ color:var(--ink); }
+  #meta #autoStatus{ color:var(--dim) !important; }
+  #themeToggle, #langToggle, #cityBtn{
+    border-radius:0; background:transparent;
+    border:1px solid var(--rule);
+    align-self:flex-end; margin-bottom:15px; padding:7px 11px;
+    font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; font-weight:400;
+  }
+  #themeToggle:hover, #langToggle:hover, #cityBtn:hover{
+    background:var(--card); color:var(--ink); border-color:var(--border);
+  }
+  .theme-dot{ width:8px; height:8px; }
+  #browseAllBtn, #refreshBtn{
+    border-radius:0; font-weight:400; font-size:10px;
+    letter-spacing:0.1em; text-transform:uppercase; padding:9px 13px;
+    margin-bottom:13px;
+  }
+  #browseAllBtn{ background:transparent; margin-right:-1px; }
+  #browseAllBtn:hover{ background:var(--card); border-color:var(--border); }
+  #browseAllBtn.active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  #refreshBtn{ font-weight:600; }
+  #refreshBtn:hover{ filter:none; background:color-mix(in srgb, var(--ochre) 84%, #fff); transform:translateY(1px); }
+  #refreshBtn:active{ transform:translateY(1px); }
+  #refreshNote{ border-radius:0; }
+
+  /* Control desk: hairline-divided cells rather than floating controls. */
+  #filterBar{
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)) 56px;
+    gap:0; padding:0; align-items:stretch;
+  }
+  #filterBar .control{
+    padding:12px 15px; gap:9px; min-width:0;
+    border-right:1px solid var(--rule);
+  }
+  #filterBar .control:has(#advToggle){ border-right:none; align-items:center; justify-content:center; padding:8px 4px; }
+  #filterBar .control:has(#advToggle) label{ display:none; }
+  #filterBar .control label{
+    font-family:var(--mono); font-weight:400; font-size:9px; letter-spacing:0.16em;
+  }
+  #filterBar .control-wide{
+    grid-column:1 / -1; border-right:none; border-top:1px solid var(--rule);
+    flex-direction:row; align-items:center; gap:14px; padding:10px 15px;
+  }
+  #filterBar .control-wide label{ min-width:52px; }
+  #schoolSelect{
+    border-radius:0; max-width:none; width:100%;
+    background:transparent; border-color:var(--rule);
+    font-size:12px; padding:7px 8px;
+  }
+  #schoolSelect:hover{ border-color:var(--border); }
+  #advToggle{
+    background:transparent; border:none; color:var(--ochre); width:auto; height:auto;
+  }
+  #advToggle:hover{ background:var(--card); }
+  #advToggle.open{ background:var(--card); border-color:transparent; color:var(--ochre); }
+  .adv-count{ top:2px; right:2px; background:transparent; color:var(--ochre); font-weight:700; }
+  #advFilters{ padding:11px 15px 13px; }
+  #advReset{ color:var(--ochre); text-transform:uppercase; letter-spacing:0.1em; font-size:10px; }
+
+  /* Sliders: 2px track over tick marks, square handle, dashed when parked. */
+  .slider-row{ gap:12px; }
+  .slider-row span{
+    font-family:var(--mono); font-size:12px; font-weight:700;
+    min-width:46px; text-align:right;
+  }
+  .slider-row span.any{ font-weight:400; text-transform:uppercase; letter-spacing:0.06em; }
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    /* Only reachable if a browser ignores the thumb rules below; ochre keeps the
+       fallback on-palette instead of leaving the old leaf-green accent. */
+    accent-color:var(--ochre);
+    width:100%; flex:1; min-width:0; height:14px;
+    background:
+      linear-gradient(var(--ochre),var(--ochre)) 0 6px / var(--fill,0%) 2px no-repeat,
+      linear-gradient(var(--rule),var(--rule)) 0 6px / 100% 2px no-repeat,
+      repeating-linear-gradient(to right, var(--border) 0 1px, transparent 1px 12.5%) 0 0 / 100% 4px no-repeat;
+    cursor:pointer;
+  }
+  input[type=range].parked{
+    background:
+      repeating-linear-gradient(to right, var(--border) 0 4px, transparent 4px 8px) 0 6px / 100% 2px no-repeat;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:9px; height:12px; border-radius:0;
+    background:var(--ink); border:1px solid var(--bg);
+  }
+  input[type=range].parked::-webkit-slider-thumb{ background:var(--chip); border-color:var(--border); }
+  input[type=range]::-moz-range-thumb{
+    width:9px; height:12px; border-radius:0;
+    background:var(--ink); border:1px solid var(--bg);
+  }
+  input[type=range].parked::-moz-range-thumb{ background:var(--chip); border-color:var(--border); }
+  input[type=range]:focus-visible{ outline:2px solid var(--ochre); outline-offset:2px; }
+
+  @media (max-width: 1180px){
+    #filterBar{ grid-template-columns:repeat(2,minmax(0,1fr)) 56px; }
+    #filterBar .control:has(#advToggle){ grid-column:3; grid-row:1; }
+    #filterBar .control{ border-bottom:1px solid var(--rule); }
+    #filterBar .control-wide{ border-bottom:none; }
+  }
+
+  /* Chips: square, quiet, colour only in the swatch. Hover inverts. */
+  .legend{ gap:6px; }
+  .legend button{
+    border-radius:0; background:transparent; border-color:var(--rule);
+    font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:5px 9px; gap:6px;
+  }
+  .legend button:hover{ background:var(--ochre); border-color:var(--ochre); color:var(--bg); }
+  .legend button .sw{ width:7px; height:7px; border-radius:0; }
+  .legend button.off{ opacity:1; border-color:var(--rule); color:var(--empty); }
+  .legend button.off .sw{ background:var(--empty) !important; }
+  #groceryChip .sw{ border-radius:50%; }
+
+  /* Sidebar: tabs left-aligned on the rule, not two stretched halves. */
+  .tabs{ gap:22px; padding:0 18px; }
+  .tabs button{
+    flex:0 0 auto; padding:13px 2px 11px;
+    font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:400;
+  }
+  .tabs button.active{ border-bottom-color:var(--ochre); font-weight:700; }
+
+  /* Panel header: one figure allowed to be huge. */
+  .panel-header{ padding:15px 18px 11px; }
+  .panel-header h2{ font-family:var(--figure); font-stretch:118%; font-weight:800; font-size:18px; }
+  .panel-header .back{
+    font-family:var(--mono); color:var(--dim); font-size:10px;
+    letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .panel-header .back:hover{ color:var(--ink); }
+  .sr-title{
+    position:absolute; width:1px; height:1px; overflow:hidden;
+    clip-path:inset(50%); white-space:nowrap;
+  }
+  .panel-figure{ display:flex; align-items:flex-end; gap:13px; }
+  .panel-figure .fig{
+    font-family:var(--figure); font-stretch:125%; font-weight:800;
+    font-size:50px; line-height:0.82; letter-spacing:-0.03em;
+    font-variant-numeric:tabular-nums;
+  }
+  .panel-figure .fig-cap{ font-size:14.5px; line-height:1.25; padding-bottom:1px; }
+  .panel-figure .fig-sub{
+    font-family:var(--mono); font-size:9.5px; line-height:1.5;
+    color:var(--dim); margin-top:4px;
+  }
+  .gauge{ border-radius:0; background:transparent; border-color:var(--rule); }
+  .gauge .g-value{ font-family:var(--figure); font-stretch:112%; font-weight:800; font-size:20px; }
+  .gauge .g-value small{ font-family:var(--mono); }
+  .search-input{ border-radius:0; }
+  .search-input:focus{ border-color:var(--ochre); }
+
+  /* ── Rows: three densities ──────────────────────────────
+     The first row of a list is the featured card — bigger, offset like a
+     printed card. Everything after it is a catalogue row: a hairline, a dot
+     leader and the one number that decides everything. */
+  #listings{ padding:10px 18px 22px; }
+  .listing-row{
+    background:transparent; border:none; border-top:1px solid var(--rule);
+    border-radius:0; padding:10px 2px; margin:0; transition:none;
+  }
+  .listing-row:last-child{ border-bottom:1px solid var(--rule); }
+  .listing-row:hover{ background:color-mix(in srgb, var(--card) 60%, var(--panel)); box-shadow:inset 2px 0 0 var(--ochre); }
+  .listing-row.rail-0, .listing-row.rail-1, .listing-row.rail-2, .listing-row.rail-3{ border-left:none; }
+  .listing-row .row-top{ align-items:flex-start; }
+  .row-head{ display:flex; gap:9px; min-width:0; }
+  .row-index{ font-family:var(--mono); font-size:9.5px; color:var(--empty); padding-top:3px; }
+  .listing-row .area-name{
+    font-family:var(--figure); font-stretch:106%; font-weight:700; font-size:14px;
+    display:flex; align-items:baseline; gap:7px;
+    min-width:0; overflow-wrap:anywhere;
+  }
+  .listing-row .area-name::before{
+    content:''; width:6px; height:6px; flex:0 0 6px; background:var(--dim);
+  }
+  .listing-row.rail-0 .area-name::before{ background:var(--teal); }
+  .listing-row.rail-1 .area-name::before{ background:var(--plum); }
+  .listing-row.rail-2 .area-name::before{ background:var(--slate); }
+  .listing-row.rail-3 .area-name::before{ background:var(--clay); }
+  .listing-row .details{ font-size:9.5px; margin-top:5px; line-height:1.5; }
+  .rent{ flex:0 0 auto; text-align:right; white-space:nowrap; }
+  .rent-fig{
+    font-family:var(--figure); font-stretch:106%; font-weight:700; font-size:15px;
+    font-variant-numeric:tabular-nums;
+  }
+  .rent-unit{ display:none; }
+  .leader{
+    display:flex; align-items:baseline; gap:6px; margin-top:6px;
+    font-family:var(--mono); font-size:9.5px; color:var(--dim);
+  }
+  .leader .dots{ flex:1; border-bottom:1px dotted var(--rule); transform:translateY(-3px); }
+  .leader .leader-val{ color:var(--ink); font-weight:700; }
+  .leader .leader-val.soon{ color:var(--ochre); }
+  /* How long this queue is against the 2 000-day span the queue-days slider
+     covers — so "410 days" has something to be long or short *against*. */
+  .qbar{ position:relative; height:2px; background:var(--rule); margin-top:7px; display:none; }
+  .qbar i{ position:absolute; inset:0; background:var(--ochre); }
+  .qbar-cap{
+    position:absolute; right:0; top:5px;
+    font-family:var(--mono); font-size:8px; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--empty);
+  }
+  .listing-row.featured .qbar{ margin-bottom:13px; }
+  .row-facts{ display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; display:none; }
+  .fact{
+    border:1px solid var(--rule); color:var(--dim);
+    font-family:var(--mono); font-size:8.5px; letter-spacing:0.08em; padding:3px 6px;
+  }
+  .listing-row .queue-badge{ display:none; }
+
+  /* The featured card */
+  .listing-row.featured{
+    background:var(--card); border:1px solid var(--border);
+    border-left:5px solid var(--dim);
+    padding:18px 16px 15px; margin-bottom:12px;
+    box-shadow:3px 3px 0 color-mix(in srgb, var(--bg) 72%, transparent);
+    transition:transform .12s, box-shadow .12s, border-color .12s;
+  }
+  .listing-row.featured.rail-0{ border-left-color:var(--teal); }
+  .listing-row.featured.rail-1{ border-left-color:var(--plum); }
+  .listing-row.featured.rail-2{ border-left-color:var(--slate); }
+  .listing-row.featured.rail-3{ border-left-color:var(--clay); }
+  .listing-row.featured:hover{
+    background:var(--card); box-shadow:7px 7px 0 color-mix(in srgb, var(--bg) 72%, transparent);
+    transform:translate(-2px,-2px); border-color:var(--ochre);
+  }
+  .listing-row.featured .area-name{ font-stretch:112%; font-size:20px; line-height:1.15; }
+  .listing-row.featured .area-name::before{ width:0; }
+  .listing-row.featured .details{ font-size:10px; }
+  .listing-row.featured .rent-fig{ font-stretch:112%; font-weight:800; font-size:32px; letter-spacing:-0.02em; }
+  .listing-row.featured .rent-unit{
+    display:block; font-family:var(--mono); font-size:9px; color:var(--dim); margin-top:4px;
+  }
+  .listing-row.featured .leader{ font-size:10px; margin-top:11px; }
+  .listing-row.featured .qbar{ display:block; }
+  .listing-row.featured .row-facts{ display:flex; }
+  .listing-row.featured .row-index{ font-size:10px; }
+
+  /* NEW reads as a stamp pressed onto the card, not a filled tab. */
+  .new-tag{
+    top:-9px; right:10px;
+    background:var(--bg); border:1px solid var(--ochre); color:var(--ochre);
+    font-weight:700; letter-spacing:0.18em; padding:3px 7px;
+    transform:rotate(-5deg);
+  }
+
+  /* Provider: neutral tag, colour only in the square. */
+  .provider-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    background:transparent !important; border:1px solid var(--rule) !important;
+    color:var(--dim) !important;
+    font-size:8.5px; font-weight:400; letter-spacing:0.12em; padding:3px 6px;
+  }
+  .provider-tag::before{ content:''; width:6px; height:6px; background:var(--dim); }
+  .provider-tag.sssb::before, .provider-tag.slot-0::before{ background:var(--teal); }
+  .provider-tag.bf::before, .provider-tag.slot-1::before{ background:var(--plum); }
+  .provider-tag.slot-2::before{ background:var(--slate); }
+  .provider-tag.slot-3::before{ background:var(--clay); }
+  .listing-row:not(.featured) .provider-tag{ display:none; }
+
+  .empty-state{ font-size:11.5px; text-align:left; padding:26px 2px; }
+
+  /* Queues tab as a printed guide: one loud numeral per card, and the strategy
+     note set apart as an aside rather than a third identical card. */
+  .q-num{
+    font-family:var(--figure); font-stretch:125%; font-weight:800;
+    font-size:28px; line-height:0.85; color:var(--teal);
+  }
+  .q-num.plum{ color:var(--plum); }
+  .queue-card h3{ align-items:baseline; gap:10px; }
+  .queue-card:last-child{
+    background:transparent; border-style:dashed; border-color:var(--border);
+  }
+  .queue-card:last-child h3{
+    font-family:var(--mono); font-stretch:normal; font-weight:400; font-size:9px;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--dim);
+  }
+
+  #queues{ padding:16px 18px; }
+  .queue-card{ border-radius:0; padding:16px; }
+  .queue-card h3{ font-family:var(--figure); font-stretch:112%; font-weight:800; font-size:16px; }
+  .queue-card a{ color:var(--ochre); }
+  .queue-card .covers{ font-size:9px; letter-spacing:0.1em; text-transform:uppercase; }
+
+  /* City picker */
+  .city-card{ border-radius:0; max-width:560px; padding:28px 30px 26px; }
+  .city-card h2{
+    font-family:var(--figure); font-stretch:125%; font-weight:800;
+    font-size:32px; letter-spacing:-0.015em; text-transform:none;
+  }
+  .city-card p{ font-family:var(--display); font-size:13.5px; line-height:1.6; }
+  #cityOptions{ gap:0; border-top:1px solid var(--rule); }
+  .city-option{
+    flex-direction:row; align-items:center; justify-content:space-between; gap:16px;
+    background:transparent; border:none; border-bottom:1px solid var(--rule);
+    border-radius:0; padding:15px 4px;
+  }
+  .city-option:hover{ background:var(--card); border-color:var(--rule); }
+  .city-option::after{
+    content:'→'; font-family:var(--mono); font-size:14px; color:var(--ochre);
+  }
+  .city-option .city-name{ font-family:var(--figure); font-stretch:118%; font-weight:800; font-size:21px; }
+  .city-option .city-meta{ font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; margin-top:5px; }
+  .wip-tag{ border-radius:0; background:transparent; border:1px solid var(--ochre); color:var(--ochre); }
+
+  /* Map furniture */
+  .area-roundel{ font-family:var(--figure); font-stretch:112%; font-weight:800; border-width:3px; }
+  .listing-dot.many{ font-family:var(--figure); font-stretch:112%; font-weight:800; }
+  #coverageNote, #sourceAlert{ border-radius:0; }
+  #coverageNote a, #sourceAlert a, #sourceNote a{ color:var(--ochre); }
+  .leaflet-container .leaflet-control-attribution{ border-radius:0; }
+  .leaflet-container .leaflet-control-attribution a{ color:var(--dim); }
+
+  /* Focus rings follow the accent */
+  .links a:focus-visible, #schoolSelect:focus-visible, #advToggle:focus-visible,
+  #advReset:focus-visible, #themeToggle:focus-visible, #langToggle:focus-visible,
+  #cityBtn:focus-visible, .city-option:focus-visible, .stats-toggle:focus-visible{
+    outline-color:var(--ochre);
+  }
+
+
+  /* Map furniture from the mock: square zoom buttons, a metric scale bar, and a
+     rule that closes the list instead of it just stopping. */
+  .map-col{ position:relative; }
+  .leaflet-touch .leaflet-bar, .leaflet-bar{
+    border:1px solid var(--border); border-radius:0; box-shadow:none;
+  }
+  .leaflet-bar a, .leaflet-bar a:hover{
+    width:28px; height:28px; line-height:28px;
+    background:var(--bg); color:var(--ink);
+    border-bottom:1px solid var(--border); border-radius:0 !important;
+    font-family:var(--mono); font-weight:400;
+  }
+  .leaflet-bar a:hover{ background:var(--card); }
+  .leaflet-bar a:last-child{ border-bottom:none; }
+  .leaflet-control-scale-line{
+    border:1px solid var(--dim); border-top:none; border-radius:0;
+    background:transparent; color:var(--dim);
+    font-family:var(--mono); font-size:9px;
+  }
+
+  /* Stop dots carry no stroke at all — the disc is the line's colour. */
+  .metro-stop{ stroke:none; }
+
+  /* Station names read as map lettering: no bubble, no arrow, just tracked mono
+     with a halo from the page background so it stays legible over tiles. */
+  .leaflet-tooltip.stop-label{
+    background:transparent; border:none; box-shadow:none; padding:0;
+    font-family:var(--mono); font-size:9px; font-weight:500;
+    letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink); white-space:nowrap;
+    text-shadow:0 0 3px var(--bg), 0 0 3px var(--bg), 0 0 6px var(--bg);
+  }
+  .leaflet-tooltip.stop-label::before{ display:none; }
+
+  .open-hint{
+    font-family:var(--mono); font-size:9.5px; line-height:1.45;
+    color:var(--ochre); margin-top:7px;
+  }
+  .list-end{
+    display:flex; align-items:center; gap:10px; margin-top:14px;
+    font-family:var(--mono); font-size:9px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--empty);
+  }
+  .list-end::before, .list-end::after{
+    content:''; flex:1; border-top:1px dotted var(--rule);
+  }
+
   /* ── Phones ──────────────────────────────────────────────
      Everything mobile lives in this one block, at the end of the sheet, so the
      desktop layout above is reached by exactly the rules it always was — a real
@@ -887,6 +1279,19 @@
     /* Comfortable touch targets. The desktop sizes are mouse-sized. */
     .legend button{padding:7px 12px;}
     #advToggle{width:36px;height:36px;}
+
+    /* The desk's hairline cells only make sense as a single row; stacked in two
+       columns they draw rules to nowhere. */
+    #filterBar .control{border-right:none;padding:0;}
+    #filterBar .control-wide{flex-direction:column;align-items:flex-start;gap:7px;border-top:none;padding:0;}
+    #filterBar .control-wide label{min-width:0;}
+    header{padding:12px 14px 0;}
+    .brand h1{font-size:21px;}
+    #meta{padding-bottom:10px;}
+    #browseAllBtn, #refreshBtn{margin-bottom:8px;}
+    .panel-figure .fig{font-size:42px;}
+    .listing-row.featured{padding:15px 14px 13px;}
+    .listing-row.featured .rent-fig{font-size:27px;}
   }
 </style>
 </head>
@@ -1016,7 +1421,7 @@
     </div>
 
     <div class="control">
-      <label data-i18n="max_commute">Max commute</label>
+      <label data-i18n="max_commute" title="Routed cycling time from the area to the campus above">Max commute (bike)</label>
       <div class="slider-row">
         <input type="range" id="maxCommute" min="5" max="90" value="45" step="5">
         <span id="maxCommuteLabel">45 min</span>
@@ -1044,9 +1449,12 @@
       <button id="advToggle" aria-expanded="false" aria-controls="advFilters"
               aria-label="More filters — size, floor and contract length"
               title="More filters: size, floor and contract length" data-i18n-title="more_filters_t">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="3.2"/>
-          <path d="M12 2.6v3.1M12 18.3v3.1M4.3 7.1l2.7 1.55M17 15.35l2.7 1.55M4.3 16.9l2.7-1.55M17 8.65l2.7-1.55" stroke-linecap="round"/>
+        <!-- Gear outline built from 8 teeth at r=10.6/7.4, rather than the eight
+             loose spokes this used to draw — which read as a sun, not a cog. -->
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true">
+          <path d="M13.41 4.74 L14.38 1.67 L17.62 3.01 L16.14 5.87 L18.13 7.86 L20.99 6.38 L22.33 9.62 L19.26 10.59 L19.26 13.41 L22.33 14.38 L20.99 17.62 L18.13 16.14 L16.14 18.13 L17.62 20.99 L14.38 22.33 L13.41 19.26 L10.59 19.26 L9.62 22.33 L6.38 20.99 L7.86 18.13 L5.87 16.14 L3.01 17.62 L1.67 14.38 L4.74 13.41 L4.74 10.59 L1.67 9.62 L3.01 6.38 L5.87 7.86 L7.86 5.87 L6.38 3.01 L9.62 1.67 L10.59 4.74 Z"/>
+          <circle cx="12" cy="12" r="3.1"/>
         </svg>
         <span class="adv-count" id="advCount" hidden></span>
       </button>
@@ -1112,6 +1520,7 @@
     </div>
 
     <div id="map"></div>
+
   </div>
 
   <div id="sidebar">
@@ -1129,14 +1538,14 @@
     <div id="queues">
       <div id="coverageNote" hidden></div>
       <div class="queue-card">
-        <h3 data-i18n="q_sssb_h"><span class="provider-tag sssb" style="margin:0;">SSSB</span> SSSB queue</h3>
+        <h3 data-i18n="q_sssb_h"><span class="q-num">1</span> SSSB queue</h3>
         <div class="covers" data-i18n="q_sssb_c">Covers: all SSSB areas (Lappkärrsberget, Jerum, Kungshamra, …)</div>
         <p data-i18n="q_p1">Register at <a href="https://sssb.se" target="_blank">sssb.se</a>. You collect one queue day per day, and listings go to whoever applies with the most queue days — that's the number this dashboard sorts by.</p>
         <p data-i18n="q_p2">To actually sign a contract you need to be a member of an SSCO-affiliated student union (or if you aren't registered for classes, an admissions letter works as well) and meet their study-pace requirements — check their current rules on the site.</p>
         <p data-i18n="q_p3" class="kv"><b>Do this first:</b> registering is quick and days only start counting from when you register, so every week earlier is a week higher in every future queue. You can collect a maximum of 90 days before registering with a student union (class registration required).</p>
       </div>
       <div class="queue-card">
-        <h3 data-i18n="q_bf_h"><span class="provider-tag bf" style="margin:0;">BOSTADSFÖRM.</span> Bostadsförmedlingen (bostad.stockholm.se)</h3>
+        <h3 data-i18n="q_bf_h"><span class="q-num plum">2</span> Bostadsförmedlingen</h3>
         <div class="covers" data-i18n="q_bf_c">Covers: Svenska Bostäder student apartments + other landlords' student housing across Stockholm</div>
         <p data-i18n="q_p4">This is Stockholm's city housing agency — Svenska Bostäder doesn't run its own student queue, their listings are advertised here. Register at <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; there's a yearly queue fee, and offers go by queue time.</p>
         <p data-i18n="q_p5">Student listings here often have much shorter effective queues than regular apartments — and unlike SSSB there's no student-union requirement to register, though student listings require you to be studying when you sign.</p>
@@ -1167,7 +1576,7 @@ const I18N = { sv: {
   all_listings: 'Alla bostäder',
   refresh: 'Uppdatera',
   campus: 'Campus',
-  max_commute: 'Max restid',
+  max_commute: 'Max restid (cykel)',
   max_queue: 'Max ködagar',
   max_rent: 'Max hyra',
   more_filters: 'Fler filter',
@@ -1184,12 +1593,12 @@ const I18N = { sv: {
   tab_listings: 'BOSTÄDER',
   tab_queues: 'KÖER ATT GÅ MED I',
 
-  q_sssb_h: '<span class="provider-tag sssb" style="margin:0;">SSSB</span> SSSB-kön',
+  q_sssb_h: '<span class="q-num">1</span> SSSB-kön',
   q_sssb_c: 'Omfattar: alla SSSB-områden (Lappkärrsberget, Jerum, Kungshamra, …)',
   q_p1: 'Registrera dig på <a href="https://sssb.se" target="_blank">sssb.se</a>. Du samlar en ködag per dag, och bostäderna går till den som söker med flest ködagar — det är siffran den här sidan sorterar efter.',
   q_p2: 'För att faktiskt skriva kontrakt måste du vara medlem i en studentkår ansluten till SSCO (eller, om du inte är registrerad på kurser, ha ett antagningsbesked) och uppfylla deras krav på studietakt — kolla deras aktuella regler på sajten.',
   q_p3: '<b>Gör det här först:</b> att registrera sig går snabbt, och ködagarna börjar räknas först när du registrerar dig — varje vecka tidigare är en vecka högre i varje framtida kö. Du kan samla högst 90 dagar innan du måste bli medlem i en studentkår (kräver kursregistrering).',
-  q_bf_h: '<span class="provider-tag bf" style="margin:0;">BOSTADSFÖRM.</span> Bostadsförmedlingen (bostad.stockholm.se)',
+  q_bf_h: '<span class="q-num plum">2</span> Bostadsförmedlingen',
   q_bf_c: 'Omfattar: Svenska Bostäders studentlägenheter + andra hyresvärdars studentbostäder i Stockholm',
   q_p4: 'Det här är Stockholms stads bostadsförmedling — Svenska Bostäder har ingen egen studentkö, deras bostäder annonseras här. Registrera dig på <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; det finns en årlig köavgift, och erbjudanden går efter kötid.',
   q_p5: 'Studentbostäderna här har ofta betydligt kortare faktisk kö än vanliga lägenheter — och till skillnad från SSSB krävs inget kårmedlemskap för att registrera sig, även om du måste studera när du skriver på.',
@@ -1198,6 +1607,18 @@ const I18N = { sv: {
   q_p7: 'Gå med i båda köerna så fort som möjligt, långt innan du ska flytta — de är oberoende av varandra och båda belönar tidig registrering. Använd SSSB-ködagarna till områdena närmast de flesta campus (Lappkärrsberget, Jerum och Kungshamra är de klassiska förstaårsvalen), och se Bostadsförmedlingen som en bra reservplan, eftersom de erbjudandena i snitt är dyrare.',
 
   // written by JS rather than sitting in the HTML
+  apply_before: 'sök senast',
+  by_bike_s: 'med cykel',
+  qbar_of: 'på den 0–2 000-dagarsskala som ködagsfiltret använder',
+  qbar_cap: 'av 2 000 d',
+  by_transit_s: 'med kollektivtrafik',
+  open_hint: 'Klicka på kortet — eller på nålen igen — för att öppna hos hyresvärden',
+  map_legend_h: 'Så läser du kartan',
+  legend_roundel: 'Ring = område, storlek = antal, färg = tunnelbanelinje',
+  legend_pin: 'Enskild nål = annons hos Bostadsförmedlingen',
+  legend_empty: '× = inget som matchar just nu',
+  list_end: 'slut på listan',
+  per_month_unit: 'kr / mån',
   any: 'Alla',
   dark: 'Mörkt',
   light: 'Ljust',
@@ -1357,7 +1778,18 @@ const LINE_COLORS = { North: 'var(--slate)', South: 'var(--clay)', City: 'var(--
 // it never swallows a click meant for an area roundel underneath).
 // Segments are ordered station coordinate runs; branches are separate runs.
 const METRO_LINES = [
-  { name: 'Green line (T17–T19)', color: '#179C4A', segments: [
+  // `stops` runs parallel to `segments`: one name per coordinate, in the same
+  // order, and null where this file's hand-entered coordinate doesn't sit close
+  // enough to a station for the name to be safe to print. Labels only appear
+  // from STOP_LABEL_ZOOM in, and a name is only drawn once even where three
+  // lines share the platform.
+  { name: 'Green line (T17–T19)', color: '#179C4A', stops: [
+    ['Alvik','Kristineberg','Thorildsplan','Fridhemsplan','S:t Eriksplan','Odenplan',
+     'Rådmansgatan','Hötorget','T-Centralen','Gamla stan','Slussen','Medborgarplatsen',
+     'Skanstull','Gullmarsplan','Skärmarbrink','Blåsut','Sandsborg','Skogskyrkogården'],
+    ['Skärmarbrink','Hammarbyhöjden','Björkhagen','Kärrtorp'],
+    ['Gullmarsplan','Globen','Enskede gård','Sockenplan'],
+  ], segments: [
     [ // trunk: Alvik → city → Skärmarbrink → Farsta direction
       [59.33345,17.98014],[59.33290,18.00301],[59.33130,18.01540],[59.33220,18.02910],
       [59.33950,18.03690],[59.34280,18.04960],[59.34070,18.05920],[59.33550,18.06350],
@@ -1372,7 +1804,13 @@ const METRO_LINES = [
       [59.29900,18.08050],[59.29390,18.07680],[59.28930,18.07200],[59.28390,18.06840],
     ],
   ]},
-  { name: 'Red line (T13–T14)', color: '#D71D24', segments: [
+  { name: 'Red line (T13–T14)', color: '#D71D24', stops: [
+    ['Mörby centrum','Danderyds sjukhus','Bergshamra','Universitetet','Tekniska högskolan',
+     'Stadion','Östermalmstorg','T-Centralen','Gamla stan','Slussen','Mariatorget',
+     'Zinkensdamm','Hornstull','Liljeholmen','Midsommarkransen','Telefonplan'],
+    ['Östermalmstorg','Karlaplan','Gärdet','Ropsten'],
+    ['Liljeholmen','Aspudden','Örnsberg'],
+  ], segments: [
     [ // Mörby centrum → city → Fruängen direction
       [59.39860,18.03650],[59.39230,18.04160],[59.38120,18.03690],[59.36540,18.05480],
       [59.34590,18.07160],[59.34280,18.08210],[59.33520,18.07450],[59.33130,18.05930],
@@ -1386,7 +1824,10 @@ const METRO_LINES = [
       [59.31030,18.02270],[59.30650,18.00990],[59.30530,17.99920],
     ],
   ]},
-  { name: 'Blue line (T10–T11)', color: '#0080C8', segments: [
+  { name: 'Blue line (T10–T11)', color: '#0080C8', stops: [
+    ['Kungsträdgården','T-Centralen','Rådhuset','Fridhemsplan','Stadshagen','Västra skogen',null,null],
+    ['Västra skogen',null,'Solna strand'],
+  ], segments: [
     [ // Kungsträdgården → Västra skogen → Akalla direction
       [59.33070,18.06850],[59.33130,18.05930],[59.33000,18.04200],[59.33220,18.02910],
       [59.33720,18.01580],[59.34750,18.00370],[59.36170,17.99860],[59.37060,17.99900],
@@ -1816,12 +2257,75 @@ let transitLayer = null;
 // put a tunnelbana through a city that hasn't got one.
 function drawTransitOverlay(){
   if (transitLayer) { leafletMap.removeLayer(transitLayer); transitLayer = null; }
+  if (stopDotLayer) { leafletMap.removeLayer(stopDotLayer); stopDotLayer = null; }
   if (!currentData || overlayFor(currentData) !== 'stockholm-metro') return;
+  // Mitred joins and butt caps rather than rounded ones: the same coordinates
+  // read as a drawn diagram instead of a soft trace, which is what a transit
+  // line is. Every vertex in a segment is a real station, so each one gets a
+  // stop dot — the ring colour comes from CSS (.metro-stop) so a theme flip
+  // repaints them without redrawing the layer.
   transitLayer = L.layerGroup(METRO_LINES.flatMap(line =>
     line.segments.map(seg => L.polyline(seg, {
-      color: line.color, weight: 3, opacity: 0.55, interactive: false,
-      lineJoin: 'round', lineCap: 'round',
+      color: line.color, weight: 4, opacity: 0.62, interactive: false,
+      lineJoin: 'miter', lineCap: 'butt',
     })))).addTo(leafletMap);
+  // One solid disc per stop, in its own line's SL colour and nothing else — no
+  // ring, since on the dark theme a background-coloured ring just reads as a
+  // black outline. Their own layer, since they come and go with zoom while the
+  // lines stay put.
+  stopDotLayer = L.layerGroup(METRO_LINES.flatMap(line =>
+    line.segments.flatMap(seg => seg.map(coord => L.circleMarker(coord, {
+      className: 'metro-stop', fillColor: line.color, fillOpacity: 1,
+      radius: 4.5, stroke: false, interactive: false,
+    })))));
+  buildStopLabels();
+  syncStopLabels();
+}
+
+// Station names, drawn as text only — no marker under them. At city zoom they'd
+// bury the area roundels, which are the point of the map, so they wait until
+// you're looking at a neighbourhood.
+const STOP_LABEL_ZOOM = 15;
+// The dots themselves are quieter than the names, so they come in two levels
+// earlier — but still not at city zoom, where 60 of them read as noise over the
+// area roundels.
+const STOP_DOT_ZOOM = 13;
+let stopLabelLayer = null;
+let stopDotLayer = null;
+
+function buildStopLabels(){
+  if (stopLabelLayer) { leafletMap.removeLayer(stopLabelLayer); stopLabelLayer = null; }
+  // Built alongside the dots in drawTransitOverlay; a city without a metro
+  // overlay gets neither.
+  if (!currentData || overlayFor(currentData) !== 'stockholm-metro') return;
+  const seen = new Set();
+  const markers = [];
+  METRO_LINES.forEach(line => (line.segments || []).forEach((seg, si) => {
+    const names = (line.stops || [])[si] || [];
+    seg.forEach((coord, ci) => {
+      const name = names[ci];
+      if (!name || seen.has(name)) return;
+      seen.add(name);
+      markers.push(
+        L.marker(coord, { icon: L.divIcon({ className: 'stop-anchor', iconSize: [0, 0] }), interactive: false, keyboard: false })
+          .bindTooltip(name, { permanent: true, direction: 'right', className: 'stop-label', offset: [3, 0] })
+      );
+    });
+  }));
+  stopLabelLayer = L.layerGroup(markers);
+}
+
+function syncStopLabels(){
+  toggleByZoom(stopLabelLayer, STOP_LABEL_ZOOM);
+  toggleByZoom(stopDotLayer, STOP_DOT_ZOOM);
+}
+
+function toggleByZoom(layer, minZoom){
+  if (!layer) return;
+  const wanted = leafletMap.getZoom() >= minZoom;
+  const on = leafletMap.hasLayer(layer);
+  if (wanted && !on) layer.addTo(leafletMap);
+  else if (!wanted && on) leafletMap.removeLayer(layer);
 }
 
 function applyProviderChrome(){
@@ -1960,11 +2464,15 @@ function applyDataSourceChrome(){
   }
 }
 
+// The bike time, deliberately — one mode, stated on the slider's own label
+// ("Max commute (bike)"), rather than silently switching to transit minutes on
+// whichever machine happened to have a Resrobot key. Transit times are still
+// scraped and still shown in the area gauges, labelled as transit.
 function commuteMinutes(obj){
   const m = schoolMetrics(obj);
   if (!m) return Infinity;
-  if (typeof m.transit_min === 'number') return m.transit_min;
   if (typeof m.bike_min === 'number') return m.bike_min;
+  if (typeof m.transit_min === 'number') return m.transit_min;
   return Infinity;
 }
 
@@ -2155,6 +2663,8 @@ function initMap(){
   // line Leaflet's default blue. Scoping it keeps both: hundreds of dots in one
   // canvas element, polylines still styleable from CSS.
   groceryRenderer = L.canvas({ padding: 0.5 });
+  // Metric only — this is a Swedish tool, and the mock's map carried a scale.
+  L.control.scale({ imperial: false, metric: true, position: 'bottomright' }).addTo(leafletMap);
   // CARTO started requiring a key for raster basemap tiles and retiring
   // anonymous access — an unkeyed request now gets a tile with "API KEY
   // REQUIRED" burned into the image instead of the map. Not a secret: it's
@@ -2183,6 +2693,7 @@ function initMap(){
   // Dots are only drawn from GROCERY_MIN_ZOOM in, so the layer has to be
   // reconsidered when the zoom crosses that line.
   leafletMap.on('zoomend', syncGroceryLayer);
+  leafletMap.on('zoomend', syncStopLabels);
 
   // Crossing AREA_SPLIT_ZOOM changes which areas are roundels and which are
   // per-building dots. Compare the set first: a zoom that doesn't change it
@@ -2387,7 +2898,10 @@ function renderMap(){
           // sidebar is already showing them all and a click would have to pick.
           // Selects rather than opening the site directly — same reasoning as
           // the pin-based marker below.
-          if (!many && rows[0].url) marker.on('click', () => selectListing(rows[0].id));
+          if (!many) marker.on('click', () => {
+            if (rows[0].url && selectedListingId === rows[0].id) window.open(rows[0].url, '_blank');
+            else selectListing(rows[0].id);
+          });
           markers.push(marker);
         });
         return;
@@ -2425,7 +2939,18 @@ function renderMap(){
     // already does that for any row with a url) — so this adds one look
     // before the click that leaves the dashboard, it doesn't remove the
     // one-click-through that every other row already offers.
-    if (l.url) marker.on('click', () => selectListing(l.id));
+    // Two presses, deliberately: the first selects the ad and opens its card in
+    // the listings panel, the second leaves for the landlord's site. Going
+    // straight out on one click meant you could never just *look* at a pin.
+    //
+    // The handler is bound whether or not the ad carries a URL — it used to be
+    // `if (l.url)`, which meant an ad with no link (every ad in the example
+    // data, and any real one whose link didn't resolve) was simply unclickable:
+    // the pin was there, and pressing it did nothing at all.
+    marker.on('click', () => {
+      if (l.url && selectedListingId === l.id) window.open(l.url, '_blank');
+      else selectListing(l.id);
+    });
     markers.push(marker);
   });
 }
@@ -2478,6 +3003,18 @@ function clearSelection(){
 function selectListing(id){
   selectedListingId = id;
   selectedArea = null;
+  // Both of these render *instead of* the selected card, so a pin press while
+  // either was up looked like nothing happened.
+  if (browseAll) {
+    browseAll = false;
+    document.getElementById('browseAllBtn').classList.remove('active');
+    searchQuery = '';
+  }
+  if (currentTab !== 'listings') {
+    currentTab = 'listings';
+    document.getElementById('tabListings').classList.add('active');
+    document.getElementById('tabQueues').classList.remove('active');
+  }
   browseAll = false;
   document.getElementById('browseAllBtn').classList.remove('active');
   switchTab('listings');
@@ -2608,11 +3145,13 @@ function newTagTitle(l){
     : `First seen ${ago} — listings stay marked NEW for ${hours}h`;
 }
 
-function rowHtml(l, newIds){
+function rowHtml(l, newIds, index = 0, featured = false){
   const commuteRef = currentData.areas[l.area] || l;
   const cm = schoolMetrics(commuteRef);
-  const commute = !cm ? ''
-    : (typeof cm.transit_min === 'number' ? cm.transit_min + ' min transit' : bikeLabel(cm));
+  // Always the bike figure: it's what the Max commute slider filters on and
+  // what exists for every area, routed or estimated. A real transit time still
+  // shows in the area's gauges, where it's labelled as transit.
+  const commute = cm && typeof cm.bike_min === 'number' ? bikeLabel(cm) : '';
   const areaRow = isAreaProvider(l.provider);
   const title = areaRow ? l.area : (l.address || l.area);
   // BF ads lead with their area (their title is the street address); SSSB rows
@@ -2637,16 +3176,39 @@ function rowHtml(l, newIds){
   const near = areaRow && !selectedArea && commuteRef && commuteRef.nearest_grocery;
   if (near) extras.push(`${near.chain} ${near.distance_m >= 1000
     ? (near.distance_m / 1000).toFixed(1) + ' km' : near.distance_m + ' m'}${t('away', ' away')}`);
+  // The provider's colour slot, reused as the card's left rail so provider
+  // identity costs one hairline instead of a tinted pill.
+  const tag = providerTag(l);
+  const slot = (tag.match(/slot-(\d)/) || [])[1];
+  // Queue days for SSSB, an application deadline for BF — whichever the source
+  // publishes is the one figure the row hangs its dot leader on.
+  const hasQueue = typeof l.queue_days === 'number';
+  const leaderLabel = hasQueue ? t('queue_days_f', 'queue days')
+    : (l.deadline ? t('apply_before', 'apply before') : null);
+  // 2000 days is where the queue-days slider tops out, so the same scale the
+  // filter uses is the scale the bar draws against.
+  const pct = hasQueue ? Math.min(100, Math.round(l.queue_days / 20)) : 0;
+  // badgeFor() writes its own preamble ("apply by 16 Sep"), which read as
+  // "apply before … apply by 16 Sep" once the row had a label of its own.
+  const leaderValue = hasQueue ? badgeFor(l)
+    : badgeFor(l).replace(/^(apply by|sök senast)\s*/i, '');
   return `
-    <div class="listing-row" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
+    <div class="listing-row${featured ? ' featured' : ''}${slot ? ' rail-' + slot : ''}" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
       ${newIds.has(l.id) ? `<span class="new-tag" title="${newTagTitle(l)}">${t('new_badge', 'NEW')}</span>` : ''}
       <div class="row-top">
-        <span class="area-name">${title}</span>
-        <span class="queue-badge">${badgeFor(l)}</span>
+        <div class="row-head">
+          <span class="row-index">${String(index + 1).padStart(2, '0')}</span>
+          <div>
+            <div class="area-name">${title}</div>
+            <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${commute}</div>
+          </div>
+        </div>
+        ${l.rent_sek ? `<div class="rent"><div class="rent-fig">${num(l.rent_sek)}</div><div class="rent-unit">${t('per_month_unit', 'kr / month')}</div></div>` : ''}
       </div>
-      <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${l.rent_sek ? num(l.rent_sek) + t('per_month', ' kr/mo · ') : ''}${commute}</div>
-      ${extras.length ? `<div class="details">${extras.join(' · ')}</div>` : ''}
-      ${providerTag(l)}
+      ${leaderLabel ? `<div class="leader"><span>${leaderLabel}</span><span class="dots"></span><span class="leader-val${hasQueue ? '' : ' soon'}">${leaderValue}</span></div>` : ''}
+      ${hasQueue ? `<div class="qbar" title="${num(l.queue_days)} ${t('queue_days_f', 'queue days')} ${t('qbar_of', 'on the 0–2 000 day scale the queue-days filter uses')}"><i style="width:${pct}%"></i><span class="qbar-cap">${t('qbar_cap', 'of 2 000 d')}</span></div>` : ''}
+      ${extras.length ? `<div class="row-facts">${extras.map(e => `<span class="fact">${e}</span>`).join('')}</div>` : ''}
+      ${tag}
     </div>
   `;
 }
@@ -2699,7 +3261,7 @@ function renderBrowseList(){
     list.innerHTML = `<div class="empty-state">${t('no_match', 'No listings match')} "${searchQuery}".</div>`;
     return;
   }
-  list.innerHTML = rows.map(l => rowHtml(l, newIds)).join('');
+  list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('');
 }
 
 function renderSidebar(){
@@ -2747,6 +3309,7 @@ function renderSidebar(){
     header.innerHTML = `
       <button class="back" onclick="clearListingSelection()">${t('back_all', '← All listings')}</button>
       <h2 id="panelTitle">${pickedListing.address || pickedListing.area}</h2>
+      ${pickedListing.url ? `<div class="open-hint">${t('open_hint', 'Click the card — or the pin again — to open it at the landlord')}</div>` : ''}
       ${statsBlock(commuteRef)}
     `;
     rows = [pickedListing];
@@ -2766,9 +3329,10 @@ function renderSidebar(){
         && visibleAreas.has(l.area) && passesFilters(l))
       || pinVisible.has(l.id)
     );
+    const mode = t('by_bike_s', 'by bike');
     const bits = [lang === 'sv'
-      ? t('within', '').replace('{n}', maxCommuteMin).replace('{s}', selectedSchool)
-      : `within ${maxCommuteMin} min of ${selectedSchool}`];
+      ? t('within', '').replace('{n}', maxCommuteMin).replace('{s}', selectedSchool) + ' ' + mode
+      : `within ${maxCommuteMin} min of ${selectedSchool} ${mode}`];
     if (maxQueueDays !== null) bits.push(`≤${num(maxQueueDays)} ${t('queue_days_f', 'queue days')}`);
     if (maxRentSek !== null) bits.push(`≤${num(maxRentSek)} kr`);
     if (minSizeSqm !== null) bits.push(`≥${minSizeSqm} m²`);
@@ -2777,7 +3341,19 @@ function renderSidebar(){
     else if (maxFloor !== null) bits.push(`floor ≤${floorLabel(maxFloor)}`);
     if (minYears !== null) bits.push(`${minYears}+ år contract`);
     bits.push(sortNote());
-    header.innerHTML = `<h2 id="panelTitle">${t('all_available', 'All available listings')}</h2><div style="font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:4px;">${bits.join(' · ')}</div>`;
+    // The number of listings that survived the filters is the most useful
+    // thing on the panel, so it is the only thing set large.
+    header.innerHTML = `
+      <h2 id="panelTitle" class="sr-title">${t('all_available', 'All available listings')}</h2>
+      <div class="panel-figure">
+        <span class="fig">${rows.length}</span>
+        <div>
+          <div class="fig-cap">${lang === 'sv'
+            ? `av ${currentData.listings.length} matchar`
+            : `of ${currentData.listings.length} pass your filters`}</div>
+          <div class="fig-sub">${bits.join(' · ')}</div>
+        </div>
+      </div>`;
   }
 
   rows = sortListings(rows);
@@ -2797,7 +3373,10 @@ function renderSidebar(){
     return;
   }
 
-  list.innerHTML = rows.map(l => rowHtml(l, newIds)).join('');
+  // One card carries the answer; the rest are catalogue rows. A single-listing
+  // view is that one card, so it gets the featured treatment too.
+  list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('')
+    + (rows.length > 2 ? `<div class="list-end">${rows.length} ${t('list_end', 'shown · end of list')}</div>` : '');
 }
 
 function switchTab(tab){
@@ -2811,8 +3390,10 @@ function switchTab(tab){
 document.getElementById('maxCommute').addEventListener('input', (e) => {
   maxCommuteMin = Number(e.target.value);
   document.getElementById('maxCommuteLabel').textContent = maxCommuteMin + ' min';
+  paintTrack(e.target, false);
   render();
 });
+paintTrack(document.getElementById('maxCommute'), false);
 // A real pointer/keyboard interaction, as opposed to the synthetic `input`
 // event applyCityChrome() dispatches when it applies a city's own default.
 ['pointerdown', 'keydown'].forEach(ev =>
@@ -2821,6 +3402,17 @@ document.getElementById('maxCommute').addEventListener('input', (e) => {
 // All of these treat one end of the slider as "no limit" rather than a
 // literal bound, so nothing is hidden until you actually pull one in: for a
 // max filter that's the top end, for a min filter the bottom.
+// The filled part of a range track can't be styled in WebKit, so the fill is a
+// background layer sized from the value. A parked slider (hiding nothing) drops
+// the fill entirely and goes dashed — "no limit" should not look like a limit
+// that happens to sit at the end.
+function paintTrack(input, parked){
+  const min = Number(input.min), max = Number(input.max);
+  const pct = max === min ? 0 : ((Number(input.value) - min) / (max - min)) * 100;
+  input.style.setProperty('--fill', pct.toFixed(1) + '%');
+  input.classList.toggle('parked', !!parked);
+}
+
 function bindLimitSlider(inputId, labelId, opts){
   const { kind, format, set } = opts;
   const input = document.getElementById(inputId);
@@ -2832,6 +3424,7 @@ function bindLimitSlider(inputId, labelId, opts){
     set(unlimited ? null : raw);
     label.textContent = unlimited ? t('any', 'Any') : format(raw);
     label.classList.toggle('any', unlimited);
+    paintTrack(input, unlimited);
   };
   input.addEventListener('input', () => { apply(); refreshAdvBadge(); render(); });
   return { input, apply };
