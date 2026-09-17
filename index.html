@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nästet — student housing in Sweden</title>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTYuNSAyOS41QzcgNDIuNSAxNi41IDUxLjUgMzIgNTEuNVM1NyA0Mi41IDU3LjUgMjkuNSIgc3Ryb2tlLXdpZHRoPSIzLjQiLz48cGF0aCBkPSJNMTAgMjYuNUMxMiAzNy41IDIwIDQ1LjUgMzEuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48cGF0aCBkPSJNNTQgMjYuNUM1MiAzNy41IDQ0IDQ1LjUgMzIuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48L2c+PHBhdGggZD0iTTEzLjggMjMuNGM0LjQtMSA2LjUtMiA5LTQuNSA0LTQgOS40LTcuNCAxNS02LjEgNS4yIDEuMiA4LjYgNS4yIDguNyAxMCAuMSA1LjgtMy4yIDExLTguNyAxMy02IDIuMi0xMy42LjgtMTguMS0yLjgtMi44LTIuMi00LjktNS45LTUuOS05LjZ6IiBmaWxsPSIjNUM4QUI4Ii8+PHBhdGggZD0iTTQ2LjQgMTkuOSA1My42IDIzIDQ2LjcgMjYuMVoiIGZpbGw9IiNGNEIyM0MiLz48cGF0aCBkPSJNMzQuOCAyMS40YzEtMS45IDMuNy0xLjkgNC44IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLXdpZHRoPSIxLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMC44IDI5LjljNC4zIDQuNCAxMS43IDUuMSAxNy42IDEuNC0zLjIgNi0xMi41IDYuNC0xNy42LTEuNHoiIGZpbGw9IiNmZmYiLz48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTggMzIuNUMxNiA0MS41IDI0IDQ2IDM0LjUgNDYiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTU2IDMyLjVDNDggNDEuNSA0MCA0NiAyOS41IDQ2IiBzdHJva2Utd2lkdGg9IjIuNiIvPjxwYXRoIGQ9Ik0xMS41IDI5LjVDMTkgMzUuNSAyNi41IDM4LjggMzUgMzkuMyIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNNTIuNSAzMEM0NS41IDM2IDM4IDM5LjMgMjkuNSAzOS42IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNCA0My41QzI0IDQ3LjUgMzQgNDguMyA0NiA0NS41IiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+" />
+<!-- Both of these exist for the watch. iOS exposes no Notification API to a page
+     in a Safari tab — it appears only once a site has been added to the Home
+     Screen, and a manifest with display:standalone is what makes the site
+     installable as a web app rather than a bookmark. The apple-touch-icon is
+     what iOS puts on the Home Screen; without one it screenshots the page. -->
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon-180.png" />
+<meta name="apple-mobile-web-app-title" content="Nästet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1275,6 +1283,12 @@
     font:11px/1.5 var(--mono); color:var(--dim);
   }
   #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
+  /* Set apart from the status counts: this one is an instruction, not a number. */
+  #watchPermNote{
+    margin-top:8px; padding:8px 10px; border-left:2px solid var(--ochre);
+    background:color-mix(in srgb, var(--ochre) 8%, transparent);
+    font-size:11.5px; line-height:1.5; color:var(--ink);
+  }
   @media (max-width: 760px), (max-height: 430px) and (max-width: 900px){
     html,body{height:auto;}
     body{display:block; overflow:visible;}
@@ -1621,6 +1635,7 @@
           <p data-i18n="watch_p1">Tell it how many queue days you have <em>today</em> and which areas you'd take. It adds a day per day from now on, and watches for an SSSB place whose queue-day requirement has dropped to meet your count.</p>
           <p data-i18n="watch_p2"><b>You have to leave this page open</b> — in a pinned or background tab is fine. There's no server behind this site, so a running copy of the page is the only thing that can notice a new listing. Close it and the watch stops.</p>
           <p data-i18n="watch_p3">A match arrives as a browser notification, so your browser will ask permission once. Your settings live in this page's address — bookmark it after you switch the watch on and you can pick the same watch up later, or on your phone.</p>
+          <p data-i18n="watch_p5"><b>On iPhone and iPad</b> a Safari tab can't show notifications at all. Use <em>Share → Add to Home Screen</em>, open Nästet from that icon and switch the watch on there. Even then iOS pauses a web app once you leave it, so treat the phone as somewhere to check the list rather than somewhere alerts reliably arrive — a desktop browser left open is what this is really built for.</p>
           <p data-i18n="watch_p4" class="kv">SSSB only: Bostadsförmedlingen ads are decided by a deadline rather than a queue-day figure, so there's nothing for your running count to be measured against.</p>
           <div class="watch-form">
             <label class="watch-field">
@@ -1642,6 +1657,7 @@
             <button id="watchStop" type="button" hidden data-i18n="watch_stop">Stop watching</button>
           </div>
           <div id="watchStatus" hidden></div>
+          <div id="watchPermNote" hidden></div>
         </div>
       </div>
       <div class="panel-header" id="panelHeader">
@@ -1747,6 +1763,10 @@ const I18N = { sv: {
   watch_p2: '<b>Du måste låta sidan vara öppen</b> — en fastnålad flik eller en flik i bakgrunden räcker. Det finns ingen server bakom den här sidan, så det enda som kan upptäcka en ny bostad är en sida som faktiskt körs. Stänger du den slutar bevakningen.',
   watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Dina inställningar ligger i sidans adress — spara den som bokmärke när du slagit på bevakningen, så kan du plocka upp samma bevakning senare, eller i mobilen.',
   watch_p4: 'Bara SSSB: annonserna hos Bostadsförmedlingen avgörs av en sista ansökningsdag i stället för ett antal ködagar, så det finns inget att mäta din uppräkning mot.',
+  watch_p5: '<b>På iPhone och iPad</b> kan en Safari-flik inte visa notiser alls. Använd <em>Dela → Lägg till på hemskärmen</em>, öppna Nästet från den ikonen och slå på bevakningen där. Även då pausar iOS en webbapp när du lämnar den, så se mobilen som ett ställe att kolla listan på snarare än ett ställe dit notiser säkert kommer — en dator med fliken öppen är vad det här egentligen är byggt för.',
+  perm_install: 'Den här webbläsaren visar bara notiser för en installerad app. Använd Dela → Lägg till på hemskärmen, öppna Nästet därifrån och slå på bevakningen igen.',
+  perm_denied: 'Notiser är blockerade för den här sidan — tillåt dem i webbläsarens webbplatsinställningar och slå sedan på bevakningen igen.',
+  perm_default: 'Notiser är avstängda, så träffar syns bara här. Slå på bevakningen igen för att få frågan.',
   watch_days_l: 'Dina ködagar idag',
   watch_rent_l: 'Max hyra (valfritt)',
   watch_areas_l: 'Områden du skulle ta',
@@ -3601,11 +3621,59 @@ function watchList(){
   return (currentData.listings || []).filter(l => watchMatches(watch, l));
 }
 
+// What this browser can do about pop-ups, feature-detected rather than sniffed.
+// 'needs-install' is the case where the Notification API is absent entirely:
+// that is iOS Safari in a tab, where it exists only for a site added to the
+// Home Screen. Telling someone there to "allow notifications" would send them
+// hunting through Settings for a switch that isn't there.
+function notifyState(){
+  if (!('Notification' in window)) return 'needs-install';
+  return Notification.permission;   // granted | denied | default
+}
+
+// Registered only once a watch is actually running — most visitors never set
+// one, and a service worker they'd never use is not worth installing on their
+// device. Safe to call repeatedly; register() resolves to the existing
+// registration if there is one.
+let swReg = null;
+async function ensureServiceWorker(){
+  if (swReg) return swReg;
+  if (!('serviceWorker' in navigator) || !window.isSecureContext) return null;
+  try {
+    swReg = await navigator.serviceWorker.register('sw.js');
+    await navigator.serviceWorker.ready;
+    return swReg;
+  } catch (e) {
+    // file:// or a browser with workers disabled. Matches still show in-panel.
+    return null;
+  }
+}
+
+// Through the service worker wherever there is one. `new Notification()` throws
+// on essentially every mobile browser — Chrome on Android answers "Illegal
+// constructor. Use ServiceWorkerRegistration.showNotification() instead" —
+// because the constructor assumes the page outlives the notification, which is
+// not how phones work. The constructor stays as the fallback for desktop
+// browsers that predate the worker path.
+async function showNote(title, options){
+  const reg = await ensureServiceWorker();
+  if (reg && reg.showNotification) {
+    try { await reg.showNotification(title, options); return true; } catch (e) {}
+  }
+  try {
+    const n = new Notification(title, options);
+    n.onclick = () => { window.focus(); n.close(); };
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function announceMatches(){
   const fresh = watchList().filter(l => !announced.has(l.id));
   fresh.forEach(l => announced.add(l.id));
   if (!fresh.length) return;
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (notifyState() !== 'granted') return;
   const title = fresh.length === 1
     ? t('notif_one', 'A place you could get — ') + fresh[0].area
     : `${fresh.length} ${t('notif_many', 'places you could get right now')}`;
@@ -3614,13 +3682,10 @@ function announceMatches(){
     l.rent_sek != null ? num(l.rent_sek) + ' kr' : null,
     num(l.queue_days) + ' ' + t('queue_days_f', 'queue days'),
   ].filter(Boolean).join(' · ')).join('\n');
-  try {
-    const n = new Notification(title, { body, tag: 'nastet-watch' });
-    n.onclick = () => { window.focus(); n.close(); };
-  } catch (e) {
-    // Some browsers only allow the constructor from a service worker. Nothing
-    // to do about it here, and the panel still shows the matches on screen.
-  }
+  showNote(title, {
+    body, tag: 'nastet-watch', icon: 'icon-192.png', badge: 'icon-192.png',
+    data: { url: location.pathname + location.search + location.hash },
+  });
 }
 
 function renderWatch(){
@@ -3667,7 +3732,11 @@ function renderWatchStatus(){
   stop.hidden = !watch;
   document.getElementById('watchStart').textContent = watch
     ? t('watch_update', 'Update watch') : t('watch_on', 'Turn on notifications');
-  if (!watch) { status.hidden = true; return; }
+  if (!watch) {
+    status.hidden = true;
+    document.getElementById('watchPermNote').hidden = true;
+    return;
+  }
   status.hidden = false;
   const hits = watchList().length;
   const bits = [
@@ -3675,9 +3744,19 @@ function renderWatchStatus(){
     hits === 1 ? `1 ${t('watch_hit_one', 'match right now')}`
                : `${hits} ${t('watch_hit_many', 'matches right now')}`,
   ];
-  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
-  if (perm !== 'granted') bits.push(t('watch_blocked', 'pop-ups are off, so matches will only show here'));
   status.textContent = bits.join(' · ');
+  // Said separately from the counts, and specifically: "pop-ups are off" is no
+  // use to someone on an iPhone hunting Settings for a switch that doesn't
+  // exist in a Safari tab.
+  const note = document.getElementById('watchPermNote');
+  const state = notifyState();
+  const msg = {
+    'needs-install': t('perm_install', 'This browser only shows notifications for an installed app. Use Share → Add to Home Screen, then open Nästet from there and switch the watch on again.'),
+    denied: t('perm_denied', 'Notifications are blocked for this site — allow them in your browser\'s site settings, then switch the watch on again.'),
+    default: t('perm_default', 'Notifications are off, so matches will only show here. Switch the watch on again to be asked.'),
+  }[state];
+  note.hidden = !msg;
+  if (msg) note.textContent = msg;
 }
 
 async function startWatch(){
@@ -3697,6 +3776,10 @@ async function startWatch(){
   // seeds the "already told you" set instead of firing a burst of pop-ups the
   // instant the watch goes on. They're listed on screen either way.
   announced = new Set(watchList().map(l => l.id));
+  // Registered before asking: on mobile the notification is shown through the
+  // worker, so a granted permission with no worker would be a permission that
+  // never produces a pop-up.
+  await ensureServiceWorker();
   if ('Notification' in window && Notification.permission === 'default') {
     // Must be inside the click that got us here; browsers refuse the prompt
     // otherwise.
@@ -4162,6 +4245,9 @@ const firstLoad = (async () => {
     // rebuild and leave every box unticked. Clearing it forces one more pass,
     // now that there are selections to restore.
     watchAreaSig = '';
+    // A watch restored from a link needs the worker too — this page may be the
+    // one that ends up showing the pop-up.
+    ensureServiceWorker();
     renderSidebar();
   }
 })();

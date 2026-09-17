@@ -20,6 +20,9 @@ on:
     # Republish when the UI itself changes, without waiting for the next scrape.
     paths:
       - 'index.html'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'icon-*.png'
       - '.github/workflows/publish.yml'
 
 permissions:
@@ -138,6 +141,12 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html _site/index.html
+          # The watch's notifications go through sw.js, and on iOS the site has
+          # to be installable as a Home Screen web app before it may show one at
+          # all — which is what the manifest and the PNG icons are for. Missing
+          # any of these turns the feature off silently on a phone, so the build
+          # fails rather than publishes a page that quietly can't notify.
+          cp sw.js manifest.webmanifest icon-180.png icon-192.png icon-512.png _site/
           python - <<'PY'
           import html, json, os, pathlib, sys
           sys.path.insert(0, ".")
