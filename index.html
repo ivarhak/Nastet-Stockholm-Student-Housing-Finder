@@ -1197,6 +1197,84 @@
      leaving a 183px map inside a page that can't scroll. Short-and-not-wide is a
      rotated phone, not a desktop — a browser window that shape would want this
      layout too. */
+
+  /* ── Clear-selection button, top-right of the map ───────────────────────── */
+  /* Inside a Leaflet control, so Leaflet owns the corner and the stacking. */
+  .clear-sel{
+    font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--ink); background:var(--panel); border:1px solid var(--rule);
+    border-radius:2px; padding:7px 10px; cursor:pointer; white-space:nowrap;
+    box-shadow:0 1px 4px rgba(0,0,0,0.18);
+  }
+  .clear-sel:hover{ border-color:var(--ochre); color:var(--ochre); }
+
+  /* ── Type an exact number into a slider's readout ───────────────────────── */
+  .editable{ cursor:text; border-bottom:1px dashed var(--rule); }
+  .editable:hover, .editable:focus-visible{ border-bottom-color:var(--ochre); color:var(--ochre); }
+  /* The input replaces the readout in place, so it has to sit on the same
+     baseline at the same size — anything else makes the row jump on click. */
+  .val-edit{
+    font:inherit; color:var(--ink); background:var(--bg);
+    border:1px solid var(--ochre); border-radius:2px;
+    width:6.5ch; padding:1px 3px; text-align:right;
+  }
+  /* The spinners steal a third of a 6.5ch box and the value is typed, not
+     nudged. Arrow keys and the slider both still work. */
+  .val-edit::-webkit-outer-spin-button, .val-edit::-webkit-inner-spin-button{
+    -webkit-appearance:none; margin:0;
+  }
+  .val-edit{ -moz-appearance:textfield; appearance:textfield; }
+
+  /* ── Watch panel ────────────────────────────────────────────────────────── */
+  #watchBox{ border-bottom:1px solid var(--rule); background:var(--panel); }
+  #watchToggle{
+    display:flex; align-items:center; gap:8px; width:100%;
+    padding:11px 14px; background:none; border:0; cursor:pointer; text-align:left;
+    font:600 11.5px/1.35 var(--mono); letter-spacing:0.02em; color:var(--ochre);
+  }
+  #watchToggle:hover{ background:color-mix(in srgb, var(--ochre) 8%, transparent); }
+  #watchToggle .bell{ font-size:13px; }
+  #watchToggle .chev{ margin-left:auto; transition:transform 0.15s; }
+  #watchToggle.open .chev{ transform:rotate(180deg); }
+  #watchPanel{ padding:2px 14px 14px; }
+  #watchPanel p{ margin:0 0 9px; font-size:11.5px; line-height:1.5; color:var(--dim); }
+  #watchPanel p b{ color:var(--ink); }
+  .watch-form{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 10px; }
+  .watch-field{ display:flex; flex-direction:column; gap:4px; flex:1 1 130px; }
+  .watch-field span{
+    font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--dim);
+  }
+  .watch-field input{
+    font:13px/1 var(--mono); color:var(--ink); background:var(--bg);
+    border:1px solid var(--rule); border-radius:2px; padding:7px 8px; width:100%;
+  }
+  .watch-field input:focus{ outline:none; border-color:var(--ochre); }
+  .watch-areas-l{
+    font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--dim); margin-bottom:6px;
+  }
+  #watchAreas{ display:flex; flex-wrap:wrap; gap:5px; }
+  .watch-area{
+    display:flex; align-items:center; gap:5px; cursor:pointer;
+    font-size:11px; color:var(--ink);
+    border:1px solid var(--rule); border-radius:2px; padding:4px 7px;
+  }
+  .watch-area:hover{ border-color:var(--ochre); }
+  .watch-area input{ accent-color:var(--ochre); margin:0; }
+  .watch-actions{ display:flex; gap:8px; margin-top:12px; }
+  #watchStart, #watchStop{
+    font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase;
+    padding:9px 12px; border-radius:2px; cursor:pointer;
+  }
+  #watchStart{ background:var(--ochre); color:#1a1205; border:1px solid var(--ochre); }
+  #watchStart:hover{ filter:brightness(1.08); }
+  #watchStop{ background:none; color:var(--dim); border:1px solid var(--rule); }
+  #watchStop:hover{ color:var(--ink); border-color:var(--ink); }
+  #watchStatus{
+    margin-top:10px; padding-top:9px; border-top:1px solid var(--rule);
+    font:11px/1.5 var(--mono); color:var(--dim);
+  }
+  #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
   @media (max-width: 760px), (max-height: 430px) and (max-width: 900px){
     html,body{height:auto;}
     body{display:block; overflow:visible;}
@@ -1529,6 +1607,43 @@
       <button id="tabQueues" onclick="switchTab('queues')" data-i18n="tab_queues">QUEUES TO JOIN</button>
     </div>
     <div id="listingsView">
+      <!-- Outside #panelHeader on purpose: renderSidebar() rewrites that on
+           every slider tick, which would wipe this form while it was being
+           filled in. Nothing in here is rebuilt except the area list and the
+           status line. -->
+      <div id="watchBox" hidden>
+        <button id="watchToggle" type="button" aria-expanded="false" aria-controls="watchPanel">
+          <span class="bell" aria-hidden="true">🔔</span>
+          <span data-i18n="watch_cta">Want to get notified if we find something?</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button>
+        <div id="watchPanel" hidden>
+          <p data-i18n="watch_p1">Tell it how many queue days you have <em>today</em> and which areas you'd take. It adds a day per day from now on, and watches for an SSSB place whose queue-day requirement has dropped to meet your count.</p>
+          <p data-i18n="watch_p2"><b>You have to leave this page open</b> — in a pinned or background tab is fine. There's no server behind this site, so a running copy of the page is the only thing that can notice a new listing. Close it and the watch stops.</p>
+          <p data-i18n="watch_p3">A match arrives as a browser notification, so your browser will ask permission once. Your settings live in this page's address — bookmark it after you switch the watch on and you can pick the same watch up later, or on your phone.</p>
+          <p data-i18n="watch_p4" class="kv">SSSB only: Bostadsförmedlingen ads are decided by a deadline rather than a queue-day figure, so there's nothing for your running count to be measured against.</p>
+          <div class="watch-form">
+            <label class="watch-field">
+              <span data-i18n="watch_days_l">Your queue days today</span>
+              <input type="number" id="watchDays" min="0" max="20000" step="1" inputmode="numeric"
+                     data-i18n-ph="ph_days" placeholder="e.g. 900">
+            </label>
+            <label class="watch-field">
+              <span data-i18n="watch_rent_l">Max rent (optional)</span>
+              <input type="number" id="watchRent" min="0" max="30000" step="100" inputmode="numeric"
+                     data-i18n-ph="ph_rent" placeholder="kr / month">
+            </label>
+          </div>
+          <div class="watch-areas-l" data-i18n="watch_areas_l">Areas you'd take</div>
+          <div id="watchAreas"></div>
+          <div id="watchError" hidden></div>
+          <div class="watch-actions">
+            <button id="watchStart" type="button">Turn on notifications</button>
+            <button id="watchStop" type="button" hidden data-i18n="watch_stop">Stop watching</button>
+          </div>
+          <div id="watchStatus" hidden></div>
+        </div>
+      </div>
       <div class="panel-header" id="panelHeader">
         <h2 id="panelTitle" data-i18n="all_available">All available listings</h2>
       </div>
@@ -1623,6 +1738,32 @@ const I18N = { sv: {
   sorted_deadline: 'efter sista ansökningsdag',
   sorted_rent: 'efter hyra',
   then_rent: ' — därefter hyra',
+  clear_sel: '✕ Rensa val',
+  edit_num: 'Klicka för att skriva in en exakt siffra',
+
+  // Bevakning
+  watch_cta: 'Vill du få en notis när något dyker upp?',
+  watch_p1: 'Berätta hur många ködagar du har <em>idag</em> och vilka områden du skulle tacka ja till. Den räknar upp en dag per dag och håller utkik efter en SSSB-bostad vars ködagskrav sjunkit ner till din nivå.',
+  watch_p2: '<b>Du måste låta sidan vara öppen</b> — en fastnålad flik eller en flik i bakgrunden räcker. Det finns ingen server bakom den här sidan, så det enda som kan upptäcka en ny bostad är en sida som faktiskt körs. Stänger du den slutar bevakningen.',
+  watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Dina inställningar ligger i sidans adress — spara den som bokmärke när du slagit på bevakningen, så kan du plocka upp samma bevakning senare, eller i mobilen.',
+  watch_p4: 'Bara SSSB: annonserna hos Bostadsförmedlingen avgörs av en sista ansökningsdag i stället för ett antal ködagar, så det finns inget att mäta din uppräkning mot.',
+  watch_days_l: 'Dina ködagar idag',
+  watch_rent_l: 'Max hyra (valfritt)',
+  watch_areas_l: 'Områden du skulle ta',
+  watch_on: 'Slå på notiser',
+  watch_update: 'Uppdatera bevakning',
+  watch_stop: 'Sluta bevaka',
+  watch_counting: 'Räknar ',
+  watch_hit_one: 'träff just nu',
+  watch_hit_many: 'träffar just nu',
+  watch_blocked: 'notiser är avstängda, så träffar syns bara här',
+  ph_days: 't.ex. 900',
+  ph_rent: 'kr / mån',
+  ph_search: 'Sök område, hyra, storlek, ködagar…',
+  watch_e_days: 'Fyll i hur många ködagar du har idag.',
+  watch_e_areas: 'Välj minst ett område att bevaka.',
+  notif_one: 'En bostad du skulle kunna få — ',
+  notif_many: 'bostäder du skulle kunna få just nu',
   ground_floor: 'Botten',
   floor_f: 'våning',
   contract_f: 'års kontrakt',
@@ -1691,6 +1832,33 @@ function t(key, en){ return (lang === 'sv' && I18N.sv[key] !== undefined) ? I18N
 // Swedish groups thousands with a space (4 968), English with a comma.
 function num(n){ return Number(n).toLocaleString(lang === 'sv' ? 'sv-SE' : undefined); }
 
+// ── Swedish dates, in both languages ───────────────────────────────────────
+// Everything dated here is Swedish — the scrape runs in Sweden, the deadlines
+// are set in Sweden, and the reader is house-hunting in Sweden — so the English
+// copy gets Swedish conventions too rather than whatever the browser's locale
+// prefers: YYYY-MM-DD and a 24-hour clock.
+//
+// The time zone is pinned for a sharper reason than taste. generated_at is UTC,
+// and rendering it without a zone used the *viewer's*, so opening the page from
+// another country showed an "updated" time that was simply wrong — an hour or
+// nine off, and stale data reads as fresh at a glance.
+const STHLM = 'Europe/Stockholm';
+function stamp(iso){
+  return new Date(iso).toLocaleString('sv-SE', { timeZone: STHLM,
+    year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+// Today in Stockholm as YYYY-MM-DD. sv-SE already formats dates this way, which
+// is why it's used even when the reader is on English.
+function todayISO(){
+  return new Date().toLocaleDateString('sv-SE', { timeZone: STHLM });
+}
+// Whole calendar days between two YYYY-MM-DD strings. Both are read as UTC
+// midnight so the difference is exact: parsing them as local times would make
+// the count jump by one across a DST boundary.
+function daysBetween(fromISO, toISO){
+  return Math.round((Date.parse(toISO + 'T00:00:00Z') - Date.parse(fromISO + 'T00:00:00Z')) / 86400000);
+}
+
 function langFromUrl(){
   return new URLSearchParams(location.search).get('lang') === 'sv' ? 'sv' : 'en';
 }
@@ -1701,6 +1869,10 @@ function applyLang(next, rerender){
   document.querySelectorAll('[data-i18n]').forEach(el => {
     if (el.dataset.i18nEn === undefined) el.dataset.i18nEn = el.innerHTML;
     el.innerHTML = t(el.dataset.i18n, el.dataset.i18nEn);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    if (el.dataset.i18nPhEn === undefined) el.dataset.i18nPhEn = el.getAttribute('placeholder') || '';
+    el.setAttribute('placeholder', t(el.dataset.i18nPh, el.dataset.i18nPhEn));
   });
   document.querySelectorAll('[data-i18n-title]').forEach(el => {
     if (el.dataset.i18nTitleEn === undefined) el.dataset.i18nTitleEn = el.getAttribute('title') || '';
@@ -1945,6 +2117,7 @@ let currentData = null;
 // "nothing changed" from "new scrape landed" without refetching everything.
 let lastGeneratedAt = null;
 let selectedArea = null;   // SSSB area name, or null
+let clearSelEl = null;     // the on-map "clear selection" button
 let selectedListingId = null;   // a single pin/building-dot listing, or null
 let markers = [];
 let routeLine = null;
@@ -2126,6 +2299,11 @@ async function loadData(triggerRefresh){
   }
   applyDataSourceChrome();
   render();
+  // Covers the manual refresh button and the local --serve path, which reload
+  // through here rather than through pollForChanges(). A no-op until a watch is
+  // set, and on first load `announced` is seeded straight afterwards so the
+  // listings already on screen don't arrive as pop-ups.
+  announceMatches();
 }
 
 // Header label, document title and the sliders whose sensible defaults differ
@@ -2519,6 +2697,11 @@ function listingCommute(l){
 // queue-days figure at all, so filtering on it would silently drop that
 // whole provider rather than narrowing it.
 function passesFilters(l){
+  // The search box narrows the map as well as the list. Both the pin markers
+  // and the roundel counts already funnel through here, so one test covers the
+  // lot — a query leaving three matches should not leave forty roundels
+  // standing over areas that no longer contain anything you asked for.
+  if (!matchesSearch(l, searchQuery.trim().toLowerCase())) return false;
   if (maxQueueDays !== null && l.queue_days != null && l.queue_days > maxQueueDays) return false;
   if (maxRentSek !== null && l.rent_sek != null && Number(l.rent_sek) > maxRentSek) return false;
   if (minSizeSqm !== null && l.size_sqm != null && Number(l.size_sqm) < minSizeSqm) return false;
@@ -2631,8 +2814,7 @@ function renderMeta(){
   const d = currentData;
   const updated = document.getElementById('lastUpdated');
   updated.textContent =
-    t('updated', 'updated ') + new Date(d.generated_at)
-      .toLocaleString(lang === 'sv' ? 'sv-SE' : [], {hour:'2-digit', minute:'2-digit', month:'short', day:'numeric'});
+    t('updated', 'updated ') + stamp(d.generated_at);
   // Data more than an hour old means no scrape has landed in a while — worth
   // flagging, because "updated <a date>" reads as current at a glance and stale
   // listings look exactly like real ones.
@@ -2719,6 +2901,36 @@ function initMap(){
   // reconsidered when the zoom crosses that line.
   leafletMap.on('zoomend', syncGroceryLayer);
   leafletMap.on('zoomend', syncStopLabels);
+
+  // Anything that reaches the map's own click handler landed on empty ground:
+  // Leaflet stops propagation for interactive layers, so roundels, pins and
+  // building dots never get here. The metro lines and stop dots are drawn with
+  // interactive:false, so they don't swallow it either.
+  //
+  // Selecting an area flies the map to it, and on a phone the panel — with its
+  // "← All listings" button — sits below the map, off-screen at exactly the
+  // moment you want out. So the way back has to be on the map itself.
+  leafletMap.on('click', () => {
+    if (selectedArea || selectedListingId) clearSelection();
+  });
+
+  // ...and a visible one next to it, since "click the empty bit" is not
+  // discoverable. A Leaflet control rather than an absolutely-positioned div:
+  // Leaflet then owns its corner, its stacking order, and keeping its clicks
+  // from reaching the map underneath (which would immediately re-clear).
+  const ClearControl = L.Control.extend({
+    options: { position: 'topright' },
+    onAdd(){
+      const el = L.DomUtil.create('button', 'clear-sel');
+      el.type = 'button';
+      el.hidden = true;
+      L.DomEvent.disableClickPropagation(el);
+      L.DomEvent.on(el, 'click', () => clearSelection());
+      clearSelEl = el;
+      return el;
+    },
+  });
+  leafletMap.addControl(new ClearControl());
 
   // Crossing AREA_SPLIT_ZOOM changes which areas are roundels and which are
   // per-building dots. Compare the set first: a zoom that doesn't change it
@@ -2931,6 +3143,11 @@ function renderMap(){
         });
         return;
       }
+      // While a search is running, an area with no match is noise rather than
+      // information. The × means "this area exists, nothing in it matches",
+      // which is worth seeing when you're browsing with the sliders and not
+      // when you're hunting for one street name.
+      if (isEmpty && searchQuery.trim()) return;
       const color = isEmpty ? 'var(--empty)' : groupColor(area.group);
       const size = isEmpty ? 16 : 14 + Math.min(count, 6) * 3;
 
@@ -3032,17 +3249,31 @@ function selectListing(id){
   // so a pin press while either was up looked like nothing happened. Leaving
   // browse-all also clears its search box, which would otherwise still be
   // filtering a list the visitor has stopped looking at.
+  const hadQuery = browseAll && searchQuery.trim() !== '';
   if (browseAll) searchQuery = '';
   browseAll = false;
   document.getElementById('browseAllBtn').classList.remove('active');
   switchTab('listings');
   if (routeLine) { leafletMap.removeLayer(routeLine); routeLine = null; }
+  // Which dots the map draws normally doesn't depend on selection — but the
+  // search does narrow it, so dropping a query has to put the hidden markers
+  // back. Without this the map stayed filtered by a search no longer running.
+  if (hadQuery) renderMap();
   renderSidebar();
 }
 
 function clearListingSelection(){
   selectedListingId = null;
   renderSidebar();
+}
+
+// Driven from renderSidebar() rather than from each of the five call sites that
+// change a selection, so it cannot fall out of step with one of them.
+function syncClearChip(){
+  if (!clearSelEl) return;
+  const on = !!(selectedArea || selectedListingId);
+  clearSelEl.hidden = !on;
+  if (on) clearSelEl.textContent = t('clear_sel', '✕ Clear selection');
 }
 
 // The readouts take a chunk of a 340px sidebar — worth having, but once you
@@ -3258,7 +3489,11 @@ function toggleBrowseAll(){
     document.getElementById('tabListings').classList.add('active');
     document.getElementById('tabQueues').classList.remove('active');
   }
+  const hadQuery = searchQuery.trim() !== '';
   searchQuery = '';
+  // Same reason as selectListing(): a query that narrowed the map has to be
+  // undrawn when it's dropped.
+  if (hadQuery) renderMap();
   renderSidebar();
 }
 
@@ -3289,7 +3524,197 @@ function renderBrowseList(){
   list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('');
 }
 
+// ── Watch: tell me when something I could actually get turns up ────────────
+// The settings live in the URL, the same choice the language toggle makes and
+// for the same reasons: this project keeps functional state out of browser
+// storage, and a link is something you can bookmark, send to your phone, or
+// leave in a pinned tab — which is what this feature asks of you anyway.
+//
+// What it cannot do is reach you with the page closed. There is no server here;
+// the site is static files on a CDN, so the only thing that can notice a new
+// listing is a copy of this page that is running. The panel says so in as many
+// words rather than leaving you to discover it by missing a flat.
+// There is deliberately no timer here. pollForChanges() already re-fetches the
+// payload every 60 seconds and re-renders when its generated_at moves, which is
+// precisely the event a watch cares about — so the watch listens to that rather
+// than running a second fetch loop against the same file on its own schedule.
+let watch = null;
+let announced = new Set();   // ids already notified in this session
+let watchAreaSig = '';
+
+// Areas ride as repeated ?wa= parameters rather than one comma-joined value, so
+// an area name containing a comma or an ampersand can't split or truncate the
+// list — URLSearchParams handles the encoding either way.
+function watchFromUrl(){
+  const p = new URLSearchParams(location.search);
+  const days = Number(p.get('wq'));
+  const areas = p.getAll('wa').filter(Boolean);
+  if (!p.has('wq') || !Number.isFinite(days) || days < 0 || !areas.length) return null;
+  const rent = Number(p.get('wr'));
+  const from = p.get('wf') || '';
+  return {
+    days,
+    // A malformed or absent start date counts from today rather than from the
+    // epoch, which would otherwise hand someone millions of queue days.
+    from: /^\d{4}-\d{2}-\d{2}$/.test(from) ? from : todayISO(),
+    rent: Number.isFinite(rent) && rent > 0 ? rent : null,
+    areas,
+  };
+}
+
+function watchToUrl(w){
+  const p = new URLSearchParams(location.search);
+  ['wq', 'wf', 'wr', 'wa'].forEach(k => p.delete(k));
+  if (w) {
+    p.set('wq', String(w.days));
+    p.set('wf', w.from);
+    if (w.rent != null) p.set('wr', String(w.rent));
+    w.areas.forEach(a => p.append('wa', a));
+  }
+  const qs = p.toString();
+  // The hash carries the city, so it has to survive the rewrite.
+  history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+}
+
+// One day per day, counted in Stockholm — the count ticks over at Swedish
+// midnight rather than the reader's, which is the same midnight SSSB uses.
+function watchDaysNow(w){
+  return w.days + Math.max(0, daysBetween(w.from, todayISO()));
+}
+
+// SSSB only, by choice: the running day-count is the whole test, and
+// Bostadsförmedlingen publishes a deadline instead of queue days, so there is
+// nothing there to compare a count against. That falls out of the data rather
+// than being special-cased by name — an ad with no stated queue days can't
+// match, and the watched areas are SSSB's areas.
+function watchMatches(w, l){
+  if (l.queue_days == null) return false;
+  if (l.queue_days > watchDaysNow(w)) return false;
+  // A listing that doesn't state a rent isn't excluded by a rent cap, matching
+  // how passesFilters() treats every other unstated value.
+  if (w.rent != null && l.rent_sek != null && Number(l.rent_sek) > w.rent) return false;
+  return w.areas.includes(l.area);
+}
+
+function watchList(){
+  if (!watch || !currentData) return [];
+  return (currentData.listings || []).filter(l => watchMatches(watch, l));
+}
+
+function announceMatches(){
+  const fresh = watchList().filter(l => !announced.has(l.id));
+  fresh.forEach(l => announced.add(l.id));
+  if (!fresh.length) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const title = fresh.length === 1
+    ? t('notif_one', 'A place you could get — ') + fresh[0].area
+    : `${fresh.length} ${t('notif_many', 'places you could get right now')}`;
+  const body = fresh.slice(0, 3).map(l => [
+    l.address || l.area,
+    l.rent_sek != null ? num(l.rent_sek) + ' kr' : null,
+    num(l.queue_days) + ' ' + t('queue_days_f', 'queue days'),
+  ].filter(Boolean).join(' · ')).join('\n');
+  try {
+    const n = new Notification(title, { body, tag: 'nastet-watch' });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch (e) {
+    // Some browsers only allow the constructor from a service worker. Nothing
+    // to do about it here, and the panel still shows the matches on screen.
+  }
+}
+
+function renderWatch(){
+  const box = document.getElementById('watchBox');
+  if (!box || !currentData) return;
+  // Offered wherever the premise holds: a city with named areas is a city with
+  // a queue-days provider behind them. Deliberately not keyed on whether any
+  // listing currently states queue days — SSSB runs dry for days at a time, and
+  // that is precisely when you want to set a watch rather than find the offer
+  // has vanished with the vacancies.
+  const areas = Object.keys(currentData.areas || {});
+  box.hidden = areas.length === 0;
+  if (box.hidden) return;
+  renderWatchAreas(areas);
+  renderWatchStatus();
+}
+
+function renderWatchAreas(names){
+  const wrap = document.getElementById('watchAreas');
+  const sorted = names.slice().sort((a, b) => a.localeCompare(b, 'sv'));
+  const sig = sorted.join('|');
+  // renderSidebar() runs on every slider tick, so rebuilding unconditionally
+  // would wipe half-ticked boxes while someone was still choosing.
+  if (sig === watchAreaSig) return;
+  watchAreaSig = sig;
+  const chosen = new Set(watch ? watch.areas : []);
+  wrap.innerHTML = '';
+  sorted.forEach(name => {
+    const lab = document.createElement('label');
+    lab.className = 'watch-area';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = name;
+    cb.checked = chosen.has(name);
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(name));
+    wrap.appendChild(lab);
+  });
+}
+
+function renderWatchStatus(){
+  const status = document.getElementById('watchStatus');
+  const stop = document.getElementById('watchStop');
+  stop.hidden = !watch;
+  document.getElementById('watchStart').textContent = watch
+    ? t('watch_update', 'Update watch') : t('watch_on', 'Turn on notifications');
+  if (!watch) { status.hidden = true; return; }
+  status.hidden = false;
+  const hits = watchList().length;
+  const bits = [
+    `${t('watch_counting', 'Counting ')}${num(watchDaysNow(watch))} ${t('queue_days_f', 'queue days')}`,
+    hits === 1 ? `1 ${t('watch_hit_one', 'match right now')}`
+               : `${hits} ${t('watch_hit_many', 'matches right now')}`,
+  ];
+  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+  if (perm !== 'granted') bits.push(t('watch_blocked', 'pop-ups are off, so matches will only show here'));
+  status.textContent = bits.join(' · ');
+}
+
+async function startWatch(){
+  const days = Number(document.getElementById('watchDays').value);
+  const rent = Number(document.getElementById('watchRent').value);
+  const areas = [...document.querySelectorAll('#watchAreas input:checked')].map(i => i.value);
+  const err = document.getElementById('watchError');
+  const fail = (msg) => { err.textContent = msg; err.hidden = false; };
+  err.hidden = true;
+  if (document.getElementById('watchDays').value === '' || !Number.isFinite(days) || days < 0) {
+    return fail(t('watch_e_days', 'Enter how many queue days you have today.'));
+  }
+  if (!areas.length) return fail(t('watch_e_areas', 'Pick at least one area to watch.'));
+  watch = { days, from: todayISO(), rent: Number.isFinite(rent) && rent > 0 ? rent : null, areas };
+  watchToUrl(watch);
+  // Whatever already matches is what you came to look at, not news — so it
+  // seeds the "already told you" set instead of firing a burst of pop-ups the
+  // instant the watch goes on. They're listed on screen either way.
+  announced = new Set(watchList().map(l => l.id));
+  if ('Notification' in window && Notification.permission === 'default') {
+    // Must be inside the click that got us here; browsers refuse the prompt
+    // otherwise.
+    try { await Notification.requestPermission(); } catch (e) {}
+  }
+  renderSidebar();
+}
+
+function stopWatch(){
+  watch = null;
+  watchToUrl(null);
+  announced = new Set();
+  renderSidebar();
+}
+
 function renderSidebar(){
+  syncClearChip();
+  renderWatch();
   document.getElementById('listingsView').style.display = currentTab === 'listings' ? 'block' : 'none';
   document.getElementById('queues').style.display = currentTab === 'queues' ? 'block' : 'none';
   if (currentTab !== 'listings') return;
@@ -3302,13 +3727,17 @@ function renderSidebar(){
     header.innerHTML = `
       <button class="back" onclick="toggleBrowseAll()">${t('back_map', '← Back to map view')}</button>
       <h2 id="panelTitle">${t('all_listings', 'All listings')} <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${currentData.listings.length} ${t('total', 'total')}</span></h2>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search area, rent, size, queue days…">
+      <input type="text" id="searchInput" class="search-input" placeholder="${t('ph_search', 'Search area, rent, size, queue days…')}">
     `;
     const input = document.getElementById('searchInput');
     input.value = searchQuery;
     input.addEventListener('input', (e) => {
       searchQuery = e.target.value;
+      // Deliberately not render(): renderSidebar() rebuilds this header, which
+      // would destroy the input mid-keystroke. The map is redrawn directly so
+      // it tracks the query without taking the caret with it.
       renderBrowseList();
+      renderMap();
     });
     input.focus();
     renderBrowseList();
@@ -3416,13 +3845,24 @@ function switchTab(tab){
 }
 
 // ---- controls ----
-document.getElementById('maxCommute').addEventListener('input', (e) => {
-  maxCommuteMin = Number(e.target.value);
+// Named rather than inline so the typed-number editor can reuse it: this one
+// isn't a bindLimitSlider (it has no "no limit" end — every position is a real
+// cap), so it carries its own apply.
+const commuteInput = document.getElementById('maxCommute');
+// Same typed-value override as bindLimitSlider, for the same reason: this
+// slider steps in 5s, and "within 23 minutes" should mean 23.
+let commuteExact = null;
+function applyCommute(){
+  maxCommuteMin = commuteExact != null ? commuteExact : Number(commuteInput.value);
   document.getElementById('maxCommuteLabel').textContent = maxCommuteMin + ' min';
-  paintTrack(e.target, false);
-  render();
+  paintTrack(commuteInput, false, maxCommuteMin);
+}
+commuteInput.addEventListener('input', () => { commuteExact = null; applyCommute(); render(); });
+makeEditable(commuteInput, document.getElementById('maxCommuteLabel'), (want) => {
+  if (want != null) { commuteExact = want; commuteInput.value = String(want); }
+  applyCommute(); render();
 });
-paintTrack(document.getElementById('maxCommute'), false);
+paintTrack(commuteInput, false);
 // A real pointer/keyboard interaction, as opposed to the synthetic `input`
 // event applyCityChrome() dispatches when it applies a city's own default.
 ['pointerdown', 'keydown'].forEach(ev =>
@@ -3435,11 +3875,76 @@ paintTrack(document.getElementById('maxCommute'), false);
 // background layer sized from the value. A parked slider (hiding nothing) drops
 // the fill entirely and goes dashed — "no limit" should not look like a limit
 // that happens to sit at the end.
-function paintTrack(input, parked){
+// `value` overrides the input's own when a typed number has been kept off the
+// slider (see bindLimitSlider), so the painted fill matches the filter rather
+// than the thumb's nearest legal step. Callers with nothing to override leave
+// it out.
+function paintTrack(input, parked, value){
   const min = Number(input.min), max = Number(input.max);
-  const pct = max === min ? 0 : ((Number(input.value) - min) / (max - min)) * 100;
+  const at = value != null ? value : Number(input.value);
+  const pct = max === min ? 0 : ((at - min) / (max - min)) * 100;
   input.style.setProperty('--fill', pct.toFixed(1) + '%');
   input.classList.toggle('parked', !!parked);
+}
+
+// A range input can only land on its own step, and its useful values are never
+// evenly spread — nobody wants 1,950 queue days, they want the 900 they've
+// actually got. So the readout is also the way in: click it and type.
+//
+// The typed number is clamped to the slider's own range rather than widening
+// it, which keeps one source of truth for what the filter can express. A value
+// clamped onto the open end therefore reads "Any", exactly as dragging there
+// does — the ends mean "no limit", and typing past them is a request for no
+// limit.
+function makeEditable(input, label, commit){
+  label.classList.add('editable');
+  label.tabIndex = 0;
+  label.setAttribute('role', 'button');
+  label.setAttribute('data-i18n-title', 'edit_num');
+  label.title = 'Click to type an exact number';
+  const open = () => {
+    if (label.querySelector('input')) return;
+    const box = document.createElement('input');
+    box.type = 'number';
+    box.className = 'val-edit';
+    box.min = input.min; box.max = input.max;
+    // step="any" on the editor, whatever the slider's own step is: the slider's
+    // step exists so that *dragging* lands on round numbers, and a number typed
+    // deliberately shouldn't be marked invalid for failing to be a multiple of
+    // 50.
+    box.step = 'any';
+    box.value = input.value;
+    label.textContent = '';
+    label.appendChild(box);
+    box.focus();
+    box.select();
+    let done = false;
+    const close = (keep) => {
+      if (done) return;          // blur fires again as the commit rips the input out
+      done = true;
+      let want = null;
+      if (keep && box.value !== '') {
+        const n = Number(box.value);
+        if (Number.isFinite(n)) want = Math.min(Number(input.max), Math.max(Number(input.min), n));
+      }
+      // null means abandoned — the caller re-renders the label either way, and
+      // that is what removes this input from the DOM.
+      commit(want);
+    };
+    box.addEventListener('keydown', (e) => {
+      // The box lives *inside* the label, so this keystroke bubbles to the
+      // label's own Enter/Space handler — which would re-open the editor that
+      // Enter has just closed, leaving the input stuck on screen forever.
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); close(true); }
+      else if (e.key === 'Escape') { e.preventDefault(); close(false); }
+    });
+    box.addEventListener('blur', () => close(true));
+  };
+  label.addEventListener('click', open);
+  label.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+  });
 }
 
 function bindLimitSlider(inputId, labelId, opts){
@@ -3447,16 +3952,31 @@ function bindLimitSlider(inputId, labelId, opts){
   const input = document.getElementById(inputId);
   const label = document.getElementById(labelId);
   const openEnd = () => Number(kind === 'max' ? input.max : input.min);
+  // A range input can only sit on a multiple of its step, and that step exists
+  // so dragging lands on round numbers — 250 kr, 50 days. A typed number is
+  // kept here instead of in the input, so the thumb can snap to 7,250 while the
+  // filter genuinely means 7,333. Any drag clears it: moving the slider is a
+  // statement that the slider's value is the one you want.
+  let exact = null;
   const apply = () => {
-    const raw = Number(input.value);
+    const raw = exact != null ? exact : Number(input.value);
     const unlimited = raw === openEnd();
     set(unlimited ? null : raw);
     label.textContent = unlimited ? t('any', 'Any') : format(raw);
     label.classList.toggle('any', unlimited);
-    paintTrack(input, unlimited);
+    paintTrack(input, unlimited, raw);
   };
-  input.addEventListener('input', () => { apply(); refreshAdvBadge(); render(); });
-  return { input, apply };
+  input.addEventListener('input', () => { exact = null; apply(); refreshAdvBadge(); render(); });
+  makeEditable(input, label, (want) => {
+    if (want != null) { exact = want; input.value = String(want); }
+    apply(); refreshAdvBadge(); render();
+  });
+  return {
+    input, apply,
+    // Used by the advanced panel's Reset, which has to drop the typed override
+    // as well as the slider position or the filter would silently survive it.
+    reset(){ exact = null; input.value = input.getAttribute('value'); apply(); },
+  };
 }
 
 const maxQueueSlider = bindLimitSlider('maxQueue', 'maxQueueLabel',
@@ -3493,10 +4013,7 @@ document.getElementById('advToggle').addEventListener('click', (e) => {
 });
 
 document.getElementById('advReset').addEventListener('click', () => {
-  advSliders.forEach(s => {
-    s.input.value = s.input.getAttribute('value');
-    s.apply();
-  });
+  advSliders.forEach(s => s.reset());
   refreshAdvBadge();
   render();
 });
@@ -3587,6 +4104,16 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
 });
 document.getElementById('browseAllBtn').addEventListener('click', toggleBrowseAll);
 
+document.getElementById('watchToggle').addEventListener('click', (e) => {
+  const btn = e.currentTarget;
+  const open = !btn.classList.contains('open');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', String(open));
+  document.getElementById('watchPanel').hidden = !open;
+});
+document.getElementById('watchStart').addEventListener('click', startWatch);
+document.getElementById('watchStop').addEventListener('click', stopWatch);
+
 document.getElementById('cityBtn').addEventListener('click', openCityPicker);
 // Back/forward and our own writes both land here, so there is one path into a
 // city change rather than two that can disagree.
@@ -3615,7 +4142,28 @@ const firstLoad = (async () => {
     // dismissing it or picking the default costs no extra load.
     currentCity = cityIndex.default;
   }
-  return loadData(false);
+  await loadData(false);
+  // Only after the first payload is in: watchList() needs listings to seed
+  // against, and everything already showing is what the visitor came to look at
+  // rather than news worth a pop-up.
+  watch = watchFromUrl();
+  if (watch) {
+    announced = new Set(watchList().map(l => l.id));
+    // Opened rather than collapsed — arriving on a link that carries a watch,
+    // the first thing you want is confirmation it's still running and what it
+    // is counting.
+    document.getElementById('watchToggle').classList.add('open');
+    document.getElementById('watchToggle').setAttribute('aria-expanded', 'true');
+    document.getElementById('watchPanel').hidden = false;
+    document.getElementById('watchDays').value = String(watch.days);
+    if (watch.rent != null) document.getElementById('watchRent').value = String(watch.rent);
+    // The area list was already built once, by the render inside loadData(),
+    // back when `watch` was still null — so its cached signature would skip the
+    // rebuild and leave every box unticked. Clearing it forces one more pass,
+    // now that there are selections to restore.
+    watchAreaSig = '';
+    renderSidebar();
+  }
 })();
 
 // Pick up whatever the background --serve auto-check produces, without needing
@@ -3647,6 +4195,8 @@ async function pollForChanges(){
         applyProviderChrome();
         applyDataSourceChrome();
         render();
+        // A new scrape has landed — the one moment a watch has anything to say.
+        announceMatches();
       }
     } catch (e) { /* offline; keep showing what's on screen */ }
     return;
