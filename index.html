@@ -1283,6 +1283,67 @@
     font:11px/1.5 var(--mono); color:var(--dim);
   }
   #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
+  /* ── Privacy & terms ────────────────────────────────────────────────────── */
+  /* Sits under the source note, which is where the takedown link already lives —
+     the two are addressed to overlapping readers. */
+  #legalLine{ margin-top:2px; }
+  #legalLink{
+    font:inherit; color:var(--dim); background:none; border:0; padding:0;
+    cursor:pointer; text-decoration:underline; text-underline-offset:2px;
+    /* Both stated rather than inherited: the UA stylesheet *declares* them on
+       form controls, and a declaration beats an inherited value — so `font:
+       inherit` alone left this line lower-case and unspaced next to a column of
+       tracked-out capitals. */
+    text-transform:inherit; letter-spacing:inherit;
+  }
+  #legalLink:hover{ color:var(--ochre); }
+  #legalOverlay{
+    position:fixed; inset:0; z-index:2100;   /* over the city picker's 2000 */
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:24px; overflow-y:auto;
+    background:color-mix(in srgb, var(--bg) 92%, transparent);
+  }
+  #legalOverlay[hidden]{ display:none; }
+  .legal-card{
+    position:relative;
+    width:100%; max-width:640px; margin:auto;
+    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+    padding:28px 30px 24px;
+  }
+  .legal-card h2{
+    margin:0 0 4px; font-family:var(--figure); font-stretch:125%;
+    font-size:26px; font-weight:800; letter-spacing:-0.015em; color:var(--ink);
+  }
+  .legal-card h3{
+    margin:20px 0 5px; font:600 10px/1.3 var(--mono);
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--ochre);
+  }
+  .legal-card p{
+    margin:0; font-family:var(--display); font-size:13px; line-height:1.65; color:var(--dim);
+  }
+  .legal-card p b{ color:var(--ink); font-weight:600; }
+  .legal-card code{
+    font:11.5px var(--mono); color:var(--ink);
+    background:color-mix(in srgb, var(--ink) 8%, transparent);
+    padding:1px 4px; border-radius:2px;
+  }
+  .legal-card a{ color:var(--ochre); }
+  .legal-date{
+    margin-top:22px !important; padding-top:14px; border-top:1px solid var(--rule);
+    font-family:var(--mono) !important; font-size:10.5px !important; opacity:0.8;
+  }
+  #legalClose{
+    position:absolute; top:12px; right:12px;
+    font:14px/1 var(--mono); color:var(--dim);
+    background:none; border:1px solid var(--rule); border-radius:2px;
+    padding:6px 9px; cursor:pointer;
+  }
+  #legalClose:hover{ color:var(--ink); border-color:var(--ink); }
+  @media (max-width: 760px){
+    .legal-card{ border-radius:0; padding:24px 20px 20px; }
+    .legal-card h2{ font-size:22px; }
+  }
+
   /* Set apart from the status counts: this one is an instruction, not a number. */
   #watchPermNote{
     margin-top:8px; padding:8px 10px; border-left:2px solid var(--ochre);
@@ -1395,6 +1456,45 @@
      to choose from. Picking sets the fragment, which is what everything else
      reads — so a chosen city is bookmarkable and survives a reload without any
      storage. -->
+<!-- Written out in the markup rather than generated, so it is in the page source
+     for anyone reading without JavaScript and for a crawler, and so the i18n
+     pass translates it like every other block of copy. -->
+<div id="legalOverlay" hidden>
+  <div class="legal-card" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+    <button id="legalClose" type="button" aria-label="Close">✕</button>
+    <h2 id="legalTitle" data-i18n="lg_h">Privacy &amp; terms</h2>
+
+    <h3 data-i18n="lg_who_h">Who runs this</h3>
+    <p data-i18n="lg_who">Nästet is a personal, non-commercial project by Ivar Håkansson, a student in Stockholm. It is free, carries no advertising, and nothing on it is for sale. To get in touch, <a href="https://github.com/ivarhak/Nastet-Stockholm-Student-Housing-Finder/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.</p>
+
+    <h3 data-i18n="lg_collect_h">What is collected about you: nothing</h3>
+    <p data-i18n="lg_collect">There are no accounts, no sign-up, no forms, no analytics and no tracking cookies. I do not record what you search for, which listings you look at, or that you visited at all. There is no database of visitors here to sell, to leak, or to hand to anyone who asks.</p>
+
+    <h3 data-i18n="lg_device_h">What is stored on your device</h3>
+    <p data-i18n="lg_device">One item, <code>nastet-theme</code>, which remembers whether you chose the light or dark theme. It is written when you click the toggle and it never leaves your browser. A watch you set up lives in this page's address instead of in storage — which means it sits in your URL bar and your bookmarks, and is never sent to me or to anyone else.</p>
+
+    <h3 data-i18n="lg_third_h">Who your browser talks to</h3>
+    <p data-i18n="lg_third">Loading any web page reveals your IP address to whoever serves it, and this page is assembled from a few places: it is hosted on <b>GitHub Pages</b>, its map tiles come from <b>CARTO</b>, its map library from <b>Cloudflare's cdnjs</b> and its typefaces from <b>Google Fonts</b>. Those companies see your IP address in their own logs under their own privacy policies. I get nothing back from them — no report, no counts, no identities.</p>
+
+    <h3 data-i18n="lg_rights_h">Your rights</h3>
+    <p data-i18n="lg_rights">Because I hold no personal data about you, there is nothing for me to show you, correct or erase — but ask anyway if you think that is wrong, and I will tell you exactly what I have. You can also complain to <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>, the Swedish data protection authority.</p>
+
+    <h3 data-i18n="lg_official_h">Not official</h3>
+    <p data-i18n="lg_official">Nästet is not affiliated with, endorsed by or run by SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH or any other landlord or university. It reads listings those organisations publish openly and draws them on a map.</p>
+
+    <h3 data-i18n="lg_apply_h">Apply at the source</h3>
+    <p data-i18n="lg_apply">Everything here is a copy, refreshed every couple of hours, and it can be stale, incomplete or simply wrong — a listing may be gone, a queue figure may have moved, a deadline may have passed. Always open the landlord's own page and apply there. Nothing on this site is a promise of a home, a queue position or a deadline, and it is not advice.</p>
+
+    <h3 data-i18n="lg_landlord_h">If you publish listings</h3>
+    <p data-i18n="lg_landlord">If you are a landlord or a housing service and would rather your listings were not shown here, say so and they will be taken down — no argument, no lawyer needed. Same link as above.</p>
+
+    <h3 data-i18n="lg_code_h">The code</h3>
+    <p data-i18n="lg_code">Nästet is open source under the MIT licence, and is provided as is, without warranty of any kind. Use it at your own risk.</p>
+
+    <p class="legal-date" data-i18n="lg_updated">Last updated 2026-09-18.</p>
+  </div>
+</div>
+
 <div id="cityPicker" hidden>
   <div class="city-card">
     <h2 data-i18n="city_q">Which city?</h2>
@@ -1476,6 +1576,9 @@
     <div id="listingCount">—</div>
     <div id="autoStatus" style="color:var(--teal);"></div>
     <div id="sourceNote" hidden></div>
+    <div id="legalLine">
+      <button id="legalLink" type="button" data-i18n="legal_link">Privacy &amp; terms</button>
+    </div>
   </div>
 
   <button id="browseAllBtn">
@@ -1764,6 +1867,29 @@ const I18N = { sv: {
   watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Dina inställningar ligger i sidans adress — spara den som bokmärke när du slagit på bevakningen, så kan du plocka upp samma bevakning senare, eller i mobilen.',
   watch_p4: 'Bara SSSB: annonserna hos Bostadsförmedlingen avgörs av en sista ansökningsdag i stället för ett antal ködagar, så det finns inget att mäta din uppräkning mot.',
   watch_p5: '<b>På iPhone och iPad</b> kan en Safari-flik inte visa notiser alls. Använd <em>Dela → Lägg till på hemskärmen</em>, öppna Nästet från den ikonen och slå på bevakningen där. Även då pausar iOS en webbapp när du lämnar den, så se mobilen som ett ställe att kolla listan på snarare än ett ställe dit notiser säkert kommer — en dator med fliken öppen är vad det här egentligen är byggt för.',
+  // Integritet & villkor
+  legal_link: 'Integritet & villkor',
+  lg_h: 'Integritet & villkor',
+  lg_who_h: 'Vem som driver det här',
+  lg_who: 'Nästet är ett personligt, icke-kommersiellt projekt av Ivar Håkansson, student i Stockholm. Det är gratis, har ingen reklam, och ingenting på sidan är till salu. Hör av dig genom att <a href="https://github.com/ivarhak/Nastet-Stockholm-Student-Housing-Finder/issues" target="_blank" rel="noopener noreferrer">skapa ett ärende på GitHub</a>.',
+  lg_collect_h: 'Vad som samlas in om dig: ingenting',
+  lg_collect: 'Det finns inga konton, ingen registrering, inga formulär, ingen analys och inga spårningskakor. Jag registrerar inte vad du söker på, vilka bostäder du tittar på, eller ens att du varit här. Det finns ingen besökardatabas att sälja, läcka eller lämna ifrån sig.',
+  lg_device_h: 'Vad som sparas på din enhet',
+  lg_device: 'En enda sak: <code>nastet-theme</code>, som minns om du valde ljust eller mörkt läge. Den skrivs när du klickar på knappen och lämnar aldrig din webbläsare. En bevakning du ställer in ligger i sidans adress i stället för i lagringen — den sitter alltså i adressfältet och i dina bokmärken, och skickas aldrig till mig eller någon annan.',
+  lg_third_h: 'Vem din webbläsare pratar med',
+  lg_third: 'Att ladda vilken webbsida som helst avslöjar din IP-adress för den som levererar den, och den här sidan sätts ihop från några håll: den ligger på <b>GitHub Pages</b>, kartrutorna kommer från <b>CARTO</b>, kartbiblioteket från <b>Cloudflares cdnjs</b> och typsnitten från <b>Google Fonts</b>. De företagen ser din IP-adress i sina egna loggar, under sina egna integritetspolicyer. Jag får ingenting tillbaka från dem — ingen rapport, inga siffror, inga identiteter.',
+  lg_rights_h: 'Dina rättigheter',
+  lg_rights: 'Eftersom jag inte har några personuppgifter om dig finns det ingenting för mig att visa, rätta eller radera — men fråga ändå om du tror att det är fel, så berättar jag exakt vad jag har. Du kan också klaga hos <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>.',
+  lg_official_h: 'Inte officiellt',
+  lg_official: 'Nästet är inte kopplat till, godkänt av eller drivet av SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH eller någon annan hyresvärd eller något lärosäte. Sidan läser annonser som de organisationerna publicerar öppet och ritar ut dem på en karta.',
+  lg_apply_h: 'Sök hos källan',
+  lg_apply: 'Allt här är en kopia som hämtas om varannan timme, och den kan vara gammal, ofullständig eller helt enkelt fel — en bostad kan vara borta, ett ködagstal kan ha ändrats, en sista ansökningsdag kan ha passerat. Öppna alltid hyresvärdens egen sida och sök där. Ingenting på den här sidan är ett löfte om en bostad, en köplats eller en deadline, och det är inte rådgivning.',
+  lg_landlord_h: 'Om du publicerar annonser',
+  lg_landlord: 'Är du hyresvärd eller bostadsförmedlare och hellre slipper se dina annonser här, så säg till, så tas de bort — ingen diskussion, ingen jurist behövs. Samma länk som ovan.',
+  lg_code_h: 'Koden',
+  lg_code: 'Nästet är öppen källkod under MIT-licens och tillhandahålls i befintligt skick, utan garantier av något slag. Använd på egen risk.',
+  lg_updated: 'Senast uppdaterad 2026-09-18.',
+
   perm_install: 'Den här webbläsaren visar bara notiser för en installerad app. Använd Dela → Lägg till på hemskärmen, öppna Nästet därifrån och slå på bevakningen igen.',
   perm_denied: 'Notiser är blockerade för den här sidan — tillåt dem i webbläsarens webbplatsinställningar och slå sedan på bevakningen igen.',
   perm_default: 'Notiser är avstängda, så träffar syns bara här. Slå på bevakningen igen för att få frågan.',
@@ -4196,6 +4322,30 @@ document.getElementById('watchToggle').addEventListener('click', (e) => {
 });
 document.getElementById('watchStart').addEventListener('click', startWatch);
 document.getElementById('watchStop').addEventListener('click', stopWatch);
+
+// #legal is safe to use as the anchor even though the hash also names the city:
+// cityFromHash() only answers for ids that exist in the city index, so an
+// unknown hash is ignored by the city router rather than fighting this one.
+function setLegal(open){
+  document.getElementById('legalOverlay').hidden = !open;
+  // A real address, so the page can be linked to — and cleared on close rather
+  // than left behind, which would otherwise reopen it on the next reload.
+  // replaceState rather than assigning location.hash: the query string carries
+  // any watch, and it has to survive.
+  const base = location.pathname + location.search;
+  history.replaceState(null, '', open ? base + '#legal' : base);
+  if (open) document.getElementById('legalClose').focus();
+}
+document.getElementById('legalLink').addEventListener('click', () => setLegal(true));
+document.getElementById('legalClose').addEventListener('click', () => setLegal(false));
+document.getElementById('legalOverlay').addEventListener('click', (e) => {
+  // Backdrop only — a click that started inside the card shouldn't dismiss it.
+  if (e.target.id === 'legalOverlay') setLegal(false);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !document.getElementById('legalOverlay').hidden) setLegal(false);
+});
+if ((location.hash || '').toLowerCase() === '#legal') setLegal(true);
 
 document.getElementById('cityBtn').addEventListener('click', openCityPicker);
 // Back/forward and our own writes both land here, so there is one path into a
