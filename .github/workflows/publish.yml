@@ -11,9 +11,26 @@ name: Publish dashboard
 
 on:
   schedule:
-    # Every two hours. Deliberately at :17 rather than :00 — GitHub's scheduler
-    # is busiest on the hour and delays runs that pile up there.
-    - cron: '17 */2 * * *'
+    # Hourly, at :17 rather than :00 — GitHub's scheduler is busiest on the hour
+    # and delays runs that pile up there.
+    #
+    # Asking for more often than we need, deliberately. `schedule` is
+    # best-effort: GitHub silently drops scheduled runs under load, and asking
+    # for every two hours was delivering every five to six (runs 402-404 landed
+    # 6h34m and 5h25m apart, consecutive, so the ones in between were never
+    # queued at all). Hourly should land an effective one to three hours.
+    #
+    # Not faster than this. Shorter intervals are dropped harder, and 24 scrapes
+    # a day is already the limit of what's polite to ask of four free services —
+    # SSSB, Bostadsförmedlingen, SGS and AF Bostäder. The runner minutes are not
+    # the constraint; this repo is public, so they're free.
+    #
+    # Frequency barely affects whether anyone gets a flat: SSSB and
+    # Bostadsförmedlingen both allocate by queue days against an application
+    # deadline, not first-come. What it buys is catching listings that appear
+    # and vanish between scrapes — SGS's Express category is genuinely
+    # first-come — and giving the watch something timely to notify about.
+    - cron: '17 * * * *'
   workflow_dispatch:      # lets you publish on demand from the Actions tab
   push:
     branches: [main]
@@ -39,7 +56,7 @@ concurrency:
 env:
   # Kept in step with the cron above; the dashboard prints it so the page can
   # say how often it updates without hardcoding the number in two places.
-  UPDATE_EVERY_HOURS: '2'
+  UPDATE_EVERY_HOURS: '1'
   # Where the site actually lives, for canonical/Open Graph/sitemap URLs. The
   # workflow can't discover the Pages custom domain on its own, so it's written
   # down once here — change it here if the domain ever moves.

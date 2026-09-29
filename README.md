@@ -12,7 +12,7 @@ It is read-only and asks nothing of you: no account, no sign-up, nothing
 tracked. If you want to support the work, there's a Ko-fi link in the header.
 
 **Live version:** [nästet.se](https://nästet.se) — published from this repo and
-re-scraped every two hours. Read-only; run it locally for desktop notifications
+re-scraped hourly. Read-only; run it locally for desktop notifications
 and an on-demand Refresh. See section 4.
 
 Two pieces:
@@ -175,7 +175,7 @@ you can look at current listings without running anything:
 > **https://nästet.se**
 
 A GitHub Actions workflow (`.github/workflows/publish.yml`) scrapes every
-provider **every two hours**, writes one `listings-<city>.json` next to the
+provider **hourly**, writes one `listings-<city>.json` next to the
 dashboard, and deploys them to Pages. The page picks up a new scrape on its own — a tab
 left open re-checks the data file every 15 minutes.
 
@@ -199,7 +199,7 @@ What the published version can't do, by nature:
 
 The workflow caches two files between runs, both worth understanding:
 `bike_route_cache.json`, so 26 areas × 7 campuses of real cycling routes aren't
-re-fetched from a free community service every two hours; and
+re-fetched from a free community service hourly; and
 `current_listings.json`, which is what new-listing diffing compares against —
 without it, every run would start from nothing and mark all ~170 listings as NEW.
 

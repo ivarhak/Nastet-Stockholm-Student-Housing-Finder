@@ -1483,7 +1483,7 @@
     <p data-i18n="lg_official">Nästet is not affiliated with, endorsed by or run by SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH or any other landlord or university. It reads listings those organisations publish openly and draws them on a map.</p>
 
     <h3 data-i18n="lg_apply_h">Apply at the source</h3>
-    <p data-i18n="lg_apply">Everything here is a copy, refreshed every couple of hours, and it can be stale, incomplete or simply wrong — a listing may be gone, a queue figure may have moved, a deadline may have passed. Always open the landlord's own page and apply there. Nothing on this site is a promise of a home, a queue position or a deadline, and it is not advice.</p>
+    <p data-i18n="lg_apply">Everything here is a copy, taken at the time shown at the top of the page, and it can be stale, incomplete or simply wrong — a listing may be gone, a queue figure may have moved, a deadline may have passed. Always open the landlord's own page and apply there. Nothing on this site is a promise of a home, a queue position or a deadline, and it is not advice.</p>
 
     <h3 data-i18n="lg_landlord_h">If you publish listings</h3>
     <p data-i18n="lg_landlord">If you are a landlord or a housing service and would rather your listings were not shown here, say so and they will be taken down — no argument, no lawyer needed. Same link as above.</p>
@@ -1883,7 +1883,7 @@ const I18N = { sv: {
   lg_official_h: 'Inte officiellt',
   lg_official: 'Nästet är inte kopplat till, godkänt av eller drivet av SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH eller någon annan hyresvärd eller något lärosäte. Sidan läser annonser som de organisationerna publicerar öppet och ritar ut dem på en karta.',
   lg_apply_h: 'Sök hos källan',
-  lg_apply: 'Allt här är en kopia som hämtas om varannan timme, och den kan vara gammal, ofullständig eller helt enkelt fel — en bostad kan vara borta, ett ködagstal kan ha ändrats, en sista ansökningsdag kan ha passerat. Öppna alltid hyresvärdens egen sida och sök där. Ingenting på den här sidan är ett löfte om en bostad, en köplats eller en deadline, och det är inte rådgivning.',
+  lg_apply: 'Allt här är en kopia, hämtad vid den tidpunkt som visas högst upp på sidan, och den kan vara gammal, ofullständig eller helt enkelt fel — en bostad kan vara borta, ett ködagstal kan ha ändrats, en sista ansökningsdag kan ha passerat. Öppna alltid hyresvärdens egen sida och sök där. Ingenting på den här sidan är ett löfte om en bostad, en köplats eller en deadline, och det är inte rådgivning.',
   lg_landlord_h: 'Om du publicerar annonser',
   lg_landlord: 'Är du hyresvärd eller bostadsförmedlare och hellre slipper se dina annonser här, så säg till, så tas de bort — ingen diskussion, ingen jurist behövs. Samma länk som ovan.',
   lg_code_h: 'Koden',
@@ -1955,6 +1955,7 @@ const I18N = { sv: {
   first_seen: 'Först sedd {ago} — bostäder är märkta NY i {h} h',
   within: 'inom {n} min från {s}',
   updates_every: 'Uppdateras var {n}:e timme',
+  updates_hourly: 'Uppdateras varje timme',
   updates_often: 'Uppdateras några gånger om dagen',
   unofficial: ' · inofficiell vy av ',
   listed_providers: 'de listade källorna',
@@ -2792,10 +2793,15 @@ function applyDataSourceChrome(){
   src.hidden = !isStatic;
   if (isStatic) {
     const every = currentData.update_every_hours;
-    src.innerHTML =
-      (lang === 'sv'
-         ? (every ? t('updates_every', '').replace('{n}', every) : t('updates_often', ''))
-         : 'Updates' + (every ? ` every ${every} ${every === 1 ? 'hour' : 'hours'}` : ' a few times a day'))
+    // An interval of one has its own word in both languages — "every 1 hour"
+    // and "var 1:e timme" are the kind of thing that reads as a bug in the page
+    // rather than a number in a template.
+    const cadence = lang === 'sv'
+      ? (every === 1 ? t('updates_hourly', '')
+         : every ? t('updates_every', '').replace('{n}', every) : t('updates_often', ''))
+      : (every === 1 ? 'Updates hourly'
+         : every ? `Updates every ${every} hours` : 'Updates a few times a day');
+    src.innerHTML = cadence
       + t('unofficial', ' · unofficial view of ')
       + ((currentData ? sourcesFor(currentData) : []).map(src =>
            `<a href="${src.url}" target="_blank" rel="noopener noreferrer">${src.label}</a>`
@@ -2961,11 +2967,22 @@ function renderMeta(){
   const updated = document.getElementById('lastUpdated');
   updated.textContent =
     t('updated', 'updated ') + stamp(d.generated_at);
-  // Data more than an hour old means no scrape has landed in a while — worth
-  // flagging, because "updated <a date>" reads as current at a glance and stale
-  // listings look exactly like real ones.
+  // Worth flagging when a scrape has actually been missed, because "updated
+  // <a date>" reads as current at a glance and stale listings look exactly like
+  // real ones.
+  //
+  // Measured against the publishing interval rather than a fixed hour. A flat
+  // 60 minutes was wrong the moment the interval was longer than that: on a
+  // two-hourly schedule the data is over an hour old for half of every healthy
+  // cycle, so the warning was lit roughly half the time and meant nothing. The
+  // threshold has to mean "a run was skipped", not "an hour passed".
+  //
+  // 2.5x rather than 1x: GitHub's scheduler is best-effort and routinely runs
+  // late, so a single delayed run is normal and shouldn't cry wolf — but two
+  // missed in a row is a real problem worth seeing.
+  const every = Number(d.update_every_hours) || 2;
   const ageMin = (Date.now() - new Date(d.generated_at).getTime()) / 60000;
-  const stale = !d.demo && ageMin > 60;
+  const stale = !d.demo && ageMin > every * 60 * 2.5;
   updated.style.color = stale ? 'var(--ochre)' : '';
   updated.title = stale
     ? `These listings are ${Math.round(ageMin / 60)}h old — no scrape has completed since. Hit "Refresh listings".`
@@ -4415,7 +4432,7 @@ let serverScraping = false;
 
 async function pollForChanges(){
   // Static build: there's no /api/status to ask, so watch the data file itself.
-  // The scheduled scrape rewrites it every couple of hours, and a page left open
+  // The scheduled scrape rewrites it roughly hourly, and a page left open
   // should pick that up without anyone reloading.
   if (dataSource === 'static') {
     try {
