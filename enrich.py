@@ -499,20 +499,27 @@ def enrich_campus(site: Path, payloads: dict) -> None:
         rec = cache.get(sid)
         if not rec or rec.get("at", "") < (now() - timedelta(days=CAMPUS_MAX_AGE_DAYS)).isoformat():
             bbox = f"{s},{w},{n},{e}"
-            query = f"""[out:json][timeout:90];
+            # Only what a search can use: buildings with a name or ref (all
+            # buildings with geometry made every mirror time out), rooms with a
+            # ref, entrances and a few amenities.
+            query = f"""[out:json][timeout:60][bbox:{bbox}];
 (
-  way["building"]({bbox});
-  relation["building"]({bbox});
-  node["indoor"="room"]({bbox});
-  way["indoor"="room"]({bbox});
-  node["entrance"]({bbox});
-  node["amenity"~"^(library|cafe|restaurant|fast_food|bicycle_parking|toilets)$"]({bbox});
+  way["building"]["name"];
+  way["building"]["ref"];
+  relation["building"]["name"];
+  nwr["indoor"="room"]["ref"];
+  node["entrance"];
+  node["amenity"~"^(library|cafe|restaurant|fast_food|toilets)$"];
 );
-out geom tags;"""
-            for url in OVERPASS_URLS:
+out geom qt;"""
+            attempts = [u for u in OVERPASS_URLS] * 2
+            for n_try, url in enumerate(attempts):
+                if n_try == len(OVERPASS_URLS):
+                    time.sleep(20)      # every mirror refused once; give them a moment
                 try:
-                    r = requests.post(url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=120)
-                    r.raise_for_status()
+                    r = requests.post(url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=90)
+                    if not r.ok:
+                        raise RuntimeError(f"HTTP {r.status_code}: {r.text[:200]!r}")
                     data = campus_from_elements(r.json().get("elements", []))
                     rec = {"at": now().isoformat(timespec="seconds"), **data}
                     cache[sid] = rec
