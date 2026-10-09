@@ -1512,7 +1512,12 @@
   #campusResults li{ border-bottom:1px solid var(--rule); }
   .cm-hit{ display:block; width:100%; text-align:left; background:none; border:none; color:var(--ink);
     font:12px/1.4 var(--display); padding:7px 2px; cursor:pointer; }
-  .cm-hit:hover, .cm-hit:focus-visible{ color:var(--accent-ink); }
+  .cm-hit:hover, .cm-hit:focus-visible, .cm-hit.sel{ color:var(--accent-ink); }
+  .cm-hit.sel{ box-shadow:inset 2px 0 0 var(--accent-ink); padding-left:8px; }
+  .cm-kind{ display:inline-block; min-width:62px; font:600 8.5px/1 var(--mono); letter-spacing:0.06em; text-transform:uppercase; color:var(--faint); }
+  .cm-dir{ display:flex; flex-wrap:wrap; gap:4px; padding:4px 0 8px; border:none !important; }
+  .cm-chip{ font:11px/1.3 var(--display); background:none; color:var(--ink); border:1px solid var(--rule); padding:3px 6px; cursor:pointer; }
+  .cm-chip:hover, .cm-chip:focus-visible{ border-color:var(--accent-ink); color:var(--accent-ink); }
   .cm-hint{ font-size:11.5px; line-height:1.5; color:var(--dim); padding:6px 0; border:none !important; }
   #campusNote{ margin-top:8px; padding:8px 9px; border:1px solid var(--accent-ink); font-size:12px; line-height:1.5; color:var(--ink); }
   .cm-foot{ margin:10px 0 0; font:10px/1.5 var(--mono); color:var(--faint); }
@@ -2242,9 +2247,11 @@ const I18N = { sv: {
   cm_building: 'Byggnad', cm_entrance: 'Entré', cm_library: 'Bibliotek', cm_cafe: 'Kafé',
   cm_restaurant: 'Restaurang', cm_toilets: 'Toaletter', cm_bikes: 'Cykelparkering',
   cm_floors: 'våningar', cm_room_in: 'Sal', cm_room_is: 'ligger i den här byggnaden — följ skyltarna inne för våningen.',
-  cm_hint: 'Skriv en salskod som D2 eller Q31, eller ett byggnadsnamn.', cm_bldgs: 'byggnader kartlagda', cm_rooms: 'salar',
+  cm_hint: 'Skriv en salskod som D2 eller Q31, en byggnad, en gatuadress eller en plats som bibliotek eller kafé.', cm_bldgs: 'byggnader kartlagda', cm_rooms: 'salar',
   cm_none: 'Inget hittades. Alla byggnader är inte namngivna i OpenStreetMap — prova byggnadens namn eller gatuadress.',
   cm_room: 'Sal', cm_level: 'plan',
+  cm_house: 'hus', cm_maybe: 'Menade du',
+  cm_ph_su: 'Sal eller byggnad — t.ex. D7, De Geersalen, kafé',
   dc_p: '<b>Hellre Discord?</b> Vår bot kan skicka DM i stället — ingen flik behöver vara öppen. Lägg till den och klistra sedan in det här kommandot där du kan prata med den:',
   dc_copy: 'Kopiera kommandot',
   dc_add: 'Lägg till boten ↗',
@@ -5451,6 +5458,9 @@ async function openCampus(){
   panel.style.maxHeight = (mapEl.offsetHeight - 24) + 'px';
   document.getElementById('campusTitle').textContent = `${(schools()[selectedSchool] || {}).name || selectedSchool}`;
   document.getElementById('campusQ').value = '';
+  document.getElementById('campusQ').placeholder = campusFor === 'SU'
+    ? t('cm_ph_su', 'Room or building — e.g. D7, De Geersalen, café')
+    : t('cm_ph', 'Room or building — e.g. D2, Q31, Bibliotek');
   renderCampusResults('');
   document.getElementById('campusQ').focus();
   leafletMap.flyToBounds(campusData.bbox, { padding: [20, 20], duration: 0.6 });
@@ -5465,7 +5475,11 @@ function exitCampus(){
   if (leafletMap && currentData) leafletMap.flyTo(centre(), 13, { duration: 0.6 });
 }
 function bldgLabel(b){
-  return b.name && b.ref && !b.name.includes(b.ref) ? `${b.name} (${b.ref})` : (b.name || (b.ref ? `${t('cm_building', 'Building')} ${b.ref}` : b.addr));
+  const n = bareName(b.name);
+  if (n && /^[A-ZÅÄÖ]{1,2}$/.test(n)) return `${t('cm_building', 'Building')} ${n}`;
+  if (!n && /^[A-ZÅÄÖ]{1,2}$/.test(b.ref || '')) return `${t('cm_building', 'Building')} ${b.ref}`;
+  // Other refs here are property numbers ("43:1"), not something people say.
+  return n || b.addr || null;
 }
 function drawCampus(){
   if (campusLayer) leafletMap.removeLayer(campusLayer);
@@ -5485,7 +5499,7 @@ function drawCampus(){
     nameMarker(m, p.name ? `${label}: ${p.name}` : label);
   });
 }
-function focusBuilding(i, room){
+function focusBuilding(i, room, note){
   campusActive = i;
   drawCampus();
   const b = campusData.buildings[i];
@@ -5495,73 +5509,195 @@ function focusBuilding(i, room){
   leafletMap.flyToBounds(b.poly, wide
     ? { paddingTopLeft: [30, panel.offsetHeight + 40], paddingBottomRight: [30, 30], maxZoom: 18, duration: 0.5 }
     : { padding: [60, 60], maxZoom: 18, duration: 0.5 });
-  const note = document.getElementById('campusNote');
-  note.innerHTML = `<b>${esc(bldgLabel(b))}</b>${b.addr ? ` · ${esc(b.addr)}` : ''}${b.levels ? ` · ${esc(b.levels)} ${t('cm_floors', 'floors')}` : ''}`
-    + (room ? `<br>${t('cm_room_in', 'Room')} <b>${esc(room)}</b> ${t('cm_room_is', 'is in this building — follow the signs inside for the floor.')}` : '');
-  note.hidden = false;
+  const box = document.getElementById('campusNote');
+  box.innerHTML = `<b>${esc(bldgLabel(b))}</b>${b.addr ? ` · ${esc(b.addr)}` : ''}${b.levels ? ` · ${esc(b.levels)} ${t('cm_floors', 'floors')}` : ''}`
+    + (room ? `<br>${t('cm_room_in', 'Room')} <b>${esc(room)}</b> ${note ? `(${esc(note)}) ` : ''}${t('cm_room_is', 'is in this building — follow the signs inside for the floor.')}` : '');
+  box.hidden = false;
 }
 
+// ── Campus search ──
+// Built on what OpenStreetMap actually holds (checked with
+// scripts/probe_campus.py): KTH names its buildings "KTH: D", "D", "M-huset";
+// SU names them in full ("Södra Huset", "Geovetenskapens hus"); neither maps
+// individual rooms. So a room is found through its building — the code's
+// letters at KTH, the house letter A–F in Södra huset at SU — plus a few lecture
+// halls whose building is well known, and everything else by name, address
+// or kind of place, forgiving accents, case and a typo.
+const CAMPUS_RULES = {
+  KTH: { codeLetters: true, halls: {} },
+  SU: {
+    codeLetters: false,
+    // Södra huset is houses A–F; room codes there start with the house letter.
+    house: { letters: 'ABCDEF', building: /^södra huset$/i, label: 'Södra huset' },
+    halls: { 'de geersalen': /geovetenskapens hus/i, 'ahlmannsalen': /geovetenskapens hus/i,
+             'nordenskiöldsalen': /geovetenskapens hus/i, 'aula magna': /aula magna/i,
+             'ub': /frescatibiblioteket/i, 'universitetsbiblioteket': /frescatibiblioteket/i },
+  },
+};
+// What people type → the kind of place, in both languages.
+const PLACE_WORDS = {
+  library: ['library', 'bibliotek', 'biblioteket', 'books'],
+  cafe: ['cafe', 'café', 'kafe', 'kafé', 'coffee', 'kaffe', 'fika'],
+  restaurant: ['restaurant', 'restaurang', 'lunch', 'food', 'mat', 'eat'],
+  fast_food: ['restaurant', 'restaurang', 'lunch', 'food', 'mat', 'snabbmat'],
+  toilets: ['toilet', 'toilets', 'toalett', 'toa', 'wc', 'bathroom', 'restroom'],
+  entrance: ['entrance', 'entré', 'entre', 'ingång', 'ingang', 'door', 'dörr'],
+};
+const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+// "KTH: D" → "D", so the campus prefix doesn't hide the building's own name.
+const bareName = s => String(s || '').replace(/^(KTH|SU)\s*:\s*/i, '').trim();
+function lev(a, b){
+  if (Math.abs(a.length - b.length) > 2) return 3;
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+// How well one query word matches a text: 3 exact word, 2 word prefix,
+// 1.5 inside a word, 1 within a typo or two (longer words only), 0 none.
+function wordScore(q, text){
+  const words = fold(text).split(/[^a-z0-9åäö]+/).filter(Boolean);
+  let best = 0;
+  for (const w of words) {
+    if (w === q) return 3;
+    if (w.startsWith(q)) best = Math.max(best, 2);
+    else if (q.length >= 3 && w.includes(q)) best = Math.max(best, 1.5);
+    else if (q.length >= 4 && lev(q, w) <= (q.length >= 7 ? 2 : 1)) best = Math.max(best, 1);
+  }
+  return best;
+}
+// Every query word has to match somewhere; the score is their sum.
+function textScore(qWords, texts){
+  let sum = 0;
+  for (const q of qWords) {
+    const s = Math.max(0, ...texts.map(t => wordScore(q, t)));
+    if (!s) return 0;
+    sum += s;
+  }
+  return sum;
+}
+// "sal D2", "Hörsal Q1", "room E31", "D-2" → "D2".
 const ROOM_CODE = /^([A-ZÅÄÖ]{1,3})[\s:.-]*(\d{1,4}[A-Z]?)$/;
-const norm = s => String(s || '').toUpperCase().replace(/\s+/g, '');
-// Ranked hits: [{kind:'room'|'building', i (building index), at, label, room}]
+function roomCode(raw){
+  const s = fold(raw).replace(/^(sal|salen|horsal|larosal|rum|room|lecture hall|hall)\s+/, '').toUpperCase().replace(/\s+/g, '');
+  const m = s.match(ROOM_CODE);
+  return m ? { letters: m[1], num: m[2], code: m[1] + m[2] } : null;
+}
+
 function campusSearch(q){
   if (!campusData) return [];
   const raw = q.trim();
   if (!raw) return [];
-  const n = norm(raw);
+  const rules = CAMPUS_RULES[campusFor] || { codeLetters: true, halls: {} };
+  const B = campusData.buildings;
   const hits = [];
-  // 1. A room OSM has mapped, exactly.
+  const add = h => { if (!hits.some(x => x.kind === h.kind && x.i === h.i && x.at === h.at)) hits.push(h); };
+
+  // 1. A room OSM maps indoors (none at KTH or SU today, but cheap to keep).
   campusData.rooms.forEach(r => {
-    if (norm(r.ref) === n || norm(r.name) === n) hits.push({ kind: 'room', at: r.at, label: r.ref, room: r.ref, level: r.level });
+    if (fold(r.ref).replace(/\s/g, '') === fold(raw).replace(/\s/g, '')) add({ kind: 'room', at: r.at, label: r.ref, level: r.level, score: 100 });
   });
-  // 2. A room code: its letters are the building.
-  const m = n.match(ROOM_CODE);
-  if (m) {
-    const letters = m[1];
-    campusData.buildings.forEach((b, i) => {
-      const ref = norm(b.ref), name = norm(b.name), alt = norm(b.alt);
-      if (ref === letters || new RegExp(`^${letters}-?HUSET\\b|^${letters}-?HUS\\b`).test(name) || new RegExp(`^${letters}-?HUSET`).test(alt)) {
-        hits.push({ kind: 'building', i, label: bldgLabel(b), room: raw.toUpperCase() });
-      }
-    });
+  // 2. A room code → its building.
+  const code = roomCode(raw);
+  if (code) {
+    if (rules.codeLetters) {
+      B.forEach((b, i) => {
+        const names = [bareName(b.name), b.ref, b.alt].map(v => fold(v).toUpperCase());
+        const L = code.letters;
+        if (names.some(n => n === L || n === `${L}-HUSET` || n === `${L}HUSET` || n === `${L}-HUS`)) {
+          add({ kind: 'building', i, label: bldgLabel(b), room: code.code, score: 90 });
+        }
+      });
+    }
+    if (rules.house && rules.house.letters.includes(code.letters) && code.letters.length === 1) {
+      B.forEach((b, i) => {
+        if (rules.house.building.test(bareName(b.name))) {
+          add({ kind: 'building', i, label: bldgLabel(b), room: code.code, score: 90,
+                note: `${t('cm_house', 'house')} ${code.letters}` });
+        }
+      });
+    }
   }
-  // 3. Building name, ref or address containing the text.
-  if (raw.length >= 2) {
-    const low = raw.toLowerCase();
-    campusData.buildings.forEach((b, i) => {
-      if (hits.some(h => h.i === i)) return;
-      if ([b.name, b.ref, b.alt, b.addr].some(v => v && String(v).toLowerCase().includes(low))) {
-        hits.push({ kind: 'building', i, label: bldgLabel(b) });
-      }
-    });
+  // 3. A lecture hall whose building is known.
+  const fq = fold(raw);
+  for (const [hall, re] of Object.entries(rules.halls || {})) {
+    if (fold(hall) === fq || (fq.length >= 4 && fold(hall).startsWith(fq))) {
+      B.forEach((b, i) => { if (re.test(bareName(b.name))) add({ kind: 'building', i, label: bldgLabel(b), room: hall.replace(/^./, c => c.toUpperCase()), score: 80 }); });
+    }
   }
-  return hits.slice(0, 12);
+  // 4. Buildings by name, ref or street address; places by name or by kind.
+  const qWords = fold(raw).split(/\s+/).filter(Boolean);
+  B.forEach((b, i) => {
+    const s = textScore(qWords, [bareName(b.name), b.ref, b.alt, b.addr]);
+    if (s) add({ kind: 'building', i, label: bldgLabel(b), score: 10 + s });
+  });
+  campusData.pois.forEach(p => {
+    const kindWords = (PLACE_WORDS[p.kind] || [p.kind]).join(' ');
+    const s = textScore(qWords, [p.name, kindWords]);
+    if (s) add({ kind: 'poi', at: p.at, label: p.name, poiKind: p.kind, score: 5 + s + (p.name ? 1 : 0) });
+  });
+  hits.sort((a, b) => b.score - a.score);
+  return hits.slice(0, 15);
+}
+
+// The closest few building names, for "did you mean".
+function campusSuggest(raw){
+  const q = fold(raw);
+  return campusData.buildings
+    .map((b, i) => ({ i, label: bldgLabel(b), d: lev(q, fold(bareName(b.name) || b.addr || '').slice(0, q.length + 2)) }))
+    .filter(x => x.label).sort((a, b) => a.d - b.d).slice(0, 4);
+}
+const POI_LABEL = () => ({ entrance: t('cm_entrance', 'Entrance'), library: t('cm_library', 'Library'), cafe: t('cm_cafe', 'Café'),
+  restaurant: t('cm_restaurant', 'Restaurant'), fast_food: t('cm_restaurant', 'Restaurant'), toilets: t('cm_toilets', 'Toilets'),
+  bicycle_parking: t('cm_bikes', 'Bike parking') });
+
+let campusHits = [], campusSel = 0;
+function goCampusHit(h){
+  if (!h) return;
+  if (h.kind === 'building') { focusBuilding(h.i, h.room, h.note); return; }
+  leafletMap.flyTo(h.at, 19, { duration: 0.5 });
+  const what = h.kind === 'room' ? `${t('cm_room', 'Room')} <b>${esc(h.label)}</b>` : `<b>${esc(h.label || POI_LABEL()[h.poiKind] || h.poiKind)}</b> · ${esc(POI_LABEL()[h.poiKind] || '')}`;
+  L.popup().setLatLng(h.at).setContent(what).openOn(leafletMap);
 }
 function renderCampusResults(q){
   const list = document.getElementById('campusResults');
   const note = document.getElementById('campusNote');
   note.hidden = true;
-  const hits = campusSearch(q);
+  campusHits = campusSearch(q);
+  campusSel = 0;
   if (!q.trim()) {
-    list.innerHTML = `<li class="cm-hint">${t('cm_hint', 'Type a room code like D2 or Q31, or a building name.')} ${campusData.buildings.length} ${t('cm_bldgs', 'buildings mapped')}${campusData.rooms.length ? `, ${campusData.rooms.length} ${t('cm_rooms', 'rooms')}` : ''}.</li>`;
+    // A directory to browse when you don't know what to type.
+    const named = campusData.buildings.map((b, i) => ({ i, label: bldgLabel(b) }))
+      .filter(x => x.label && !/^\d/.test(x.label))
+      .sort((a, b) => a.label.localeCompare(b.label, 'sv'));
+    list.innerHTML = `<li class="cm-hint">${t('cm_hint', 'Type a room code like D2 or Q31, a building, a street address, or a place like library or café.')}</li>`
+      + `<li class="cm-dir">${named.map(x => `<button type="button" class="cm-chip" data-i="${x.i}">${esc(x.label)}</button>`).join('')}</li>`;
+    list.querySelectorAll('.cm-chip').forEach(btn => btn.addEventListener('click', () => focusBuilding(Number(btn.dataset.i))));
     return;
   }
-  if (!hits.length) {
-    list.innerHTML = `<li class="cm-hint">${t('cm_none', 'Nothing found. Not every building is labelled in OpenStreetMap — try the building’s name or street address.')}</li>`;
+  if (!campusHits.length) {
+    const sug = campusSuggest(q);
+    list.innerHTML = `<li class="cm-hint">${t('cm_none', 'Nothing found. Not every building is labelled in OpenStreetMap — try the building’s name or street address.')}</li>`
+      + (sug.length ? `<li class="cm-hint">${t('cm_maybe', 'Did you mean')}: ${sug.map(x => `<button type="button" class="cm-chip" data-i="${x.i}">${esc(x.label)}</button>`).join(' ')}</li>` : '');
+    list.querySelectorAll('.cm-chip').forEach(btn => btn.addEventListener('click', () => focusBuilding(Number(btn.dataset.i))));
     return;
   }
-  list.innerHTML = hits.map((h, k) => `<li><button type="button" class="cm-hit" data-k="${k}">${h.kind === 'room'
-      ? `${t('cm_room', 'Room')} ${esc(h.label)}${h.level != null ? ` · ${t('cm_level', 'level')} ${esc(h.level)}` : ''}`
-      : `${h.room ? `${esc(h.room)} → ` : ''}${esc(h.label)}`}</button></li>`).join('');
-  list.querySelectorAll('.cm-hit').forEach(btn => btn.addEventListener('click', () => {
-    const h = hits[Number(btn.dataset.k)];
-    if (h.kind === 'room') {
-      leafletMap.flyTo(h.at, 19, { duration: 0.5 });
-      L.popup().setLatLng(h.at).setContent(`${t('cm_room', 'Room')} <b>${esc(h.label)}</b>`).openOn(leafletMap);
-    } else focusBuilding(h.i, h.room);
-  }));
-  // Enter on a single obvious answer goes straight there.
-  if (hits.length === 1 && hits[0].kind === 'building') focusBuilding(hits[0].i, hits[0].room);
+  const kindTag = h => h.kind === 'building' ? t('cm_building', 'Building') : h.kind === 'room' ? t('cm_room', 'Room') : (POI_LABEL()[h.poiKind] || h.poiKind);
+  list.innerHTML = campusHits.map((h, k) => `<li><button type="button" class="cm-hit${k === 0 ? ' sel' : ''}" data-k="${k}">
+      <span class="cm-kind">${esc(kindTag(h))}</span>
+      ${h.room ? `<b>${esc(h.room)}</b> → ` : ''}${esc(h.label || kindTag(h))}${h.note ? ` · ${esc(h.note)}` : ''}${h.level != null ? ` · ${t('cm_level', 'level')} ${esc(h.level)}` : ''}</button></li>`).join('');
+  list.querySelectorAll('.cm-hit').forEach(btn => btn.addEventListener('click', () => goCampusHit(campusHits[Number(btn.dataset.k)])));
+  // A room code that resolves to one building is the answer — show it straight away.
+  if (campusHits[0].room && campusHits.filter(h => h.room).length === 1) goCampusHit(campusHits[0]);
+}
+// ↑/↓ move through the results, Enter goes to the highlighted one.
+function campusKey(e){
+  if (!campusHits.length || !['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;
+  e.preventDefault();
+  if (e.key === 'Enter') return goCampusHit(campusHits[campusSel]);
+  campusSel = (campusSel + (e.key === 'ArrowDown' ? 1 : -1) + campusHits.length) % campusHits.length;
+  document.querySelectorAll('#campusResults .cm-hit').forEach((b, k) => b.classList.toggle('sel', k === campusSel));
 }
 
 function renderSidebar(){
@@ -5898,6 +6034,7 @@ document.getElementById('discordCopy').addEventListener('click', async (e) => {
 document.getElementById('campusBtn').addEventListener('click', openCampus);
 document.getElementById('campusExit').addEventListener('click', exitCampus);
 document.getElementById('campusQ').addEventListener('input', e => renderCampusResults(e.target.value));
+document.getElementById('campusQ').addEventListener('keydown', campusKey);
 // Esc leaves the campus map — unless the compare dialog is open, which Esc closes first.
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && campusMode && document.getElementById('compareModal').hidden) exitCampus();
