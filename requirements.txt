@@ -20,3 +20,9 @@ keyring>=24.0
 # keyring -> SecretStorage, but macOS keyring uses the Keychain backend and
 # pulls in no crypto at all, so on Ivar's Mac it would simply have been absent.
 cryptography>=42.0
+
+# Build-time only: drawing the link-preview card (og_image.py). fontTools and
+# brotli unpack the self-hosted woff2 fonts, which Pillow can't read directly.
+Pillow>=10.1
+fonttools>=4.47
+brotli>=1.1

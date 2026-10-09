@@ -13,10 +13,33 @@
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <meta name="apple-mobile-web-app-title" content="Nästet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Served from this site rather than Google Fonts and cdnjs: a visitor's IP
+     address no longer goes to either just for loading the page, and the page
+     no longer waits on two more hosts. Same files, same OFL/BSD licences —
+     see vendor/. -->
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+<link rel="preload" href="vendor/fonts/familjen-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Same family names the rest of this sheet already uses, so nothing below
+     changed. Latin subset only — it covers å, ä and ö; anything outside it
+     (arrows, for one) falls back per glyph to a system font. */
+  @font-face{
+    font-family:'Archivo'; font-style:normal; font-display:swap;
+    font-weight:100 900; font-stretch:62% 125%;
+    src:url(vendor/fonts/archivo.woff2) format('woff2-variations'), url(vendor/fonts/archivo.woff2) format('woff2');
+  }
+  @font-face{
+    font-family:'Familjen Grotesk'; font-style:normal; font-display:swap;
+    font-weight:400 700;
+    src:url(vendor/fonts/familjen-grotesk.woff2) format('woff2-variations'), url(vendor/fonts/familjen-grotesk.woff2) format('woff2');
+  }
+  @font-face{
+    font-family:'JetBrains Mono'; font-style:normal; font-display:swap;
+    font-weight:100 800;
+    src:url(vendor/fonts/jetbrains-mono.woff2) format('woff2-variations'), url(vendor/fonts/jetbrains-mono.woff2) format('woff2');
+  }
+
   /* ── Palette ─────────────────────────────────────────────
      Two themes, both driven entirely by these tokens: markers, chips and
      tiles all read them through var(), so switching theme repaints without
@@ -37,12 +60,19 @@
     --teal:#5fb0a4;    /* SSSB */
     --plum:#ab8fb5;    /* Bostadsförmedlingen */
     --ochre:#d3a244;   /* alerts, refresh, NEW, the campus marker */
+    /* Ochre used as text rather than fill. The same colour in dark; in light
+       the fill ochre measured 3.0:1 as text on the panels. */
+    --accent-ink:var(--ochre);
     --ochre-rgb:211,162,68;
     --teal-soft:rgba(95,176,164,0.16);
     --teal-line:rgba(95,176,164,0.45);
     --plum-soft:rgba(171,143,181,0.16);
     --plum-line:rgba(171,143,181,0.45);
     --empty:#5c6560;      /* an area with nothing available right now */
+    /* Small secondary text. Separate from --empty, which it used to borrow:
+       that grey is for a marker with nothing in it, and as text it measured
+       2.5:1. This one clears WCAG's 4.5:1 on every surface it sits on. */
+    --faint:#8a948e;
     --school-pin:#e6d79a;
     --pin-ring:#14171a;   /* = --bg, so markers read as cut out of the page */
     --display:'Familjen Grotesk', system-ui, sans-serif;
@@ -56,19 +86,22 @@
     --rule:#d3ccb4;
     --border:#c6bea3;
     --ink:#22301f;
-    --dim:#6f7a68;
+    /* Darkened from #6f7a68, which measured 3.4–4.0:1 on the light panels. */
+    --dim:#586252;
     --leaf:#4e8248;
     --clay:#b2563f;
     --slate:#3f6f8a;
     --teal:#3c7d7a;
     --plum:#8a6a86;
     --ochre:#b07d2a;
+    --accent-ink:#835710;
     --ochre-rgb:176,125,42;
     --teal-soft:rgba(60,125,122,0.14);
     --teal-line:rgba(60,125,122,0.45);
     --plum-soft:rgba(138,106,134,0.14);
     --plum-line:rgba(138,106,134,0.45);
     --empty:#a49d89;
+    --faint:#655e4c;
     --school-pin:#4a4326;
     --pin-ring:#f6f2e8;
   }
@@ -249,7 +282,7 @@
     position:absolute;top:-6px;right:-6px;
     min-width:15px;height:15px;
     font-family:var(--mono);font-size:9px;font-weight:600;line-height:15px;
-    background:var(--ochre);color:var(--bg);
+    background:var(--accent-ink);color:var(--bg);
     text-align:center;
   }
 
@@ -313,7 +346,8 @@
   #groceryChip .sw{background:var(--ochre);border-radius:50%;}
   /* Toggle is on but the map is zoomed out past the threshold: dimmed like an
      off chip, but dashed, so "on and waiting" reads differently from "off". */
-  #groceryChip.zoomed-out{opacity:0.55;border-style:dashed;}
+  #groceryChip.zoomed-out{border-style:dashed;color:var(--faint);}
+  #groceryChip.zoomed-out .sw{opacity:0.55;}
   /* No rule for the grocery dots on purpose: they're canvas-rendered, so CSS
      can't reach them and their colour is resolved in JS (see cssVar). */
 
@@ -397,7 +431,7 @@
     border-top:1px solid var(--ochre);
     transform:rotate(45deg);
   }
-  #refreshNote b{color:var(--ochre);font-weight:600;}
+  #refreshNote b{color:var(--accent-ink);font-weight:600;}
   #refreshNote .elapsed{font-variant-numeric:tabular-nums;}
 
   #meta{
@@ -549,6 +583,15 @@
     display:flex;justify-content:space-between;align-items:center;gap:8px;
   }
   .listing-row .area-name{font-weight:700;font-size:13px;}
+  /* The row's title is its keyboard handle: a real button, so Tab reaches every
+     listing and Enter opens it, while a mouse can still click anywhere on the
+     row. The row itself stays a plain container because it will hold buttons
+     of its own, and buttons can't nest. */
+  .row-open{
+    font:inherit; color:inherit; text-align:left; background:none; border:0;
+    padding:0; margin:0; cursor:pointer; display:block; width:100%;
+  }
+  .row-open:focus-visible{ outline:2px solid var(--ochre); outline-offset:3px; border-radius:2px; }
   .listing-row .queue-badge{
     font-family:var(--mono);
     font-size:12px;font-weight:600;
@@ -574,7 +617,7 @@
   .new-tag{
     position:absolute;top:-7px;right:10px;
     font-family:var(--mono);font-size:9px;font-weight:600;
-    background:var(--ochre);color:var(--bg);
+    background:var(--accent-ink);color:var(--bg);
     padding:2px 6px;letter-spacing:.05em;
   }
   .search-input{
@@ -783,7 +826,7 @@
   .wip-tag{
     display:inline-block;margin-left:7px;
     font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;
-    background:var(--ochre);color:var(--bg);
+    background:var(--accent-ink);color:var(--bg);
     padding:2px 6px;border-radius:3px;
     vertical-align:1px;
   }
@@ -863,13 +906,13 @@
   }
   #schoolSelect:hover{ border-color:var(--border); }
   #advToggle{
-    background:transparent; border:none; color:var(--ochre); width:auto; height:auto;
+    background:transparent; border:none; color:var(--accent-ink); width:auto; height:auto;
   }
   #advToggle:hover{ background:var(--card); }
-  #advToggle.open{ background:var(--card); border-color:transparent; color:var(--ochre); }
-  .adv-count{ top:2px; right:2px; background:transparent; color:var(--ochre); font-weight:700; }
+  #advToggle.open{ background:var(--card); border-color:transparent; color:var(--accent-ink); }
+  .adv-count{ top:2px; right:2px; background:transparent; color:var(--accent-ink); font-weight:700; }
   #advFilters{ padding:11px 15px 13px; }
-  #advReset{ color:var(--ochre); text-transform:uppercase; letter-spacing:0.1em; font-size:10px; }
+  #advReset{ color:var(--accent-ink); text-transform:uppercase; letter-spacing:0.1em; font-size:10px; }
 
   /* Sliders: 2px track over tick marks, square handle, dashed when parked. */
   .slider-row{ gap:12px; }
@@ -921,10 +964,11 @@
     font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase;
     padding:5px 9px; gap:6px;
   }
-  .legend button:hover{ background:var(--ochre); border-color:var(--ochre); color:var(--bg); }
+  .legend button:hover{ background:var(--accent-ink); border-color:var(--accent-ink); color:var(--bg); }
   .legend button .sw{ width:7px; height:7px; border-radius:0; }
-  .legend button.off{ opacity:1; border-color:var(--rule); color:var(--empty); }
+  .legend button.off{ opacity:1; border-color:var(--rule); color:var(--faint); }
   .legend button.off .sw{ background:var(--empty) !important; }
+  .legend button.off:hover{ color:var(--bg); }
   #groceryChip .sw{ border-radius:50%; }
 
   /* Sidebar: tabs left-aligned on the rule, not two stretched halves. */
@@ -943,6 +987,7 @@
     letter-spacing:0.1em; text-transform:uppercase;
   }
   .panel-header .back:hover{ color:var(--ink); }
+  .panel-header .share-link{ float:right; }
   .sr-title{
     position:absolute; width:1px; height:1px; overflow:hidden;
     clip-path:inset(50%); white-space:nowrap;
@@ -978,7 +1023,7 @@
   .listing-row.rail-0, .listing-row.rail-1, .listing-row.rail-2, .listing-row.rail-3{ border-left:none; }
   .listing-row .row-top{ align-items:flex-start; }
   .row-head{ display:flex; gap:9px; min-width:0; }
-  .row-index{ font-family:var(--mono); font-size:9.5px; color:var(--empty); padding-top:3px; }
+  .row-index{ font-family:var(--mono); font-size:9.5px; color:var(--faint); padding-top:3px; }
   .listing-row .area-name{
     font-family:var(--figure); font-stretch:106%; font-weight:700; font-size:14px;
     display:flex; align-items:baseline; gap:7px;
@@ -1004,7 +1049,7 @@
   }
   .leader .dots{ flex:1; border-bottom:1px dotted var(--rule); transform:translateY(-3px); }
   .leader .leader-val{ color:var(--ink); font-weight:700; }
-  .leader .leader-val.soon{ color:var(--ochre); }
+  .leader .leader-val.soon{ color:var(--accent-ink); }
   /* How long this queue is against the 2 000-day span the queue-days slider
      covers — so "410 days" has something to be long or short *against*. */
   .qbar{ position:relative; height:2px; background:var(--rule); margin-top:7px; display:none; }
@@ -1012,7 +1057,7 @@
   .qbar-cap{
     position:absolute; right:0; top:5px;
     font-family:var(--mono); font-size:8px; letter-spacing:0.1em;
-    text-transform:uppercase; color:var(--empty);
+    text-transform:uppercase; color:var(--faint);
   }
   .listing-row.featured .qbar{ margin-bottom:13px; }
   .row-facts{ display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; display:none; }
@@ -1053,7 +1098,7 @@
   /* NEW reads as a stamp pressed onto the card, not a filled tab. */
   .new-tag{
     top:-9px; right:10px;
-    background:var(--bg); border:1px solid var(--ochre); color:var(--ochre);
+    background:var(--bg); border:1px solid var(--ochre); color:var(--accent-ink);
     font-weight:700; letter-spacing:0.18em; padding:3px 7px;
     transform:rotate(-5deg);
   }
@@ -1093,7 +1138,7 @@
   #queues{ padding:16px 18px; }
   .queue-card{ border-radius:0; padding:16px; }
   .queue-card h3{ font-family:var(--figure); font-stretch:112%; font-weight:800; font-size:16px; }
-  .queue-card a{ color:var(--ochre); }
+  .queue-card a{ color:var(--accent-ink); }
   .queue-card .covers{ font-size:9px; letter-spacing:0.1em; text-transform:uppercase; }
 
   /* City picker */
@@ -1111,17 +1156,17 @@
   }
   .city-option:hover{ background:var(--card); border-color:var(--rule); }
   .city-option::after{
-    content:'→'; font-family:var(--mono); font-size:14px; color:var(--ochre);
+    content:'→'; font-family:var(--mono); font-size:14px; color:var(--accent-ink);
   }
   .city-option .city-name{ font-family:var(--figure); font-stretch:118%; font-weight:800; font-size:21px; }
   .city-option .city-meta{ font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; margin-top:5px; }
-  .wip-tag{ border-radius:0; background:transparent; border:1px solid var(--ochre); color:var(--ochre); }
+  .wip-tag{ border-radius:0; background:transparent; border:1px solid var(--ochre); color:var(--accent-ink); }
 
   /* Map furniture */
   .area-roundel{ font-family:var(--figure); font-stretch:112%; font-weight:800; border-width:3px; }
   .listing-dot.many{ font-family:var(--figure); font-stretch:112%; font-weight:800; }
   #coverageNote, #sourceAlert{ border-radius:0; }
-  #coverageNote a, #sourceAlert a, #sourceNote a{ color:var(--ochre); }
+  #coverageNote a, #sourceAlert a, #sourceNote a{ color:var(--accent-ink); }
   .leaflet-container .leaflet-control-attribution{ border-radius:0; }
   .leaflet-container .leaflet-control-attribution a{ color:var(--dim); }
 
@@ -1169,12 +1214,12 @@
 
   .open-hint{
     font-family:var(--mono); font-size:9.5px; line-height:1.45;
-    color:var(--ochre); margin-top:7px;
+    color:var(--accent-ink); margin-top:7px;
   }
   .list-end{
     display:flex; align-items:center; gap:10px; margin-top:14px;
     font-family:var(--mono); font-size:9px; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--empty);
+    text-transform:uppercase; color:var(--faint);
   }
   .list-end::before, .list-end::after{
     content:''; flex:1; border-top:1px dotted var(--rule);
@@ -1214,11 +1259,11 @@
     border-radius:2px; padding:7px 10px; cursor:pointer; white-space:nowrap;
     box-shadow:0 1px 4px rgba(0,0,0,0.18);
   }
-  .clear-sel:hover{ border-color:var(--ochre); color:var(--ochre); }
+  .clear-sel:hover{ border-color:var(--ochre); color:var(--accent-ink); }
 
   /* ── Type an exact number into a slider's readout ───────────────────────── */
   .editable{ cursor:text; border-bottom:1px dashed var(--rule); }
-  .editable:hover, .editable:focus-visible{ border-bottom-color:var(--ochre); color:var(--ochre); }
+  .editable:hover, .editable:focus-visible{ border-bottom-color:var(--ochre); color:var(--accent-ink); }
   /* The input replaces the readout in place, so it has to sit on the same
      baseline at the same size — anything else makes the row jump on click. */
   .val-edit{
@@ -1238,7 +1283,7 @@
   #watchToggle{
     display:flex; align-items:center; gap:8px; width:100%;
     padding:11px 14px; background:none; border:0; cursor:pointer; text-align:left;
-    font:600 11.5px/1.35 var(--mono); letter-spacing:0.02em; color:var(--ochre);
+    font:600 11.5px/1.35 var(--mono); letter-spacing:0.02em; color:var(--accent-ink);
   }
   #watchToggle:hover{ background:color-mix(in srgb, var(--ochre) 8%, transparent); }
   #watchToggle .bell{ font-size:13px; }
@@ -1296,7 +1341,7 @@
        tracked-out capitals. */
     text-transform:inherit; letter-spacing:inherit;
   }
-  #legalLink:hover{ color:var(--ochre); }
+  #legalLink:hover{ color:var(--accent-ink); }
   #legalOverlay{
     position:fixed; inset:0; z-index:2100;   /* over the city picker's 2000 */
     display:flex; align-items:flex-start; justify-content:center;
@@ -1316,7 +1361,7 @@
   }
   .legal-card h3{
     margin:20px 0 5px; font:600 10px/1.3 var(--mono);
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--ochre);
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-ink);
   }
   .legal-card p{
     margin:0; font-family:var(--display); font-size:13px; line-height:1.65; color:var(--dim);
@@ -1327,7 +1372,7 @@
     background:color-mix(in srgb, var(--ink) 8%, transparent);
     padding:1px 4px; border-radius:2px;
   }
-  .legal-card a{ color:var(--ochre); }
+  .legal-card a{ color:var(--accent-ink); }
   .legal-date{
     margin-top:22px !important; padding-top:14px; border-top:1px solid var(--rule);
     font-family:var(--mono) !important; font-size:10.5px !important; opacity:0.8;
@@ -1474,7 +1519,7 @@
     <p data-i18n="lg_device">One item, <code>nastet-theme</code>, which remembers whether you chose the light or dark theme. It is written when you click the toggle and it never leaves your browser. A watch you set up lives in this page's address instead of in storage — which means it sits in your URL bar and your bookmarks, and is never sent to me or to anyone else.</p>
 
     <h3 data-i18n="lg_third_h">Who your browser talks to</h3>
-    <p data-i18n="lg_third">Loading any web page reveals your IP address to whoever serves it, and this page is assembled from a few places: it is hosted on <b>GitHub Pages</b>, its map tiles come from <b>CARTO</b>, its map library from <b>Cloudflare's cdnjs</b> and its typefaces from <b>Google Fonts</b>. Those companies see your IP address in their own logs under their own privacy policies. I get nothing back from them — no report, no counts, no identities.</p>
+    <p data-i18n="lg_third">Loading any web page reveals your IP address to whoever serves it. This page is hosted on <b>GitHub Pages</b> and its map tiles come from <b>CARTO</b>; everything else — the typefaces and the map library included — is served from this site itself. Those two companies see your IP address in their own logs, under their own privacy policies. I get nothing back from them — no report, no counts, no identities.</p>
 
     <h3 data-i18n="lg_rights_h">Your rights</h3>
     <p data-i18n="lg_rights">Because I hold no personal data about you, there is nothing for me to show you, correct or erase — but ask anyway if you think that is wrong, and I will tell you exactly what I have. You can also complain to <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>, the Swedish data protection authority.</p>
@@ -1616,7 +1661,7 @@
     </div>
 
     <div class="control">
-      <label data-i18n="max_commute" title="Routed cycling time from the area to the campus above">Max commute (bike)</label>
+      <label for="maxCommute" data-i18n="max_commute" title="Routed cycling time from the area to the campus above">Max commute (bike)</label>
       <div class="slider-row">
         <input type="range" id="maxCommute" min="5" max="90" value="45" step="5">
         <span id="maxCommuteLabel">45 min</span>
@@ -1624,7 +1669,7 @@
     </div>
 
     <div class="control">
-      <label data-i18n="max_queue">Max queue days</label>
+      <label for="maxQueue" data-i18n="max_queue">Max queue days</label>
       <div class="slider-row">
         <input type="range" id="maxQueue" min="0" max="2000" value="2000" step="50">
         <span id="maxQueueLabel" class="any">Any</span>
@@ -1632,7 +1677,7 @@
     </div>
 
     <div class="control">
-      <label data-i18n="max_rent">Max rent</label>
+      <label for="maxRent" data-i18n="max_rent">Max rent</label>
       <div class="slider-row">
         <input type="range" id="maxRent" min="3000" max="13000" value="13000" step="250">
         <span id="maxRentLabel" class="any">Any</span>
@@ -1677,7 +1722,7 @@
 
     <div id="advFilters">
       <div class="control">
-        <label data-i18n="min_size">Min size</label>
+        <label for="minSize" data-i18n="min_size">Min size</label>
         <div class="slider-row">
           <input type="range" id="minSize" min="0" max="80" value="0" step="2">
           <span id="minSizeLabel" class="any">Any</span>
@@ -1685,7 +1730,7 @@
       </div>
 
       <div class="control">
-        <label data-i18n="min_floor">Lowest floor</label>
+        <label for="minFloor" data-i18n="min_floor">Lowest floor</label>
         <div class="slider-row">
           <input type="range" id="minFloor" min="0" max="16" value="0" step="1">
           <span id="minFloorLabel" class="any">Any</span>
@@ -1693,7 +1738,7 @@
       </div>
 
       <div class="control">
-        <label data-i18n="max_floor">Highest floor</label>
+        <label for="maxFloor" data-i18n="max_floor">Highest floor</label>
         <div class="slider-row">
           <input type="range" id="maxFloor" min="0" max="16" value="16" step="1">
           <span id="maxFloorLabel" class="any">Any</span>
@@ -1701,7 +1746,7 @@
       </div>
 
       <div class="control">
-        <label data-i18n="min_contract">Min contract</label>
+        <label for="minYears" data-i18n="min_contract">Min contract</label>
         <div class="slider-row">
           <input type="range" id="minYears" min="0" max="10" value="0" step="1">
           <span id="minYearsLabel" class="any">Any</span>
@@ -1793,7 +1838,7 @@
   </div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
 <script>
 // ── Språk / language ───────────────────────────────────────────────────────
 // English is the source of truth and stays in the HTML, so a no-JS visitor and
@@ -1877,7 +1922,7 @@ const I18N = { sv: {
   lg_device_h: 'Vad som sparas på din enhet',
   lg_device: 'En enda sak: <code>nastet-theme</code>, som minns om du valde ljust eller mörkt läge. Den skrivs när du klickar på knappen och lämnar aldrig din webbläsare. En bevakning du ställer in ligger i sidans adress i stället för i lagringen — den sitter alltså i adressfältet och i dina bokmärken, och skickas aldrig till mig eller någon annan.',
   lg_third_h: 'Vem din webbläsare pratar med',
-  lg_third: 'Att ladda vilken webbsida som helst avslöjar din IP-adress för den som levererar den, och den här sidan sätts ihop från några håll: den ligger på <b>GitHub Pages</b>, kartrutorna kommer från <b>CARTO</b>, kartbiblioteket från <b>Cloudflares cdnjs</b> och typsnitten från <b>Google Fonts</b>. De företagen ser din IP-adress i sina egna loggar, under sina egna integritetspolicyer. Jag får ingenting tillbaka från dem — ingen rapport, inga siffror, inga identiteter.',
+  lg_third: 'Att ladda vilken webbsida som helst avslöjar din IP-adress för den som levererar den. Den här sidan ligger på <b>GitHub Pages</b> och kartrutorna kommer från <b>CARTO</b>; allt annat — typsnitten och kartbiblioteket också — levereras från sidan själv. De två företagen ser din IP-adress i sina egna loggar, under sina egna integritetspolicyer. Jag får ingenting tillbaka från dem — ingen rapport, inga siffror, inga identiteter.',
   lg_rights_h: 'Dina rättigheter',
   lg_rights: 'Eftersom jag inte har några personuppgifter om dig finns det ingenting för mig att visa, rätta eller radera — men fråga ändå om du tror att det är fel, så berättar jag exakt vad jag har. Du kan också klaga hos <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>.',
   lg_official_h: 'Inte officiellt',
@@ -1933,6 +1978,9 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  copy_link: '⧉ Kopiera länk',
+  link_copied: '✓ Kopierad',
+  copy_link_prompt: 'Kopiera länken:',
   back_map: '← Tillbaka till kartan',
   group_North: 'Norr',
   group_South: 'Söder',
@@ -1955,6 +2003,8 @@ const I18N = { sv: {
   first_seen: 'Först sedd {ago} — bostäder är märkta NY i {h} h',
   within: 'inom {n} min från {s}',
   unofficial_lead: 'Inofficiell vy av ',
+  n_available: 'lediga',
+  none_available: 'inga lediga',
   unofficial: ' · inofficiell vy av ',
   listed_providers: 'de listade källorna',
   apply_there: ' — sök där.',
@@ -2992,7 +3042,7 @@ function renderMeta(){
   const every = Number(d.update_every_hours) || 2;
   const ageMin = (Date.now() - new Date(d.generated_at).getTime()) / 60000;
   const stale = !d.demo && ageMin > Math.max(180, every * 60 * 2.5);
-  updated.style.color = stale ? 'var(--ochre)' : '';
+  updated.style.color = stale ? 'var(--accent-ink)' : '';
   updated.title = stale
     ? `These listings are ${Math.round(ageMin / 60)}h old — no scrape has completed since. Hit "Refresh listings".`
     : stamp(d.generated_at);
@@ -3136,6 +3186,7 @@ function renderSchools(){
     }).addTo(leafletMap);
     marker.bindTooltip(isCentre ? school.name : `${school.name} — click to centre here`,
                        { direction:'top', opacity: isCentre ? 1 : 0.85 });
+    nameMarker(marker, school.name);
     if (!isCentre) marker.on('click', () => setSchool(id));
     markers.push(marker);
   });
@@ -3257,6 +3308,15 @@ function splitSignature(){
   return Object.keys(currentData.areas).filter(areaSplits).sort().join('|');
 }
 
+// Leaflet renders a divIcon marker as a focusable role="button" with nothing
+// inside it a screen reader can say, so every roundel and pin read out as just
+// "button". aria-label rather than Leaflet's `title` option, which would add a
+// native browser tooltip on top of Leaflet's own.
+function nameMarker(marker, label){
+  const el = marker.getElement && marker.getElement();
+  if (el) el.setAttribute('aria-label', label);
+}
+
 function renderMap(){
   lastSplitSignature = splitSignature();
   markers.forEach(m => leafletMap.removeLayer(m));
@@ -3296,6 +3356,7 @@ function renderMap(){
             iconSize: [size, size],
           });
           const marker = L.marker(at, { icon, zIndexOffset: 200 }).addTo(leafletMap);
+          nameMarker(marker, `${address} — ${rows.length} ${t('n_available', 'available')}`);
           const line = l => [l.type, l.size_sqm ? l.size_sqm + ' m²' : null,
                              l.rent_sek ? num(l.rent_sek) + ' kr' : null,
                              l.queue_days != null ? num(l.queue_days) + ' d' : null]
@@ -3329,6 +3390,8 @@ function renderMap(){
         iconSize:[size,size],
       });
       const marker = L.marker(area.coords, { icon }).addTo(leafletMap);
+      nameMarker(marker, count > 0 ? `${name} — ${count} ${t('n_available', 'available')}`
+                                   : `${name} — ${t('none_available', 'none available')}`);
       marker.on('click', () => selectArea(name));
       if (count > 0) {
         marker.bindTooltip(`${name} · ${count} available`, { direction:'top' });
@@ -3345,6 +3408,7 @@ function renderMap(){
     if (!l.coords) return;
     const icon = L.divIcon({ className:'', html:'<div class="bf-pin"></div>', iconSize:[13,13] });
     const marker = L.marker(l.coords, { icon }).addTo(leafletMap);
+    nameMarker(marker, `${l.address || l.area}${l.rent_sek ? ' — ' + num(l.rent_sek) + ' kr' : ''}`);
     marker.bindTooltip(`${l.address || l.area} · ${l.rent_sek ? l.rent_sek + ' kr' : ''} (${l.landlord || (providerInfo[l.provider] || {}).abbr || l.provider})`, { direction:'top' });
     // Selects the listing instead of leaving the page immediately — a pin
     // gives no preview otherwise, unlike an SSSB area roundel which always
@@ -3446,6 +3510,51 @@ function syncClearChip(){
   const on = !!(selectedArea || selectedListingId);
   clearSelEl.hidden = !on;
   if (on) clearSelEl.textContent = t('clear_sel', '✕ Clear selection');
+  selectionToUrl();
+}
+
+// ?listing=<id> or ?area=<name>, so a link can point at one flat or one area.
+// Held off until the first payload has been applied: the render inside the
+// first loadData() runs with nothing selected, and syncing then would wipe the
+// very parameter the visitor arrived with before it could be read.
+let selectionUrlReady = false;
+
+function selectionToUrl(){
+  if (!selectionUrlReady) return;
+  const u = new URL(location.href);
+  u.searchParams.delete('listing');
+  u.searchParams.delete('area');
+  if (selectedListingId) u.searchParams.set('listing', selectedListingId);
+  else if (selectedArea) u.searchParams.set('area', selectedArea);
+  if (u.href !== location.href) history.replaceState(null, '', u);
+}
+
+// Only names and ids present in the loaded city count — the area name ends up
+// in the panel header, so nothing from the URL is trusted beyond a lookup key.
+function selectionFromUrl(){
+  const p = new URLSearchParams(location.search);
+  const id = p.get('listing');
+  const l = id && currentData.listings.find(x => x.id === id);
+  if (l) {
+    selectListing(l.id);
+    if (l.coords) leafletMap.flyTo(l.coords, Math.max(leafletMap.getZoom(), 15), { duration: 0.6 });
+    return;
+  }
+  const area = p.get('area');
+  if (area && Object.prototype.hasOwnProperty.call(currentData.areas || {}, area)) selectArea(area);
+}
+
+async function copySelectionLink(btn){
+  const url = location.href;
+  const done = t('link_copied', '✓ Copied');
+  try {
+    await navigator.clipboard.writeText(url);
+    btn.textContent = done;
+  } catch (e) {
+    // No clipboard permission (an embedded preview, an old browser): hand the
+    // link over in a box that can be copied by hand instead.
+    window.prompt(t('copy_link_prompt', 'Copy this link:'), url);
+  }
 }
 
 // The readouts take a chunk of a 340px sidebar — worth having, but once you
@@ -3627,7 +3736,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
         <div class="row-head">
           <span class="row-index">${String(index + 1).padStart(2, '0')}</span>
           <div>
-            <div class="area-name">${title}</div>
+            <button type="button" class="area-name row-open" onclick="event.stopPropagation();handleRowClick('${l.id.replace(/'/g,"\\'")}')">${title}</button>
             <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${commute}</div>
           </div>
         </div>
@@ -3996,7 +4105,7 @@ function renderSidebar(){
     // row and the single row shown below it in agreement.
     const commuteRef = currentData.areas[pickedListing.area] || pickedListing;
     header.innerHTML = `
-      <button class="back" onclick="clearListingSelection()">${t('back_all', '← All listings')}</button>
+      <button class="back" onclick="clearListingSelection()">${t('back_all', '← All listings')}</button><button class="back share-link" type="button" onclick="copySelectionLink(this)">${t('copy_link', '⧉ Copy link')}</button>
       <h2 id="panelTitle">${pickedListing.address || pickedListing.area}</h2>
       ${pickedListing.url ? `<div class="open-hint">${t('open_hint', 'Click the card — or the pin again — to open it at the landlord')}</div>` : ''}
       ${statsBlock(commuteRef)}
@@ -4005,7 +4114,7 @@ function renderSidebar(){
   } else if (selectedArea) {
     const area = currentData.areas[selectedArea];
     header.innerHTML = `
-      <button class="back" onclick="clearSelection()">${t('back_all', '← All listings')}</button>
+      <button class="back" onclick="clearSelection()">${t('back_all', '← All listings')}</button><button class="back share-link" type="button" onclick="copySelectionLink(this)">${t('copy_link', '⧉ Copy link')}</button>
       <h2 id="panelTitle">${selectedArea} <span style="color:var(--dim);font-weight:400;font-size:12px;">· ${area.group} ${groupNoun()} · ${areaProviderName() || ''}</span></h2>
       ${statsBlock(area)}
     `;
@@ -4381,6 +4490,10 @@ window.addEventListener('hashchange', () => {
   if (id && id !== currentCity) {
     currentCity = id;
     document.getElementById('cityPicker').hidden = true;
+    // Ids and area names belong to one city's payload.
+    selectedArea = null;
+    selectedListingId = null;
+    if (routeLine) { leafletMap.removeLayer(routeLine); routeLine = null; }
     loadData(false);
   }
 });
@@ -4402,6 +4515,9 @@ const firstLoad = (async () => {
     currentCity = cityIndex.default;
   }
   await loadData(false);
+  selectionFromUrl();
+  selectionUrlReady = true;
+  selectionToUrl();
   // Only after the first payload is in: watchList() needs listings to seed
   // against, and everything already showing is what the visitor came to look at
   // rather than news worth a pop-up.

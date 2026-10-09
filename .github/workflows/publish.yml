@@ -34,6 +34,9 @@ on:
       - 'sw.js'
       - 'manifest.webmanifest'
       - 'icon-*.png'
+      - 'vendor/**'
+      - 'history.py'
+      - 'og_image.py'
       - '.github/workflows/publish.yml'
 
 permissions:
@@ -163,6 +166,9 @@ jobs:
           # any of these turns the feature off silently on a phone, so the build
           # fails rather than publishes a page that quietly can't notify.
           cp sw.js manifest.webmanifest icon-180.png icon-192.png icon-512.png _site/
+          # Fonts, Leaflet and the QR encoder are served from the site itself
+          # rather than Google Fonts and cdnjs — see the comment in index.html.
+          cp -r vendor _site/
           python - <<'PY'
           import html, json, os, pathlib, sys
           sys.path.insert(0, ".")
@@ -244,6 +250,24 @@ jobs:
                 "operatingSystem": "Any", "isAccessibleForFree": True,
                 "inLanguage": "en", "areaServed": names}
 
+          # The unfurl picture. Optional: a deploy without it just falls back
+          # to the small "summary" card rather than failing.
+          card = "summary"
+          og_img = ""
+          try:
+              import sys
+              sys.path.insert(0, ".")
+              import og_image
+              og_image.draw(index).save("_site/og.png", optimize=True)
+              card = "summary_large_image"
+              og_img = (f'<meta property="og:image" content="{site}/og.png" />\n'
+                        '<meta property="og:image:width" content="1200" />\n'
+                        '<meta property="og:image:height" content="630" />\n'
+                        f'<meta property="og:image:alt" content="{attr(desc)}" />\n')
+              print("og.png drawn")
+          except Exception as e:
+              print(f"::warning title=og image::not drawn ({e})")
+
           head = (
               f'<meta name="description" content="{attr(desc)}" />\n'
               f'<link rel="canonical" href="{site}/" />\n'
@@ -255,7 +279,8 @@ jobs:
               f'<link rel="alternate" hreflang="en" href="{site}/" />\n'
               f'<link rel="alternate" hreflang="sv" href="{site}/?lang=sv" />\n'
               f'<link rel="alternate" hreflang="x-default" href="{site}/" />\n'
-              '<meta name="twitter:card" content="summary" />\n'
+              + og_img +
+              f'<meta name="twitter:card" content="{card}" />\n'
               '<script type="application/ld+json">'
               f'{json.dumps(ld, ensure_ascii=False)}</script>\n')
 
