@@ -1328,6 +1328,79 @@
     font:11px/1.5 var(--mono); color:var(--dim);
   }
   #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
+
+  /* ── On this device: profile, marks, compare, last visit ───────────────── */
+  .row-you{ display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+  .fact.you{ color:var(--dim); }
+  .fact.you.lead{ color:var(--accent-ink); border-color:var(--accent-ink); font-weight:600; }
+  .row-acts{ display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+  .row-acts .mark{
+    font:500 9px/1 var(--mono); letter-spacing:0.06em; text-transform:uppercase;
+    background:none; color:var(--faint); border:1px solid transparent;
+    padding:4px 6px; cursor:pointer;
+  }
+  .row-acts .mark:hover, .row-acts .mark:focus-visible{ color:var(--ink); border-color:var(--rule); }
+  .row-acts .mark.on{ color:var(--accent-ink); border-color:var(--accent-ink); }
+  .listing-row.marked-hidden{ opacity:0.6; }
+  .listing-row.marked-applied .area-name::after{
+    content:' ✓'; color:var(--accent-ink);
+  }
+  .since-strip{
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    margin:0 0 12px; padding:9px 11px; border:1px dashed var(--accent-ink);
+    font:11px/1.4 var(--mono); color:var(--dim);
+  }
+  .since-strip b{ color:var(--ink); }
+  .since-strip button, .link-btn, #compareBar button, .profile-card button{
+    font:600 9.5px/1 var(--mono); letter-spacing:0.06em; text-transform:uppercase;
+    background:none; color:var(--accent-ink); border:1px solid var(--accent-ink);
+    padding:6px 8px; cursor:pointer;
+  }
+  .since-strip button.ghost, #compareBar button.ghost, .profile-card button.ghost{
+    color:var(--dim); border-color:var(--rule);
+  }
+  .since-strip button.ghost{ margin-left:auto; }
+  .link-btn{ border:none; padding:0; color:var(--faint); }
+  .link-btn:hover{ color:var(--ink); }
+  #compareBar{
+    position:sticky; bottom:0; z-index:6;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:10px 14px; background:var(--panel); border-top:1px solid var(--accent-ink);
+    font:11px/1 var(--mono); color:var(--ink);
+  }
+  #compareBar[hidden]{ display:none; }
+  #compareBar span{ margin-right:auto; }
+  #compareBar.full{ animation:cmpshake .3s 2; }
+  @keyframes cmpshake{ 50%{ transform:translateX(3px); } }
+  @media (prefers-reduced-motion: reduce){ #compareBar.full{ animation:none; outline:1px solid var(--accent-ink); } }
+  #compareModal{
+    position:fixed; inset:0; z-index:2000; display:flex; align-items:center; justify-content:center;
+    background:color-mix(in srgb, var(--bg) 70%, transparent); padding:16px;
+  }
+  #compareModal[hidden]{ display:none; }
+  .compare-box{
+    background:var(--panel); border:1px solid var(--border); max-width:860px; width:100%;
+    max-height:calc(100vh - 32px); display:flex; flex-direction:column;
+  }
+  .compare-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--rule); }
+  .compare-head h3{ margin:0; font-size:15px; }
+  .compare-head .back{ font:600 10px/1 var(--mono); background:none; border:none; color:var(--dim); cursor:pointer; text-transform:uppercase; }
+  .compare-scroll{ overflow:auto; }
+  .compare-table{ border-collapse:collapse; width:100%; font-size:12px; }
+  .compare-table th, .compare-table td{ text-align:left; padding:7px 12px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  .compare-table thead th{ font-weight:700; color:var(--ink); }
+  .compare-table tbody th{ font:600 9.5px/1.4 var(--mono); letter-spacing:0.06em; text-transform:uppercase; color:var(--dim); white-space:nowrap; }
+  .compare-table td{ font-family:var(--mono); color:var(--ink); }
+  .compare-table .na{ color:var(--faint); }
+  .compare-table a{ color:var(--accent-ink); }
+  .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
+  .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
+  .pf-check input{ width:auto !important; accent-color:var(--ochre); }
+  .profile-card .kv.warn{ color:var(--accent-ink); }
+  #profileShareOut{ margin-top:10px; }
+  #profileShareOut .search-input{ width:100%; margin:0 0 8px; }
+  #profileQr{ width:150px; background:#fff; }
+  #profileQr svg{ display:block; width:100%; height:auto; }
   /* ── Privacy & terms ────────────────────────────────────────────────────── */
   /* Sits under the source note, which is where the takedown link already lives —
      the two are addressed to overlapping readers. */
@@ -1782,7 +1855,7 @@
         <div id="watchPanel" hidden>
           <p data-i18n="watch_p1">Tell it how many queue days you have <em>today</em> and which areas you'd take. It adds a day per day from now on, and watches for an SSSB place whose queue-day requirement has dropped to meet your count.</p>
           <p data-i18n="watch_p2"><b>You have to leave this page open</b> — in a pinned or background tab is fine. There's no server behind this site, so a running copy of the page is the only thing that can notice a new listing. Close it and the watch stops.</p>
-          <p data-i18n="watch_p3">A match arrives as a browser notification, so your browser will ask permission once. Your settings live in this page's address — bookmark it after you switch the watch on and you can pick the same watch up later, or on your phone.</p>
+          <p data-i18n="watch_p3">A match arrives as a browser notification, so your browser will ask permission once. The watch is remembered in this browser, and also rides in the page's address — bookmark that to take the same watch to your phone.</p>
           <p data-i18n="watch_p5"><b>On iPhone and iPad</b> a Safari tab can't show notifications at all. Use <em>Share → Add to Home Screen</em>, open Nästet from that icon and switch the watch on there. Even then iOS pauses a web app once you leave it, so treat the phone as somewhere to check the list rather than somewhere alerts reliably arrive — a desktop browser left open is what this is really built for.</p>
           <p data-i18n="watch_p4" class="kv">SSSB only: Bostadsförmedlingen ads are decided by a deadline rather than a queue-day figure, so there's nothing for your running count to be measured against.</p>
           <div class="watch-form">
@@ -1813,9 +1886,11 @@
       </div>
       <div id="sourceAlert" hidden></div>
       <div id="listings"></div>
+      <div id="compareBar" hidden></div>
     </div>
     <div id="queues">
       <div id="coverageNote" hidden></div>
+      <div class="queue-card profile-card" id="profileCard"></div>
       <div class="queue-card">
         <h3 data-i18n="q_sssb_h"><span class="q-num">1</span> SSSB queue</h3>
         <div class="covers" data-i18n="q_sssb_c">Covers: all SSSB areas (Lappkärrsberget, Jerum, Kungshamra, …)</div>
@@ -1838,16 +1913,23 @@
   </div>
 </main>
 
+<div id="compareModal" hidden></div>
 <script src="vendor/leaflet/leaflet.js"></script>
 <script>
 // ── Språk / language ───────────────────────────────────────────────────────
 // English is the source of truth and stays in the HTML, so a no-JS visitor and
 // any crawler that doesn't run scripts still get a readable page; Swedish is
-// applied over it. The choice lives in ?lang=sv rather than storage — the
-// localStorage ban applies here as much as anywhere, and a query parameter is
-// linkable and indexable besides, which a client-side-only switch would not be.
+// applied over it. The choice lives in ?lang=sv rather than storage: a query
+// parameter is linkable and indexable, which a client-side-only switch is not.
 // Values are author-written constants, never user input, which is why the ones
 // carrying markup (links, <em>) are applied as innerHTML.
+// For any text that isn't an author-written constant — typed input, values
+// read back from storage — on its way into innerHTML.
+function esc(v){
+  return String(v ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
 const I18N = { sv: {
   city_q: 'Vilken stad?',
   city_help: 'Välj var du pluggar. Du kan byta när som helst i toppmenyn.',
@@ -1909,7 +1991,7 @@ const I18N = { sv: {
   watch_cta: 'Vill du få en notis när något dyker upp?',
   watch_p1: 'Berätta hur många ködagar du har <em>idag</em> och vilka områden du skulle tacka ja till. Den räknar upp en dag per dag och håller utkik efter en SSSB-bostad vars ködagskrav sjunkit ner till din nivå.',
   watch_p2: '<b>Du måste låta sidan vara öppen</b> — en fastnålad flik eller en flik i bakgrunden räcker. Det finns ingen server bakom den här sidan, så det enda som kan upptäcka en ny bostad är en sida som faktiskt körs. Stänger du den slutar bevakningen.',
-  watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Dina inställningar ligger i sidans adress — spara den som bokmärke när du slagit på bevakningen, så kan du plocka upp samma bevakning senare, eller i mobilen.',
+  watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Bevakningen sparas i den här webbläsaren och följer också med i sidans adress — spara den som bokmärke för att ta med samma bevakning till mobilen.',
   watch_p4: 'Bara SSSB: annonserna hos Bostadsförmedlingen avgörs av en sista ansökningsdag i stället för ett antal ködagar, så det finns inget att mäta din uppräkning mot.',
   watch_p5: '<b>På iPhone och iPad</b> kan en Safari-flik inte visa notiser alls. Använd <em>Dela → Lägg till på hemskärmen</em>, öppna Nästet från den ikonen och slå på bevakningen där. Även då pausar iOS en webbapp när du lämnar den, så se mobilen som ett ställe att kolla listan på snarare än ett ställe dit notiser säkert kommer — en dator med fliken öppen är vad det här egentligen är byggt för.',
   // Integritet & villkor
@@ -1978,6 +2060,53 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  // On this device: profile, marks, compare, last visit
+  profile_import_q: 'Länken innehåller en Nästet-profil. Ladda den på den här enheten? Den ersätter profilen som finns sparad här.',
+  profile_link: 'Profillänk',
+  profile_link_note: 'Öppna länken eller skanna koden på din andra enhet. Den som har länken ser de här siffrorna — inget annat följer med.',
+  forget_q: 'Ta bort din profil, sparade och dolda bostäder, jämförelselistan och senaste besöket från den här enheten?',
+  bf_short: 'Bostadsförmedlingen',
+  days_word: 'dagar',
+  cap_note: 'Stannar på 90 dagar tills du går med i en studentkår — SSSB slutar räkna där.',
+  profile_h: 'Dina köer',
+  profile_empty: 'Fyll i dina ködagar så visar varje bostad om du skulle ligga först i dag.',
+  pf_days: 'SSSB-ködagar i dag',
+  pf_reg: 'Registrerad hos SSSB',
+  pf_union: 'Medlem i en studentkår',
+  pf_bf: 'I Bostadsförmedlingens kö sedan',
+  pf_budget: 'Boendebudget per månad (kr)',
+  pf_from: 'Inflytt tidigast',
+  pf_to: 'Inflytt senast',
+  pf_share: 'Använd på en annan enhet',
+  pf_forget: 'Glöm den här enheten',
+  pf_privacy: 'Sparas bara i den här webbläsaren. Inget skickas någonstans.',
+  compare_n: 'Jämför',
+  compare_open: 'Jämför sida vid sida',
+  compare_clear: 'Rensa',
+  c_provider: 'Hyresvärd', c_area: 'Område', c_address: 'Adress', c_type: 'Typ',
+  c_rent: 'Hyra / månad', c_size: 'Storlek', c_sqm: 'kr per m²',
+  c_queue: 'Ködagar (ledande)', c_apps: 'Sökande', c_deadline: 'Sök senast',
+  c_movein: 'Inflyttning', c_bike: 'Cykel till campus', c_floor: 'Våning',
+  c_open: 'Öppna annonsen ↗',
+  close: 'Stäng',
+  sv_lead: 'Sedan ditt senaste besök',
+  sv_new: 'nya',
+  sv_gone: 'borta',
+  sv_only: 'Visa bara nya',
+  sv_all: 'Visa alla',
+  dismiss: 'Stäng',
+  you_lead: 'Du skulle ligga först i dag',
+  days_short: 'dagar kvar',
+  over_budget: 'över budget',
+  since_last: 'ny sedan senast',
+  m_save: '☆ Spara', m_saved: '★ Sparad',
+  m_apply: 'Sökt?', m_applied: '✓ Sökt',
+  m_hide: 'Dölj', m_unhide: 'Visa igen',
+  m_compare: '+ Jämför', m_comparing: '✓ Jämför',
+  all_hidden: 'Inget kvar när dina dolda bostäder räknats bort.',
+  hide_hidden: 'Göm de du dolt',
+  n_hidden: 'dolda',
+  show: 'visa',
   copy_link: '⧉ Kopiera länk',
   link_copied: '✓ Kopierad',
   copy_link_prompt: 'Kopiera länken:',
@@ -2105,6 +2234,8 @@ function applyLang(next, rerender){
   if (typeof currentData !== 'undefined' && currentData) {
     applyProviderChrome();
     render();
+    renderProfile();
+    renderCompareBar();
   }
 }
 
@@ -2429,11 +2560,9 @@ let dataSource = 'demo';
 
 // ── Which city ──────────────────────────────────────────────────────────
 //
-// The chosen city lives in the URL fragment (…/#lund), not in storage. Three
-// reasons, and the first is a hard constraint: this file gets previewed inside
-// sandboxed viewers where merely touching localStorage throws, which is why the
-// project bans it for anything functional. A fragment also makes a city
-// bookmarkable and shareable, and needs nothing from the static host.
+// The chosen city lives in the URL fragment (…/#lund), not in storage: a
+// fragment makes a city bookmarkable and shareable, and needs nothing from the
+// static host.
 //
 // FALLBACK_CITIES covers the standalone/demo case, exactly like FALLBACK_SCHOOLS.
 const FALLBACK_CITIES = { default: 'stockholm',
@@ -2499,6 +2628,8 @@ async function loadData(triggerRefresh){
     }
   }
   lastGeneratedAt = currentData.generated_at;
+  pruneMarks();
+  noteVisit();
   applyProviderChrome();
   applyCityChrome();
   if (triggerRefresh) {
@@ -3730,7 +3861,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
   const leaderValue = hasQueue ? badgeFor(l)
     : badgeFor(l).replace(/^(apply by|sök senast)\s*/i, '');
   return `
-    <div class="listing-row${featured ? ' featured' : ''}${slot ? ' rail-' + slot : ''}" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
+    <div class="listing-row${featured ? ' featured' : ''}${slot ? ' rail-' + slot : ''}${markOf(l.id) ? ' marked-' + markOf(l.id) : ''}" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
       ${newIds.has(l.id) ? `<span class="new-tag" title="${newTagTitle(l)}">${t('new_badge', 'NEW')}</span>` : ''}
       <div class="row-top">
         <div class="row-head">
@@ -3745,6 +3876,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
       ${leaderLabel ? `<div class="leader"><span>${leaderLabel}</span><span class="dots"></span><span class="leader-val${hasQueue ? '' : ' soon'}">${leaderValue}</span></div>` : ''}
       ${hasQueue ? `<div class="qbar" title="${num(l.queue_days)} ${t('queue_days_f', 'queue days')} ${t('qbar_of', 'on the 0–2 000 day scale the queue-days filter uses')}"><i style="width:${pct}%"></i><span class="qbar-cap">${t('qbar_cap', 'of 2 000 d')}</span></div>` : ''}
       ${extras.length ? `<div class="row-facts">${extras.map(e => `<span class="fact">${e}</span>`).join('')}</div>` : ''}
+      ${rowPersonal(l)}
       ${tag}
     </div>
   `;
@@ -3797,19 +3929,20 @@ function renderBrowseList(){
   const q = searchQuery.trim().toLowerCase();
   let rows = currentData.listings.filter(l => matchesSearch(l, q));
   rows = sortListings(rows);
+  const personal = personalFilter(rows);
+  rows = personal.rows;
 
   if (rows.length === 0) {
-    list.innerHTML = `<div class="empty-state">${t('no_match', 'No listings match')} "${searchQuery}".</div>`;
+    list.innerHTML = `<div class="empty-state">${t('no_match', 'No listings match')} "${esc(searchQuery)}".</div>`;
     return;
   }
-  list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('');
+  list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('') + hiddenFooter(personal.hiddenN);
 }
 
 // ── Watch: tell me when something I could actually get turns up ────────────
-// The settings live in the URL, the same choice the language toggle makes and
-// for the same reasons: this project keeps functional state out of browser
-// storage, and a link is something you can bookmark, send to your phone, or
-// leave in a pinned tab — which is what this feature asks of you anyway.
+// The settings live in the URL, so a watch is something you can bookmark, send
+// to your phone, or leave in a pinned tab — which is what this feature asks of
+// you anyway.
 //
 // What it cannot do is reach you with the page closed. There is no server here;
 // the site is static files on a CDN, so the only thing that can notice a new
@@ -3962,7 +4095,15 @@ function renderWatch(){
   if (box.hidden) return;
   renderWatchAreas(areas);
   renderWatchStatus();
+  // Offer the profile's running count once, without fighting someone typing.
+  const days = document.getElementById('watchDays');
+  if (!watch && !watchDaysFilled && days.value === '' && profileDaysNow() != null) {
+    days.value = String(profileDaysNow());
+    if (profile.watch && profile.watch.rent) document.getElementById('watchRent').value = String(profile.watch.rent);
+  }
+  watchDaysFilled = true;
 }
+let watchDaysFilled = false;
 
 function renderWatchAreas(names){
   const wrap = document.getElementById('watchAreas');
@@ -4033,6 +4174,11 @@ async function startWatch(){
   if (!areas.length) return fail(t('watch_e_areas', 'Pick at least one area to watch.'));
   watch = { days, from: todayISO(), rent: Number.isFinite(rent) && rent > 0 ? rent : null, areas };
   watchToUrl(watch);
+  // The days typed here are the same fact as the profile's, so either form
+  // keeps the other current; the watch itself is remembered too.
+  saveProfile({ sssb_days: Math.round(days), sssb_days_on: todayISO(),
+                watch: { areas, rent: watch.rent && Math.round(watch.rent) } });
+  renderProfile();
   // Whatever already matches is what you came to look at, not news — so it
   // seeds the "already told you" set instead of firing a burst of pop-ups the
   // instant the watch goes on. They're listed on screen either way.
@@ -4052,8 +4198,357 @@ async function startWatch(){
 function stopWatch(){
   watch = null;
   watchToUrl(null);
+  saveProfile({ watch: undefined });
   announced = new Set();
   renderSidebar();
+}
+
+// ── On this device: your profile, marks, compare list and last visit ──────
+// All of it lives in this browser's storage and nowhere else — there is no
+// account and no server copy. The profile link is the way to carry it to
+// another device; "Forget" wipes every key this page writes.
+const store = {
+  get(k, fallback){
+    try { const v = localStorage.getItem(k); return v == null ? fallback : JSON.parse(v); }
+    catch (e) { return fallback; }
+  },
+  set(k, v){
+    try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); }
+    catch (e) { /* private window or sandboxed preview: works for this visit only */ }
+  },
+};
+const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-theme'];
+
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+// Everything that reaches the profile — typed in, read back from storage, or
+// arriving in somebody's link — passes through here, so only known fields of
+// the right shape survive.
+function cleanProfile(p){
+  const out = {};
+  if (!p || typeof p !== 'object') return out;
+  const int = (v, max) => Number.isInteger(v) && v >= 0 && v <= max ? v : undefined;
+  out.sssb_days = int(p.sssb_days, 20000);
+  for (const k of ['sssb_days_on', 'sssb_reg', 'bf_since', 'move_from', 'move_to']) {
+    if (typeof p[k] === 'string' && ISO_DAY.test(p[k])) out[k] = p[k];
+  }
+  if (typeof p.union === 'boolean') out.union = p.union;
+  out.budget = int(p.budget, 50000);
+  if (p.watch && Array.isArray(p.watch.areas)) {
+    const areas = p.watch.areas.filter(a => typeof a === 'string' && a.length <= 80).slice(0, 100);
+    const rent = int(p.watch.rent, 50000);
+    if (areas.length) out.watch = { areas, rent: rent || null };
+  }
+  Object.keys(out).forEach(k => out[k] === undefined && delete out[k]);
+  return out;
+}
+
+let profile = cleanProfile(store.get('nastet-profile', {}));
+function saveProfile(patch){
+  profile = cleanProfile({ ...profile, ...patch });
+  store.set('nastet-profile', Object.keys(profile).length ? profile : null);
+}
+
+// SSSB days keep counting from the day they were entered. Without a student
+// union membership SSSB stops the count at 90, so the profile does too.
+const SSSB_NO_UNION_CAP = 90;
+function profileDaysNow(){
+  if (profile.sssb_days == null) return null;
+  const n = profile.sssb_days + Math.max(0, daysBetween(profile.sssb_days_on || todayISO(), todayISO()));
+  return profile.union === false ? Math.min(n, Math.max(profile.sssb_days, SSSB_NO_UNION_CAP)) : n;
+}
+
+function watchFromProfile(){
+  if (!profile.watch || profile.sssb_days == null) return null;
+  return { days: profile.sssb_days, from: profile.sssb_days_on || todayISO(),
+           rent: profile.watch.rent, areas: profile.watch.areas };
+}
+
+// ── Profile link: the whole profile in one URL, for another device ──
+function b64urlEncode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b); });
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64urlDecode(s){
+  const bin = atob(s.replace(/-/g, '+').replace(/_/g, '/'));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+}
+function profileLink(){
+  const u = new URL(location.origin + location.pathname);
+  u.searchParams.set('profile', b64urlEncode(JSON.stringify(profile)));
+  return u.href + location.hash;
+}
+// Asked, never silent: a link can come from anyone, and taking it would
+// replace what this device already has.
+function profileFromUrl(){
+  const u = new URL(location.href);
+  const raw = u.searchParams.get('profile');
+  if (!raw) return;
+  u.searchParams.delete('profile');
+  history.replaceState(null, '', u);
+  let incoming;
+  try { incoming = cleanProfile(JSON.parse(b64urlDecode(raw))); } catch (e) { return; }
+  if (!Object.keys(incoming).length) return;
+  if (window.confirm(t('profile_import_q', 'This link carries a Nästet profile. Load it onto this device? It replaces any profile saved here.'))) {
+    profile = {}; saveProfile(incoming);
+  }
+}
+
+let qrLoading = null;
+function loadQr(){
+  if (window.qrcode) return Promise.resolve();
+  return qrLoading || (qrLoading = new Promise((ok, fail) => {
+    const s = document.createElement('script');
+    s.src = 'vendor/qrcode/qrcode.js'; s.onload = ok; s.onerror = fail;
+    document.head.appendChild(s);
+  }));
+}
+async function shareProfile(){
+  const url = profileLink();
+  const out = document.getElementById('profileShareOut');
+  out.hidden = false;
+  out.innerHTML = `<input type="text" readonly class="search-input" id="profileLinkBox" aria-label="${t('profile_link', 'Profile link')}">
+    <div id="profileQr" aria-hidden="true"></div>
+    <p class="kv">${t('profile_link_note', 'Open this link or scan the code on your other device. Anyone with the link sees these numbers — they carry nothing else.')}</p>`;
+  const box = document.getElementById('profileLinkBox');
+  box.value = url;
+  try { await navigator.clipboard.writeText(url); box.select(); } catch (e) { box.select(); }
+  try {
+    await loadQr();
+    const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+    document.getElementById('profileQr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+  } catch (e) { /* the link alone still works */ }
+}
+
+function forgetDevice(){
+  if (!window.confirm(t('forget_q', 'Remove your profile, saved and hidden listings, compare list and last-visit record from this device?'))) return;
+  STORE_KEYS.forEach(k => store.set(k, null));
+  profile = {}; marks = {}; compareIds = []; sinceVisit = null; onlySince = false;
+  renderProfile(); renderCompareBar(); renderSidebar();
+}
+
+// ── The profile card, top of the Queues tab ──
+function renderProfile(){
+  const el = document.getElementById('profileCard');
+  if (!el) return;
+  const now = profileDaysNow();
+  const bfDays = profile.bf_since ? Math.max(0, daysBetween(profile.bf_since, todayISO())) : null;
+  const summary = [
+    now != null ? `SSSB <b>${num(now)}</b> ${t('queue_days_f', 'queue days')}` : null,
+    bfDays != null ? `${t('bf_short', 'Bostadsförmedlingen')} <b>${num(bfDays)}</b> ${t('days_word', 'days')}` : null,
+  ].filter(Boolean).join(' · ');
+  const uncapped = profile.sssb_days == null ? null
+    : profile.sssb_days + Math.max(0, daysBetween(profile.sssb_days_on || todayISO(), todayISO()));
+  const capNote = profile.union === false && uncapped != null && uncapped > now
+    ? `<p class="kv warn">${t('cap_note', 'Capped at 90 days until you join a student union — SSSB stops counting there.')}</p>` : '';
+  el.innerHTML = `
+    <h3>${t('profile_h', 'Your queues')}</h3>
+    <p class="covers">${summary || t('profile_empty', 'Add your queue days and every listing shows whether you would lead it today.')}</p>
+    ${capNote}
+    <div class="profile-grid">
+      <label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
+        <input type="number" id="pfDays" min="0" max="20000" step="1" inputmode="numeric" value="${now ?? ''}"></label>
+      <label class="watch-field"><span>${t('pf_reg', 'SSSB registration date')}</span>
+        <input type="date" id="pfReg" value="${profile.sssb_reg || ''}"></label>
+      <label class="watch-field pf-check"><input type="checkbox" id="pfUnion" ${profile.union === false ? '' : 'checked'}>
+        <span>${t('pf_union', 'Member of a student union')}</span></label>
+      <label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
+        <input type="date" id="pfBf" value="${profile.bf_since || ''}"></label>
+      <label class="watch-field"><span>${t('pf_budget', 'Monthly housing budget (kr)')}</span>
+        <input type="number" id="pfBudget" min="0" max="50000" step="100" inputmode="numeric" value="${profile.budget ?? ''}"></label>
+      <label class="watch-field"><span>${t('pf_from', 'Move in from')}</span>
+        <input type="date" id="pfFrom" value="${profile.move_from || ''}"></label>
+      <label class="watch-field"><span>${t('pf_to', 'Move in by')}</span>
+        <input type="date" id="pfTo" value="${profile.move_to || ''}"></label>
+    </div>
+    <div class="watch-actions">
+      <button type="button" onclick="shareProfile()">${t('pf_share', 'Use on another device')}</button>
+      <button type="button" class="ghost" onclick="forgetDevice()">${t('pf_forget', 'Forget this device')}</button>
+    </div>
+    <div id="profileShareOut" hidden></div>
+    <p class="kv">${t('pf_privacy', 'Saved only in this browser. Nothing here is sent anywhere.')}</p>`;
+  const bind = (id, fn) => document.getElementById(id).addEventListener('change', e => { fn(e.target); renderProfile(); renderSidebar(); });
+  const intOrNull = v => v === '' ? undefined : Math.round(Number(v));
+  bind('pfDays', i => saveProfile({ sssb_days: intOrNull(i.value), sssb_days_on: todayISO() }));
+  bind('pfReg', i => saveProfile({ sssb_reg: i.value || undefined }));
+  bind('pfUnion', i => saveProfile({ union: i.checked }));
+  bind('pfBf', i => saveProfile({ bf_since: i.value || undefined }));
+  bind('pfBudget', i => saveProfile({ budget: intOrNull(i.value) }));
+  bind('pfFrom', i => saveProfile({ move_from: i.value || undefined }));
+  bind('pfTo', i => saveProfile({ move_to: i.value || undefined }));
+}
+
+// ── Marks: saved / applied / hidden, per listing ──
+let marks = store.get('nastet-marks', {}) || {};
+const MARK_KINDS = ['saved', 'applied', 'hidden'];
+let showHidden = false;
+function markOf(id){ return marks[id] && marks[id].m; }
+function setMark(id, kind){
+  if (markOf(id) === kind) delete marks[id];
+  else marks[id] = { m: kind, at: todayISO() };
+  store.set('nastet-marks', marks);
+  renderSidebar();
+}
+// Marks on listings that have long since gone are dead weight; ninety days
+// covers a contract offer coming back around.
+function pruneMarks(){
+  if (!currentData) return;
+  const live = new Set(currentData.listings.map(l => l.id));
+  let changed = false;
+  for (const [id, v] of Object.entries(marks)) {
+    if (!MARK_KINDS.includes(v && v.m) || (!live.has(id) && daysBetween(v.at || '2000-01-01', todayISO()) > 90)) {
+      delete marks[id]; changed = true;
+    }
+  }
+  if (changed) store.set('nastet-marks', marks);
+}
+
+// ── Compare: up to three side by side ──
+const COMPARE_MAX = 3;
+let compareIds = (store.get('nastet-compare', []) || []).filter(x => typeof x === 'string').slice(0, COMPARE_MAX);
+function toggleCompare(id){
+  if (compareIds.includes(id)) compareIds = compareIds.filter(x => x !== id);
+  else if (compareIds.length < COMPARE_MAX) compareIds.push(id);
+  else return flashCompareFull();
+  store.set('nastet-compare', compareIds);
+  renderCompareBar(); renderSidebar();
+}
+function flashCompareFull(){
+  const bar = document.getElementById('compareBar');
+  bar.classList.add('full'); setTimeout(() => bar.classList.remove('full'), 900);
+}
+function compareListings(){
+  if (!currentData) return [];
+  return compareIds.map(id => currentData.listings.find(l => l.id === id)).filter(Boolean);
+}
+function renderCompareBar(){
+  const bar = document.getElementById('compareBar');
+  if (!bar) return;
+  const ls = compareListings();
+  bar.hidden = ls.length === 0;
+  if (bar.hidden) return;
+  bar.innerHTML = `<span>${t('compare_n', 'Comparing')} ${ls.length}/${COMPARE_MAX}</span>
+    <button type="button" onclick="openCompare()">${t('compare_open', 'Compare side by side')}</button>
+    <button type="button" class="ghost" onclick="compareIds=[];store.set('nastet-compare',null);renderCompareBar();renderSidebar()">${t('compare_clear', 'Clear')}</button>`;
+}
+function openCompare(){
+  const ls = compareListings();
+  if (!ls.length) return;
+  const cell = v => v == null || v === '' ? '<span class="na">—</span>' : esc(v);
+  const metric = l => schoolMetrics(currentData.areas[l.area] || l) || {};
+  const rows = [
+    [t('c_provider', 'Provider'), l => l.provider],
+    [t('c_area', 'Area'), l => l.area],
+    [t('c_address', 'Address'), l => l.address],
+    [t('c_type', 'Type'), l => l.type],
+    [t('c_rent', 'Rent / month'), l => l.rent_sek != null ? num(l.rent_sek) + ' kr' : null],
+    [t('c_size', 'Size'), l => l.size_sqm ? l.size_sqm + ' m²' : null],
+    [t('c_sqm', 'kr per m²'), l => l.rent_sek && l.size_sqm ? num(Math.round(l.rent_sek / l.size_sqm)) : null],
+    [t('c_queue', 'Queue days (leader)'), l => l.queue_days != null ? num(l.queue_days) : null],
+    [t('c_apps', 'Applicants'), l => l.applicants],
+    [t('c_deadline', 'Apply by'), l => l.deadline],
+    [t('c_movein', 'Move-in'), l => l.move_in],
+    [t('c_bike', 'Bike to campus'), l => { const m = metric(l); return typeof m.bike_min === 'number' ? m.bike_min + ' min' : null; }],
+    [t('c_floor', 'Floor'), l => l.floor],
+  ];
+  const modal = document.getElementById('compareModal');
+  modal.innerHTML = `<div class="compare-box" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+    <div class="compare-head"><h3 id="compareTitle">${t('compare_open', 'Compare side by side')}</h3>
+      <button type="button" class="back" id="compareClose">${t('close', 'Close')} ✕</button></div>
+    <div class="compare-scroll"><table class="compare-table">
+      <thead><tr><th scope="col"></th>${ls.map(l => `<th scope="col">${esc(l.address || l.area)}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(([label, f]) => `<tr><th scope="row">${label}</th>${ls.map(l => `<td>${cell(f(l))}</td>`).join('')}</tr>`).join('')}
+      <tr><th scope="row"></th>${ls.map(l => `<td>${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener">${t('c_open', 'Open listing ↗')}</a>` : ''}</td>`).join('')}</tr>
+      </tbody></table></div></div>`;
+  modal.hidden = false;
+  const close = () => { modal.hidden = true; document.removeEventListener('keydown', onKey); };
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  modal.onclick = e => { if (e.target === modal) close(); };
+  document.getElementById('compareClose').onclick = close;
+  document.getElementById('compareClose').focus();
+}
+
+// ── Since your last visit ──
+// One snapshot per city of which listings were on screen. The comparison is
+// made once per page load against what the *previous* visit saw; while this
+// page stays open the snapshot keeps moving, so the next visit compares
+// against what you last had in front of you.
+let sinceVisit = null;
+let onlySince = false;
+const visitBaselined = new Set();
+function noteVisit(){
+  if (!currentData || !currentCity) return;
+  const seen = store.get('nastet-seen', {}) || {};
+  const prev = seen[currentCity];
+  const ids = currentData.listings.map(l => l.id);
+  if (!visitBaselined.has(currentCity)) {
+    visitBaselined.add(currentCity);
+    // Under ten minutes isn't a new visit, just a reload.
+    if (prev && Array.isArray(prev.ids) && Date.now() - Date.parse(prev.at) > 10 * 60000) {
+      const before = new Set(prev.ids);
+      const now = new Set(ids);
+      sinceVisit = { city: currentCity, at: prev.at,
+                     fresh: new Set(ids.filter(id => !before.has(id))),
+                     gone: prev.ids.filter(id => !now.has(id)).length };
+    } else {
+      sinceVisit = null;
+    }
+  }
+  seen[currentCity] = { at: new Date().toISOString(), ids };
+  store.set('nastet-seen', seen);
+}
+function sinceStrip(){
+  const sv = sinceVisit;
+  if (!sv || sv.city !== currentCity || (!sv.fresh.size && !sv.gone)) return '';
+  const bits = [`<b>${sv.fresh.size}</b> ${t('sv_new', 'new')}`];
+  if (sv.gone) bits.push(`${sv.gone} ${t('sv_gone', 'gone')}`);
+  return `<div class="since-strip"><span>${t('sv_lead', 'Since your last visit')} ${relAgo(sv.at)}: ${bits.join(' · ')}</span>
+    ${sv.fresh.size ? `<button type="button" onclick="onlySince=!onlySince;renderSidebar()">${onlySince ? t('sv_all', 'Show everything') : t('sv_only', 'Show only new')}</button>` : ''}
+    <button type="button" class="ghost" aria-label="${t('dismiss', 'Dismiss')}" onclick="sinceVisit=null;onlySince=false;renderSidebar()">✕</button></div>`;
+}
+
+// What the row knows about you: whether your running count leads it today,
+// whether it's over budget, and your marks — plus the buttons to change them.
+function rowPersonal(l){
+  const facts = [];
+  const mine = profileDaysNow();
+  if (mine != null && typeof l.queue_days === 'number') {
+    facts.push(mine >= l.queue_days
+      ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>`
+      : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`);
+  }
+  if (profile.budget && l.rent_sek > profile.budget) facts.push(`<span class="fact you">${t('over_budget', 'over budget')}</span>`);
+  if (sinceVisit && sinceVisit.city === currentCity && sinceVisit.fresh.has(l.id)) facts.push(`<span class="fact you">${t('since_last', 'new since last visit')}</span>`);
+  const m = markOf(l.id);
+  const id = esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
+  const btn = (kind, on, off) => `<button type="button" class="mark${m === kind ? ' on' : ''}" aria-pressed="${m === kind}" onclick="event.stopPropagation();setMark('${id}','${kind}')">${m === kind ? on : off}</button>`;
+  const cmp = compareIds.includes(l.id);
+  return `${facts.length ? `<div class="row-you">${facts.join('')}</div>` : ''}
+    <div class="row-acts">
+      ${btn('saved', t('m_saved', '★ Saved'), t('m_save', '☆ Save'))}
+      ${btn('applied', t('m_applied', '✓ Applied'), t('m_apply', 'Applied?'))}
+      ${btn('hidden', t('m_unhide', 'Unhide'), t('m_hide', 'Hide'))}
+      <button type="button" class="mark${cmp ? ' on' : ''}" aria-pressed="${cmp}" onclick="event.stopPropagation();toggleCompare('${id}')">${cmp ? t('m_comparing', '✓ Compare') : t('m_compare', '+ Compare')}</button>
+    </div>`;
+}
+
+// Hidden listings and the since-visit filter, applied to whatever list is
+// about to render. Returns the rows plus how many were hidden.
+function personalFilter(rows){
+  let hiddenN = 0;
+  const out = rows.filter(l => {
+    if (markOf(l.id) === 'hidden' && !showHidden) { hiddenN++; return false; }
+    if (onlySince && sinceVisit && sinceVisit.city === currentCity && !sinceVisit.fresh.has(l.id)) return false;
+    return true;
+  });
+  return { rows: out, hiddenN };
+}
+function hiddenFooter(n){
+  if (!n && !showHidden) return '';
+  return `<div class="list-end"><button type="button" class="link-btn" onclick="showHidden=!showHidden;renderSidebar()">${showHidden
+    ? t('hide_hidden', 'Hide the ones you hid')
+    : `${n} ${t('n_hidden', 'hidden')} · ${t('show', 'show')}`}</button></div>`;
 }
 
 function renderSidebar(){
@@ -4159,8 +4654,15 @@ function renderSidebar(){
   }
 
   rows = sortListings(rows);
+  const personal = personalFilter(rows);
+  rows = personal.rows;
+  const strip = selectedArea || selectedListingId ? '' : sinceStrip();
 
   if (rows.length === 0) {
+    if (personal.hiddenN || onlySince) {
+      list.innerHTML = strip + `<div class="empty-state">${t('all_hidden', 'Nothing left once your hidden listings are set aside.')}</div>` + hiddenFooter(personal.hiddenN);
+      return;
+    }
     // Three different situations, and telling them apart matters: your filters
     // are too tight, the landlord genuinely has nothing, or we never got an
     // answer. The last one used to render as the second — a fetch that failed
@@ -4177,8 +4679,9 @@ function renderSidebar(){
 
   // One card carries the answer; the rest are catalogue rows. A single-listing
   // view is that one card, so it gets the featured treatment too.
-  list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('')
-    + (rows.length > 2 ? `<div class="list-end">${rows.length} ${t('list_end', 'shown · end of list')}</div>` : '');
+  list.innerHTML = strip + rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('')
+    + (rows.length > 2 ? `<div class="list-end">${rows.length} ${t('list_end', 'shown · end of list')}</div>` : '')
+    + hiddenFooter(personal.hiddenN);
 }
 
 function switchTab(tab){
@@ -4399,10 +4902,9 @@ document.getElementById('schoolSelect').addEventListener('change', (e) => setSch
 // there's nothing to re-render and no tile layer to rebuild (both themes use
 // the same Voyager tiles and the same filter).
 //
-// The stored preference is the one place this file touches localStorage, and
-// it's wrapped: the page is sometimes previewed inside sandboxed viewers where
-// storage access throws, and a theme that won't persist there is fine, while an
-// exception on load is not. Nothing functional depends on it.
+// Every storage access in this file is wrapped (see store below): in a private
+// window or a sandboxed preview it can throw, and a theme that won't persist is
+// fine while an exception on load is not.
 function applyTheme(theme){
   const light = theme === 'light';
   document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
@@ -4505,6 +5007,7 @@ initMap();
 // never appears and this is invisible — it starts mattering when a second city
 // ships.
 const firstLoad = (async () => {
+  profileFromUrl();
   await loadCityIndex();
   const ids = Object.keys(cityIndex.cities);
   currentCity = cityFromHash() || (ids.length === 1 ? ids[0] : null);
@@ -4515,13 +5018,16 @@ const firstLoad = (async () => {
     currentCity = cityIndex.default;
   }
   await loadData(false);
+  renderProfile();
+  renderCompareBar();
   selectionFromUrl();
   selectionUrlReady = true;
   selectionToUrl();
   // Only after the first payload is in: watchList() needs listings to seed
   // against, and everything already showing is what the visitor came to look at
   // rather than news worth a pop-up.
-  watch = watchFromUrl();
+  // A link's watch wins over the one saved here: it's what was just opened.
+  watch = watchFromUrl() || watchFromProfile();
   if (watch) {
     announced = new Set(watchList().map(l => l.id));
     // Opened rather than collapsed — arriving on a link that carries a watch,
@@ -4568,6 +5074,7 @@ async function pollForChanges(){
       if (data.generated_at && data.generated_at !== lastGeneratedAt) {
         currentData = data;
         lastGeneratedAt = data.generated_at;
+        noteVisit();
         // A scheduled scrape can change which providers have listings, so the
         // chips have to be rebuilt here too — not only on first load.
         applyProviderChrome();
