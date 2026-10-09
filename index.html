@@ -1444,6 +1444,21 @@
   .df-key .sw.easy{ background:var(--leaf); } .df-key .sw.mid{ background:var(--ochre); }
   .df-key .sw.hard{ background:var(--clay); } .df-key .sw.none{ background:var(--empty); }
   #diffChip .sw{ border-radius:50%; background:conic-gradient(var(--leaf) 0 33%, var(--ochre) 0 66%, var(--clay) 0); }
+  .qh{ margin:10px 0 6px; padding:10px 0 2px; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+  .qh h4{ margin:0 0 6px; font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); }
+  .qh ul{ list-style:none; margin:0; padding:0; }
+  .qh li{ display:flex; gap:8px; margin-bottom:8px; font-size:12px; line-height:1.45; color:var(--dim); }
+  .qh li b{ color:var(--ink); }
+  .qh-dot{ flex:0 0 12px; font-size:11px; line-height:1.6; }
+  .qh-ok .qh-dot{ color:var(--leaf); }
+  .qh-warn .qh-dot{ color:var(--accent-ink); }
+  .qh-warn span:not(.qh-dot){ color:var(--ink); }
+  .qh-unset .qh-dot, .qh-check .qh-dot{ color:var(--faint); }
+  .qh-acts{ display:block; margin-top:2px; font:10px/1.5 var(--mono); }
+  .qh-acts a{ color:var(--accent-ink); }
+  .profile-card .qh-acts .link-btn{ font:10px/1.5 var(--mono); color:var(--accent-ink); text-transform:none; letter-spacing:0; text-decoration:underline; border:none; padding:0; }
+  .nowrap{ white-space:nowrap; }
+  :root[data-theme="light"] .qh-ok .qh-dot{ color:#3d6b2a; }
   .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -2124,6 +2139,23 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  qh_h: 'Köhälsa',
+  qh_unset: 'Fyll i dina uppgifter ovan för att kontrollera den här kön.',
+  qh_cap_on: 'Dina dagar slutar räknas vid 90 den',
+  qh_cap_join: 'om du inte går med i en studentkår.',
+  qh_capped: 'Dina dagar har stannat på 90 — gå med i en studentkår för att börja räkna igen.',
+  qh_cap_nodate: 'Utan studentkår stannar dagarna på 90. Fyll i registreringsdatum för att se när.',
+  qh_ics_cap: 'SSSB: ködagarna stannar på 90 — gå med i en studentkår',
+  qh_sssb_ok: 'Räknar en dag per dag.',
+  qh_bf_unset: 'Fyll i när du gick med för att få en påminnelse om den årliga köavgiften.',
+  qh_bf_due: 'Årlig köavgift förfaller runt',
+  qh_in: 'om',
+  qh_bf_lose: 'Missar du den förlorar du din plats i kön.',
+  qh_ics_bf: 'Betala köavgiften till Bostadsförmedlingen',
+  qh_check: 'Vissa köer stänger inaktiva konton. Kontrollera hur den här hålls aktiv.',
+  qh_s_ok: 'OK', qh_s_warn: 'Behöver åtgärd', qh_s_unset: 'Ej ifyllt', qh_s_check: 'Kontrollera',
+  qh_ics: 'Lägg till i kalendern',
+  qh_rules: 'Deras regler ↗',
   tab_market: 'MARKNAD',
   difficulty: 'Svårighet',
   gated: 'Aktiveras när mer data har samlats in',
@@ -4461,6 +4493,100 @@ function forgetDevice(){
   renderProfile(); renderCompareBar(); renderSidebar();
 }
 
+// ── Queue health: what keeps each queue place alive ───────────────────────
+// Only rules we're sure of are turned into dates; everything else is a link
+// to the landlord's own rules page. A wrong deadline here is worse than none —
+// someone could lose years of queue time trusting it.
+const QUEUE_LINKS = {
+  'SSSB': 'https://sssb.se',
+  'Bostadsförmedlingen': 'https://bostad.stockholm.se',
+  'SGS': 'https://www.sgs.se',
+  'AF Bostäder': 'https://www.afbostader.se',
+};
+function addDays(iso, n){
+  const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+// The next anniversary of a date, today included.
+function nextAnniversary(iso){
+  const today = todayISO();
+  let y = Number(today.slice(0, 4));
+  let d = `${y}${iso.slice(4)}`;
+  if (iso.slice(5) === '02-29') d = `${y}-02-28`;
+  if (d < today) d = `${y + 1}${iso.slice(4)}`.replace(/-02-29$/, '-02-28');
+  return d;
+}
+function queueHealth(){
+  const items = [];
+  const providers = new Set(((cityIndex.cities[currentCity] || {}).providers) || []);
+  if (providers.has('SSSB')) {
+    if (profile.sssb_days == null && !profile.sssb_reg) {
+      items.push({ q: 'SSSB', state: 'unset', text: t('qh_unset', 'Add your details above to check this queue.') });
+    } else if (profile.union === false) {
+      const capOn = profile.sssb_reg ? addDays(profile.sssb_reg, SSSB_NO_UNION_CAP) : null;
+      const left = capOn ? daysBetween(todayISO(), capOn) : null;
+      items.push({ q: 'SSSB', state: left != null && left > 30 ? 'ok' : 'warn',
+        text: capOn
+          ? (left > 0 ? `${t('qh_cap_on', 'Your days stop counting at 90 on')} <span class="nowrap">${capOn}</span> ${t('qh_cap_join', 'unless you join a student union.')}`
+                      : t('qh_capped', 'Your days have stopped at 90 — join a student union to start counting again.'))
+          : t('qh_cap_nodate', 'Without a student union your days stop at 90. Add your registration date to see when.'),
+        ics: capOn && left > 0 ? { date: capOn, title: t('qh_ics_cap', 'SSSB: queue days stop at 90 — join a student union'), yearly: false } : null });
+    } else {
+      items.push({ q: 'SSSB', state: 'ok', text: t('qh_sssb_ok', 'Counting a day per day.') });
+    }
+  }
+  if (providers.has('Bostadsförmedlingen')) {
+    if (!profile.bf_since) {
+      items.push({ q: 'Bostadsförmedlingen', state: 'unset', text: t('qh_bf_unset', 'Add when you joined to get a reminder for the yearly queue fee.') });
+    } else {
+      const due = nextAnniversary(profile.bf_since);
+      const left = daysBetween(todayISO(), due);
+      items.push({ q: 'Bostadsförmedlingen', state: left <= 30 ? 'warn' : 'ok',
+        text: `${t('qh_bf_due', 'Yearly queue fee due around')} <span class="nowrap">${due}</span>${left <= 30 ? ` — ${t('qh_in', 'in')} ${left} ${t('days_word', 'days')}` : ''}. ${t('qh_bf_lose', 'Miss it and you lose your place in the queue.')}`,
+        ics: { date: profile.bf_since, title: t('qh_ics_bf', 'Pay the Bostadsförmedlingen queue fee'), yearly: true } });
+    }
+  }
+  for (const p of providers) {
+    if (p === 'SSSB' || p === 'Bostadsförmedlingen') continue;
+    items.push({ q: p, state: 'check', text: t('qh_check', 'Some queues drop inactive accounts. Check how this one stays active.') });
+  }
+  return items;
+}
+function healthHtml(){
+  const items = queueHealth();
+  if (!items.length) return '';
+  const dot = { ok: '●', warn: '▲', unset: '○', check: '?' };
+  const label = { ok: t('qh_s_ok', 'OK'), warn: t('qh_s_warn', 'Needs attention'), unset: t('qh_s_unset', 'Not set'), check: t('qh_s_check', 'Check') };
+  return `<div class="qh"><h4>${t('qh_h', 'Queue health')}</h4><ul>${items.map((it, i) => `<li class="qh-${it.state}">
+      <span class="qh-dot" aria-label="${label[it.state]}" role="img">${dot[it.state]}</span>
+      <div><b>${esc(it.q)}</b> <span>${it.text}</span>
+      <span class="qh-acts">${it.ics ? `<button type="button" class="link-btn" onclick="downloadIcs(${i})">${t('qh_ics', 'Add to calendar')}</button> · ` : ''}<a href="${QUEUE_LINKS[it.q] || '#'}" target="_blank" rel="noopener">${t('qh_rules', 'Their rules ↗')}</a></span></div></li>`).join('')}</ul></div>`;
+}
+function icsText(s){ return String(s).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\n/g, '\\n'); }
+// A one-day event with a reminder two weeks before; yearly ones repeat on the
+// anniversary. Built here, downloaded straight from the page — no calendar
+// account is involved.
+function downloadIcs(i){
+  const it = queueHealth()[i];
+  if (!it || !it.ics) return;
+  const day = it.ics.date.replace(/-/g, '');
+  const slug = it.q.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Nästet//Queue reminders//EN', 'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT', `UID:${day}-${slug}@nastet`, `DTSTAMP:${stamp}`,
+    `DTSTART;VALUE=DATE:${day}`, `SUMMARY:${icsText(it.ics.title)}`,
+    `DESCRIPTION:${icsText(it.text.replace(/<[^>]+>/g, '') + '\n' + (QUEUE_LINKS[it.q] || ''))}`];
+  if (it.ics.yearly) lines.push('RRULE:FREQ=YEARLY');
+  lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER:-P14D', `DESCRIPTION:${icsText(it.ics.title)}`, 'END:VALARM',
+             'END:VEVENT', 'END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n') + '\r\n'], { type: 'text/calendar' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nastet-${slug}.ics`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 // ── The profile card, top of the Queues tab ──
 function renderProfile(){
   const el = document.getElementById('profileCard');
@@ -4479,6 +4605,7 @@ function renderProfile(){
     <h3>${t('profile_h', 'Your queues')}</h3>
     <p class="covers">${summary || t('profile_empty', 'Add your queue days and every listing shows whether you would lead it today.')}</p>
     ${capNote}
+    ${healthHtml()}
     <div class="profile-grid">
       <label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
         <input type="number" id="pfDays" min="0" max="20000" step="1" inputmode="numeric" value="${now ?? ''}"></label>
