@@ -1388,6 +1388,7 @@ def _parse_listing_from_link(link, url: str) -> dict:
         "floor": floor,
         "max_years": max_years,      # contract cap in years; None = none stated
         "el_included": el_included,  # True = "Elström ingår"; None = not stated
+        **_parse_card_extras(card_text),   # move_in, applicants, el_mode
         "url": url,
     }
 
@@ -1407,8 +1408,8 @@ def _parse_listing_from_link(link, url: str) -> dict:
 _CARD_VALUES_RE = re.compile(
     r"(?P<size>\d{1,3})\s*m²\s*"
     r"(?P<rent>[\d\s]{3,7})\s*kr\s*"
-    r"\d{4}-\d{2}-\d{2}\s*"  # move-in date — not currently surfaced
-    r"(?P<queue>[\d\s]{1,6}?)\s*\(\d+\s*st\)"
+    r"(?P<movein>\d{4}-\d{2}-\d{2})\s*"
+    r"(?P<queue>[\d\s]{1,6}?)\s*\((?P<applicants>\d+)\s*st\)"
 )
 
 # "Våning" (floor) is the last value in that same run, right after the queue
@@ -1451,6 +1452,41 @@ def _parse_el_included(card_text: str) -> bool | None:
     """True if the card says electricity is included; None if it says nothing
     (deliberately not False — we don't actually know it's excluded)."""
     return True if _CARD_EL_RE.search(card_text) else None
+
+
+# SSSB's tenancy agreements use three electricity arrangements: included in the
+# rent ("Elström ingår"), your own contract ("ingår ej"), or "El Schablon" —
+# SSSB holds the subscription and bills your measured use on the rent invoice.
+# The all-in cost needs to tell those apart, since they differ by a few hundred
+# kronor a month. Only the first is confirmed on cards; the other two are
+# matched in case SSSB states them, and anything unstated stays None.
+_CARD_EL_SCHABLON_RE = re.compile(r"El\s*-?\s*schablon|individuell\s+el", re.IGNORECASE)
+_CARD_EL_EXCLUDED_RE = re.compile(r"Elström\s+ingår\s+ej|el\s+ingår\s+ej", re.IGNORECASE)
+
+
+def _parse_card_extras(card_text: str) -> dict:
+    """Fields read from the same card text as `_parse_card_fields`, kept apart
+    so that function's tuple — which several callers unpack — doesn't move.
+
+    move_in    — the "Inflyttning" value, YYYY-MM-DD; matched by the values run
+                 for years but never captured until now.
+    applicants — the "(3st)" after the queue figure: how many people have
+                 registered interest. The queue figure itself is the *leading*
+                 applicant's days, not a requirement.
+    el_mode    — "included" | "schablon" | "excluded" | None (not stated).
+    """
+    out = {"move_in": None, "applicants": None, "el_mode": None}
+    m = _CARD_VALUES_RE.search(card_text)
+    if m:
+        out["move_in"] = m.group("movein")
+        out["applicants"] = int(m.group("applicants"))
+    if _CARD_EL_EXCLUDED_RE.search(card_text):
+        out["el_mode"] = "excluded"
+    elif _CARD_EL_SCHABLON_RE.search(card_text):
+        out["el_mode"] = "schablon"
+    elif _CARD_EL_RE.search(card_text):
+        out["el_mode"] = "included"
+    return out
 
 # The housing type ("Rum i korridor" = corridor/dorm room, "2 rum och kök" =
 # 2-room + kitchen, etc.) is whatever text sits between "Previous Next" and
@@ -1752,7 +1788,8 @@ def _listings_from_links(links_by_url: dict, expected_total: int | None) -> list
     for l in listings:
         print(f"    [{l['area']}] queue_days={l['queue_days']} rent={l['rent_sek']} "
               f"size={l['size_sqm']} floor={l['floor']} max_years={l['max_years']} "
-              f"el={l['el_included']} :: {l['raw_text'][:90]}")
+              f"el={l.get('el_mode')} move_in={l.get('move_in')} "
+              f"applicants={l.get('applicants')} :: {l['raw_text'][:90]}")
 
     if len(listing_links) == 0:
         print("  ! No 'refid=' links found at all — either 0 listings are published right "
@@ -2281,6 +2318,16 @@ def fetch_bostadsformedlingen() -> list[dict]:
             "elevator": _bf_tristate(ad, "Hiss", "hiss"),
             "balcony": _bf_tristate(ad, "Balkong", "balkong"),
             "deadline": _bf_field(ad, "AnnonseradTill", "SistaAnsokan", "AnmalanSenast"),
+            # When BF itself published the ad. Exact, unlike `first_seen`, which
+            # is only ever as precise as our scrape interval.
+            "published_at": _bf_field(ad, "AnnonseradFran", "Publicerad"),
+            # The flat, not the ad. A re-posted ad gets a new AnnonsId but the
+            # same LägenhetId, which is what makes a re-listing detectable: an
+            # apartment back on the market after nobody took it last time.
+            "apartment_id": _bf_field(ad, "LägenhetId", "LagenhetId", "Lägenhetsnummer"),
+            # BF's feed doesn't state a move-in date; kept as an explicit None
+            # so every provider's rows have the same shape.
+            "move_in": None,
             "coords": coords,
             "url": _bf_listing_url(ad, coords),
         })
@@ -2461,7 +2508,7 @@ def fetch_sgs(categories=None) -> tuple[list[dict], list[str]]:
                 "coords": None,
                 "max_years": None,
                 "el_included": None,
-                "available_from": _dotnet_date((it.get("availability") or {}).get("availableFrom")),
+                "move_in": _dotnet_date((it.get("availability") or {}).get("availableFrom")),
                 "deadline": None,
                 "tagline": it.get("description"),
                 "url": SGS_SITE + str(oid),
@@ -2549,7 +2596,7 @@ def fetch_afbostader() -> tuple[list[dict], list[str]]:
             # people have already applied. 40 versus 6 is the whole answer.
             "applicants": _num(it.get("numberOfReservations"), int),
             "deadline": (it.get("reserveUntilDate") or None),
-            "available_from": (it.get("moveInDate") or None),
+            "move_in": (it.get("moveInDate") or None),
             # Reserved for students new to Lund.
             "novice_priority": (it.get("priority") == "Novisch"),
             "contract_months": _num(it.get("rentalPeriods"), int),
