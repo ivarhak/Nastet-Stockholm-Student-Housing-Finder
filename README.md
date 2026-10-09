@@ -175,7 +175,7 @@ you can look at current listings without running anything:
 > **https://nästet.se**
 
 A GitHub Actions workflow (`.github/workflows/publish.yml`) scrapes every
-provider **hourly**, writes one `listings-<city>.json` next to the
+provider **hourly** (see the Worker below), writes one `listings-<city>.json` next to the
 dashboard, and deploys them to Pages. The page picks up a new scrape on its own — a tab
 left open re-checks the data file every 15 minutes.
 
@@ -191,9 +191,40 @@ What the published version can't do, by nature:
 - **No Refresh.** Re-scraping needs a token, and a token cannot live in a public
   static page. The schedule is the refresh.
 - **No desktop notifications.** Those are the reason to run it locally.
-- **Freshness is approximate.** GitHub's scheduled workflows are best-effort and
-  commonly run 5–20 minutes late. Also note GitHub **disables cron workflows
-  after 60 days without repo activity** — it emails you first.
+- **Freshness depends on the Worker.** GitHub's own scheduler drops most
+  scheduled runs — asking it for hourly delivered one run every ~6 hours — so
+  the hourly clock is a small Cloudflare Worker (below). Without it the
+  workflow's fallback schedule still publishes, about every three hours at best.
+
+### Keeping it fresh: the Cloudflare Worker
+
+`worker/` is a tiny Cloudflare Worker that dispatches the publish workflow
+every hour and posts to a Discord channel if the published data goes stale. It
+runs on Cloudflare's free plan (one cron trigger out of the five allowed).
+One-time setup, about ten minutes:
+
+1. **A GitHub token for it.** GitHub → Settings → Developer settings →
+   Fine-grained tokens → *Generate new token*. Repository access: **only this
+   repository**. Permissions: **Actions: Read and write** — nothing else.
+2. **Install wrangler and log in** (from the `worker/` folder):
+   ```bash
+   npm install -g wrangler
+   wrangler login
+   ```
+3. **Create the KV store** it keeps its alert flag (and later the Discord
+   watch subscriptions) in, then paste the printed `id` into `wrangler.toml`:
+   ```bash
+   wrangler kv namespace create SUBS
+   ```
+4. **Add the secrets:**
+   ```bash
+   wrangler secret put GITHUB_TOKEN         # the token from step 1
+   wrangler secret put ADMIN_WEBHOOK_URL    # optional: a Discord webhook for "data went stale" alerts
+   ```
+5. **Deploy:** `wrangler deploy`. Check it with `wrangler tail` — each hour logs
+   `dispatch: ok (HTTP 204)` and the age of the published data.
+
+Tests run with `npm test` in `worker/` and need nothing but Node.
 
 
 

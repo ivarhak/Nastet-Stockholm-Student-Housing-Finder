@@ -1,0 +1,23 @@
+# Cloudflare Worker for Nästet — see the "Worker and Discord bot" section of the
+# README for the one-time setup. Secrets are NOT in this file; they're set with
+# `wrangler secret put <NAME>` and live only in Cloudflare.
+name = "nastet"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[triggers]
+# Hourly, at :17 — off the top of the hour, where every scheduler is busiest.
+crons = ["17 * * * *"]
+
+[vars]
+GITHUB_REPO = "ivarhak/Nastet-Stockholm-Student-Housing-Finder"
+WORKFLOW = "publish.yml"
+GITHUB_REF = "main"
+SITE_URL = "https://xn--nstet-gra.se"
+STALE_HOURS = "3"
+
+# Subscriptions for the Discord watch, plus the health check's alert flag.
+# Create it once with `wrangler kv namespace create SUBS` and paste the id here.
+[[kv_namespaces]]
+binding = "SUBS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"

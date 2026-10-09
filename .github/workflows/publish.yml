@@ -11,27 +11,21 @@ name: Publish dashboard
 
 on:
   schedule:
-    # Hourly, at :17 rather than :00 — GitHub's scheduler is busiest on the hour
-    # and delays runs that pile up there.
+    # A fallback only. The real clock is the Cloudflare Worker in worker/, which
+    # dispatches this workflow every hour at :17.
     #
-    # Asking for more often than we need, deliberately. `schedule` is
-    # best-effort: GitHub silently drops scheduled runs under load, and asking
-    # for every two hours was delivering every five to six (runs 402-404 landed
-    # 6h34m and 5h25m apart, consecutive, so the ones in between were never
-    # queued at all). Hourly should land an effective one to three hours.
+    # GitHub's `schedule` is best-effort and has been dropping most runs across
+    # the platform: asking for hourly delivered a median of one run every 6.1 h
+    # (Oct 4–9, 20 runs, 2.8–9.4 h apart). A workflow_dispatch is not throttled
+    # that way. This entry stays so the site keeps updating — slowly — if the
+    # Worker is ever down; at :47 so it never lands on top of a dispatch.
     #
-    # Not faster than this. Shorter intervals are dropped harder, and 24 scrapes
-    # a day is already the limit of what's polite to ask of four free services —
-    # SSSB, Bostadsförmedlingen, SGS and AF Bostäder. The runner minutes are not
-    # the constraint; this repo is public, so they're free.
-    #
-    # Frequency barely affects whether anyone gets a flat: SSSB and
-    # Bostadsförmedlingen both allocate by queue days against an application
-    # deadline, not first-come. What it buys is catching listings that appear
-    # and vanish between scrapes — SGS's Express category is genuinely
-    # first-come — and giving the watch something timely to notify about.
-    - cron: '17 * * * *'
-  workflow_dispatch:      # lets you publish on demand from the Actions tab
+    # Hourly is the ceiling, not a target to push past: 24 scrapes a day is
+    # already a fair amount to ask of four free services, and SSSB and
+    # Bostadsförmedlingen allocate by queue days against a deadline, so minutes
+    # don't decide who gets a flat.
+    - cron: '47 */3 * * *'
+  workflow_dispatch:      # the Worker's hourly trigger, and on-demand runs from the Actions tab
   push:
     branches: [main]
     # Republish when the UI itself changes, without waiting for the next scrape.

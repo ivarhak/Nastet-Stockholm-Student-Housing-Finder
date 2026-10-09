@@ -1,0 +1,10 @@
+{
+  "name": "nastet-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "deploy": "wrangler deploy",
+    "register-commands": "node scripts/register-commands.mjs"
+  }
+}

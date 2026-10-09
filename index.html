@@ -1954,9 +1954,7 @@ const I18N = { sv: {
   new_badge: 'NY',
   first_seen: 'Först sedd {ago} — bostäder är märkta NY i {h} h',
   within: 'inom {n} min från {s}',
-  updates_every: 'Uppdateras var {n}:e timme',
-  updates_hourly: 'Uppdateras varje timme',
-  updates_often: 'Uppdateras några gånger om dagen',
+  unofficial_lead: 'Inofficiell vy av ',
   unofficial: ' · inofficiell vy av ',
   listed_providers: 'de listade källorna',
   apply_there: ' — sök där.',
@@ -1999,6 +1997,19 @@ function stamp(iso){
 function todayISO(){
   return new Date().toLocaleDateString('sv-SE', { timeZone: STHLM });
 }
+// "14 min ago" / "för 14 min sedan". Coarse on purpose — a scrape timestamp
+// doesn't deserve seconds, and the exact time is one hover away.
+function relAgo(iso){
+  const min = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  const sv = lang === 'sv';
+  if (min < 2) return sv ? 'nyss' : 'just now';
+  if (min < 60) return sv ? `för ${min} min sedan` : `${min} min ago`;
+  const h = Math.round(min / 60);
+  if (h < 36) return sv ? `för ${h} tim sedan` : `${h} h ago`;
+  const d = Math.round(h / 24);
+  return sv ? `för ${d} dagar sedan` : `${d} days ago`;
+}
+
 // Whole calendar days between two YYYY-MM-DD strings. Both are read as UTC
 // midnight so the difference is exact: parsing them as local times would make
 // the count jump by one across a DST boundary.
@@ -2792,17 +2803,9 @@ function applyDataSourceChrome(){
   const src = document.getElementById('sourceNote');
   src.hidden = !isStatic;
   if (isStatic) {
-    const every = currentData.update_every_hours;
-    // An interval of one has its own word in both languages — "every 1 hour"
-    // and "var 1:e timme" are the kind of thing that reads as a bug in the page
-    // rather than a number in a template.
-    const cadence = lang === 'sv'
-      ? (every === 1 ? t('updates_hourly', '')
-         : every ? t('updates_every', '').replace('{n}', every) : t('updates_often', ''))
-      : (every === 1 ? 'Updates hourly'
-         : every ? `Updates every ${every} hours` : 'Updates a few times a day');
-    src.innerHTML = cadence
-      + t('unofficial', ' · unofficial view of ')
+    // No cadence claim: the header already says how old the data is, which is
+    // the version of this that cannot be wrong.
+    src.innerHTML = t('unofficial_lead', 'Unofficial view of ')
       + ((currentData ? sourcesFor(currentData) : []).map(src =>
            `<a href="${src.url}" target="_blank" rel="noopener noreferrer">${src.label}</a>`
          ).join(' + ') || t('listed_providers', 'the listed providers'))
@@ -2965,8 +2968,11 @@ function setSchool(id){
 function renderMeta(){
   const d = currentData;
   const updated = document.getElementById('lastUpdated');
-  updated.textContent =
-    t('updated', 'updated ') + stamp(d.generated_at);
+  // Relative, with the exact Stockholm time on hover. "Updated 14 min ago" is
+  // true by construction; a promised interval was not — the schedule asked for
+  // hourly and GitHub delivered every six hours, so the old "Updates hourly"
+  // line was a claim the page had no way to keep.
+  updated.textContent = t('updated', 'updated ') + relAgo(d.generated_at);
   // Worth flagging when a scrape has actually been missed, because "updated
   // <a date>" reads as current at a glance and stale listings look exactly like
   // real ones.
@@ -2980,13 +2986,16 @@ function renderMeta(){
   // 2.5x rather than 1x: GitHub's scheduler is best-effort and routinely runs
   // late, so a single delayed run is normal and shouldn't cry wolf — but two
   // missed in a row is a real problem worth seeing.
+  //
+  // Floored at three hours: with an hourly trigger that tolerates two late runs
+  // before crying wolf, and it can't shrink below that if the interval does.
   const every = Number(d.update_every_hours) || 2;
   const ageMin = (Date.now() - new Date(d.generated_at).getTime()) / 60000;
-  const stale = !d.demo && ageMin > every * 60 * 2.5;
+  const stale = !d.demo && ageMin > Math.max(180, every * 60 * 2.5);
   updated.style.color = stale ? 'var(--ochre)' : '';
   updated.title = stale
     ? `These listings are ${Math.round(ageMin / 60)}h old — no scrape has completed since. Hit "Refresh listings".`
-    : '';
+    : stamp(d.generated_at);
   const bySrc = {};
   d.listings.forEach(l => bySrc[l.provider] = (bySrc[l.provider]||0)+1);
   document.getElementById('listingCount').textContent =
@@ -4483,6 +4492,10 @@ function scheduleNextPoll(){
     scheduleNextPoll();
   }, nextPollDelay());
 }
+
+// "updated 14 min ago" has to keep counting while the page sits open, or a tab
+// left overnight reads as fresh. Meta only — nothing else depends on the clock.
+setInterval(() => { if (currentData) renderMeta(); }, 60 * 1000);
 
 function nextPollDelay(){
   if (serverScraping || myRefreshInFlight) return 3000;
