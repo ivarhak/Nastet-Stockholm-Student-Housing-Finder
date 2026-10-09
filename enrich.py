@@ -64,7 +64,7 @@ FLOORPLAN_DIR = DATA / "floorplans"
 FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
 PLAN_WIDTH = 640
 PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
-PLAN_PARSER = 2              # bump when find_plan_links changes, to re-check old misses
+PLAN_PARSER = 3              # bump when find_plan_links changes, to re-check old misses
 MAX_NEW_PLANS_PER_RUN = 25   # politeness: a cold cache fills over a few runs
 
 
@@ -90,6 +90,37 @@ def find_plan_links(html: str, base: str) -> list[str]:
             seen.add(u)
             out.append(u)
     return out
+
+
+# The object page fills its "pdf-links" box with a script widget
+# (data-widget="objektdokument"); the documents come from SSSB's widget
+# endpoint, keyed by the same refid as the page.
+WIDGET_URLS = [
+    "https://minasidor.sssb.se/widgets/?refid={refid}&widgets%5B%5D=objektdokument",
+    "https://minasidor.sssb.se/widgets/?callback=cb&refid={refid}&widgets%5B%5D=objektdokument",
+]
+
+
+def widget_plan_links(session, page_url: str, debug: bool) -> list[str]:
+    m = re.search(r"refid=([0-9a-fA-F]+)", page_url)
+    if not m:
+        return []
+    for tmpl in WIDGET_URLS:
+        url = tmpl.format(refid=m.group(1))
+        try:
+            r = session.get(url, timeout=20, headers={"Referer": page_url, "X-Requested-With": "XMLHttpRequest"})
+        except requests.RequestException as e:
+            if debug:
+                print(f"    widget {url}: {type(e).__name__}: {e}")
+            continue
+        body = r.text.replace("\\/", "/").replace("\\u002F", "/")
+        found = [u.replace("&amp;", "&") for u in re.findall(r'(?:https?:)?//[^"\'\s<>]+?\.pdf[^"\'\s<>]*', body, re.I)]
+        found += [urljoin(page_url, u) for u in re.findall(r'["\'](/[^"\'\s<>]+?\.pdf[^"\'\s<>]*)', body, re.I)]
+        if debug:
+            print(f"    widget {url}: HTTP {r.status_code}, {len(body):,} chars, pdfs {found[:3]} — head {body[:300]!r}")
+        if found:
+            return [("https:" + u) if u.startswith("//") else u for u in found]
+    return []
 
 
 def render_plan(blob: bytes, content_type: str) -> bytes | None:
@@ -137,7 +168,8 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
                 try:
                     page = session.get(l["url"], timeout=20)
                     page.raise_for_status()
-                    cands = find_plan_links(page.text, page.url)
+                    cands = find_plan_links(page.text, page.url) or \
+                        widget_plan_links(session, page.url, debug=not shown_debug)
                     if not shown_debug:
                         # The first page's candidates, so a changed page layout
                         # shows up here rather than as silently missing plans.
@@ -151,6 +183,10 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
                             print(f"    …{snip}…")
                         apis = sorted(set(re.findall(r'["\'](/[^"\']*(?:api|Api|widget|ajax)[^"\']*)["\']', page.text)))[:15]
                         print(f"    script-ish paths: {apis}")
+                        srcs = re.findall(r'<script[^>]+src=["\']([^"\']+)', page.text)[:12]
+                        mentions = sorted(set(re.findall(r'[\w/.:-]*widgets[\w/.?=&%-]*', page.text)))[:10]
+                        print(f"    script srcs: {srcs}")
+                        print(f"    'widgets' mentions: {mentions}")
                     for url in cands[:3]:
                         r = session.get(url, timeout=30)
                         if not r.ok or len(r.content) < 1000:
@@ -198,6 +234,20 @@ def round_coords(geom):
     return geom
 
 
+def coarse(geom):
+    """4 decimals (~11 m), dropping points that collapse onto the previous one."""
+    if isinstance(geom, list) and geom and isinstance(geom[0], (int, float)):
+        return [round(v, 4) for v in geom]
+    if isinstance(geom, list) and geom and isinstance(geom[0], list) and geom[0] and isinstance(geom[0][0], (int, float)):
+        pts = []
+        for p in geom:
+            q = [round(v, 4) for v in p]
+            if not pts or q != pts[-1]:
+                pts.append(q)
+        return pts
+    return [coarse(g) for g in geom] if isinstance(geom, list) else geom
+
+
 def enrich_isochrones(site: Path, payloads: dict) -> None:
     cache = load(ISOCHRONE_CACHE, {})
     asked = 0
@@ -241,13 +291,18 @@ def enrich_isochrones(site: Path, payloads: dict) -> None:
                     print(f"  isochrones: {city}/{sid}: {type(e).__name__}: {e}"
                           f"{' (keeping the older copy)' if rec else ''}")
             if rec and rec.get("features"):
-                # Largest first, so the smaller rings draw on top.
+                # Largest first, so the smaller rings draw on top. One file per
+                # campus, at ~11 m precision: the page only ever draws one
+                # campus, and the full set was ~750 KB for Stockholm.
                 feats = sorted(rec["features"], key=lambda f: -(f["properties"]["min"] or 0))
-                out[sid] = {"type": "FeatureCollection", "features": feats}
+                feats = [{**f, "geometry": {**f["geometry"], "coordinates": coarse(f["geometry"]["coordinates"])}}
+                         for f in feats]
+                name = f"isochrones-{city}-{re.sub(r'[^A-Za-z0-9-]', '', sid)}.json"
+                (site / name).write_text(json.dumps({"type": "FeatureCollection", "features": feats},
+                                                    separators=(",", ":")))
+                out[sid] = name
         if out:
-            (site / f"isochrones-{city}.json").write_text(
-                json.dumps({"contours": CONTOURS, "schools": out}, separators=(",", ":")))
-            data["isochrones"] = f"isochrones-{city}.json"
+            data["isochrones"] = out
         print(f"isochrones: {city}: {len(out)}/{len(schools)} campuses")
     save(ISOCHRONE_CACHE, cache)
     print(f"isochrones: {asked} requested this run")

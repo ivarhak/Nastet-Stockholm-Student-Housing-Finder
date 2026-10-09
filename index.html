@@ -1410,6 +1410,8 @@
     font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--dim);
   }
   .allin-toggle input{ accent-color:var(--ochre); margin:0; }
+  /* display:flex above beats the user agent's [hidden] rule. */
+  .allin-toggle[hidden]{ display:none; }
   .date-filter{
     font:12px/1 var(--mono); color:var(--ink); background:var(--bg);
     border:1px solid var(--rule); border-radius:2px; padding:5px 6px; width:100%;
@@ -1491,6 +1493,35 @@
   .fact.nz{ color:var(--dim); }
   .fact.nz-noisy, .fact.nz-very_noisy{ color:var(--accent-ink); border-color:var(--accent-ink); }
   .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.10; stroke:var(--leaf); stroke-width:1.5; stroke-dasharray:5 5; }
+  .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; }
+  #campusPanel{
+    position:absolute; z-index:1100; top:12px; right:12px; width:300px; max-width:calc(100% - 24px);
+    max-height:calc(100% - 24px); overflow:auto; background:var(--panel); border:1px solid var(--border);
+    padding:12px 13px; box-shadow:4px 4px 0 color-mix(in srgb, var(--bg) 70%, transparent);
+  }
+  #campusPanel[hidden]{ display:none; }
+  .cm-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .cm-head h3{ margin:0 0 8px; font-size:14px; line-height:1.25; }
+  .cm-exit{ font:600 9.5px/1.3 var(--mono); text-transform:uppercase; letter-spacing:0.06em; background:none;
+    border:1px solid var(--rule); color:var(--dim); padding:5px 7px; cursor:pointer; white-space:nowrap; }
+  .cm-exit:hover{ color:var(--ink); border-color:var(--ink); }
+  #campusQ{ width:100%; margin:0; }
+  #campusResults{ list-style:none; margin:8px 0 0; padding:0; }
+  #campusResults li{ border-bottom:1px solid var(--rule); }
+  .cm-hit{ display:block; width:100%; text-align:left; background:none; border:none; color:var(--ink);
+    font:12px/1.4 var(--display); padding:7px 2px; cursor:pointer; }
+  .cm-hit:hover, .cm-hit:focus-visible{ color:var(--accent-ink); }
+  .cm-hint{ font-size:11.5px; line-height:1.5; color:var(--dim); padding:6px 0; border:none !important; }
+  #campusNote{ margin-top:8px; padding:8px 9px; border:1px solid var(--accent-ink); font-size:12px; line-height:1.5; color:var(--ink); }
+  .cm-foot{ margin:10px 0 0; font:10px/1.5 var(--mono); color:var(--faint); }
+  .leaflet-overlay-pane path.campus-bldg{ fill:var(--slate); fill-opacity:0.18; stroke:var(--slate); stroke-width:1; }
+  .leaflet-overlay-pane path.campus-bldg.active{ fill:var(--ochre); fill-opacity:0.45; stroke:var(--ochre); stroke-width:2.5; }
+  .leaflet-tooltip.campus-tip{ background:transparent; border:none; box-shadow:none; font:700 11px/1 var(--mono); color:#1a2a33; text-shadow:0 0 3px #fff, 0 0 3px #fff; }
+  .leaflet-tooltip.campus-tip::before{ display:none; }
+  .campus-poi{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--pin-ring); background:var(--leaf); }
+  .campus-poi.poi-entrance{ background:var(--ochre); border-radius:1px; }
+  .campus-poi.poi-library{ background:var(--plum); }
+  body.campus-mode .area-roundel, body.campus-mode .listing-dot, body.campus-mode .bf-pin{ opacity:0.25; }
   .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -1829,6 +1860,7 @@
     <div class="control">
       <label data-i18n="campus">Campus</label>
       <select id="schoolSelect" title="Centre the map and measure commutes from here"></select>
+      <button type="button" id="campusBtn" class="allin-toggle campus-btn" hidden data-i18n="cm_open">Campus map &amp; room finder</button>
     </div>
 
     <div class="control">
@@ -1945,6 +1977,15 @@
     </div>
 
     <div id="map"></div>
+    <div id="campusPanel" hidden role="region" aria-labelledby="campusTitle">
+      <div class="cm-head"><h3 id="campusTitle"></h3>
+        <button type="button" id="campusExit" class="cm-exit">✕ <span data-i18n="cm_exit">Back to housing</span></button></div>
+      <label for="campusQ" class="sr-title" data-i18n="cm_q_l">Find a room or building</label>
+      <input type="search" id="campusQ" class="search-input" autocomplete="off" data-i18n-ph="cm_ph" placeholder="Room or building — e.g. D2, Q31, Bibliotek">
+      <div id="campusNote" hidden></div>
+      <ul id="campusResults"></ul>
+      <p class="cm-foot" data-i18n="cm_foot">Buildings and rooms from OpenStreetMap, as mapped by volunteers. A room code's letters name its building; the floor is on the signs inside.</p>
+    </div>
     <div id="hoverCard" hidden role="tooltip" onmouseenter="clearTimeout(hoverHideTimer)" onmouseleave="hideHoverCard()"></div>
 
   </div>
@@ -2183,6 +2224,17 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  cm_open: 'Campuskarta och salsökning',
+  cm_exit: 'Tillbaka till bostäder',
+  cm_q_l: 'Hitta en sal eller byggnad',
+  cm_ph: 'Sal eller byggnad — t.ex. D2, Q31, Bibliotek',
+  cm_foot: 'Byggnader och salar från OpenStreetMap, kartlagda av frivilliga. En salskods bokstäver anger byggnaden; våningen står på skyltarna inne.',
+  cm_building: 'Byggnad', cm_entrance: 'Entré', cm_library: 'Bibliotek', cm_cafe: 'Kafé',
+  cm_restaurant: 'Restaurang', cm_toilets: 'Toaletter', cm_bikes: 'Cykelparkering',
+  cm_floors: 'våningar', cm_room_in: 'Sal', cm_room_is: 'ligger i den här byggnaden — följ skyltarna inne för våningen.',
+  cm_hint: 'Skriv en salskod som D2 eller Q31, eller ett byggnadsnamn.', cm_bldgs: 'byggnader kartlagda', cm_rooms: 'salar',
+  cm_none: 'Inget hittades. Alla byggnader är inte namngivna i OpenStreetMap — prova byggnadens namn eller gatuadress.',
+  cm_room: 'Sal', cm_level: 'plan',
   dc_p: '<b>Hellre Discord?</b> Vår bot kan skicka DM i stället — ingen flik behöver vara öppen. Lägg till den och klistra sedan in det här kommandot där du kan prata med den:',
   dc_copy: 'Kopiera kommandot',
   dc_add: 'Lägg till boten ↗',
@@ -3289,6 +3341,7 @@ function render(){
     buildGroceryLayer();
   }
   renderSchoolPicker();
+  syncCampusButton();
   renderMeta();
   recentreForCity();
   renderMap();
@@ -5273,14 +5326,14 @@ function attachHoverCard(marker, rows){
 // ── Bike isochrones: what the commute slider means on the ground ─────────
 // Drawn for the selected campus at the contour nearest the slider (at or above
 // it), so the shaded area is "where Max commute reaches by bike".
-let isoData = null, isoCity = null, isoLayer = null;
+let isoData = null, isoKey = null, isoLayer = null;
 let showIso = store.get('nastet-iso', false) === true;
+// One file per campus (isochrones-<city>-<school>.json), fetched when needed.
 async function loadIsochrones(){
-  const city = currentCity || cityIndex.default;
-  if (isoCity === city) return isoData;
-  isoCity = city; isoData = null;
-  const file = currentData && currentData.isochrones;
+  const file = currentData && currentData.isochrones && currentData.isochrones[selectedSchool];
   if (!file) return null;
+  if (isoKey === file) return isoData;
+  isoKey = file; isoData = null;
   try { const r = await fetch('./' + file, { cache: 'no-store' }); isoData = r.ok ? await r.json() : null; }
   catch (e) { isoData = null; }
   return isoData;
@@ -5289,15 +5342,16 @@ let isoSeq = 0;
 async function syncIsochrones(){
   const seq = ++isoSeq;
   const wrap = document.getElementById('isoToggleWrap');
-  if (wrap) wrap.hidden = !(currentData && currentData.isochrones);
+  const has = !!(currentData && currentData.isochrones && currentData.isochrones[selectedSchool]);
+  if (wrap) wrap.hidden = !has;
   if (isoLayer) { leafletMap.removeLayer(isoLayer); isoLayer = null; }
-  if (!showIso || !currentData || !currentData.isochrones) return;
+  if (!showIso || !has) return;
   const data = await loadIsochrones();
   // A slider drag fires many of these; only the latest may draw.
   if (seq !== isoSeq) return;
   if (isoLayer) { leafletMap.removeLayer(isoLayer); isoLayer = null; }
-  const fc = data && data.schools && data.schools[selectedSchool];
-  if (!fc) return;
+  const fc = data;
+  if (!fc || !fc.features) return;
   const mins = fc.features.map(f => f.properties.min).filter(m => m != null).sort((a, b) => a - b);
   const pick = mins.find(m => m >= maxCommuteMin) ?? mins[mins.length - 1];
   const feat = fc.features.find(f => f.properties.min === pick);
@@ -5306,6 +5360,155 @@ async function syncIsochrones(){
   isoLayer.bringToBack();
   const lab = document.getElementById('isoLabel');
   if (lab) lab.textContent = `${t('iso_short', 'Reach on map')} · ${pick} min`;
+}
+
+// ── Campus map: find a building or a room on your campus ─────────────────
+// From OpenStreetMap, built in CI (enrich.py → campus-<school>.json). Rooms
+// are found by building: a room code's letters name its building ("D2" is in
+// building D, "Q31" in building Q), and rooms OSM has mapped indoors match
+// exactly. It finds the building, not the room inside it — the signs take
+// over from the door.
+let campusMode = false, campusData = null, campusFor = null, campusLayer = null, campusActive = null;
+function campusFile(){
+  const maps = currentData && currentData.campus_maps;
+  return maps && maps[selectedSchool];
+}
+function syncCampusButton(){
+  const btn = document.getElementById('campusBtn');
+  if (btn) btn.hidden = !campusFile();
+  if (campusMode && campusFor !== selectedSchool) exitCampus();
+}
+async function openCampus(){
+  const file = campusFile();
+  if (!file) return;
+  if (campusFor !== selectedSchool || !campusData) {
+    try { const r = await fetch('./' + file, { cache: 'no-store' }); campusData = r.ok ? await r.json() : null; }
+    catch (e) { campusData = null; }
+    campusFor = selectedSchool;
+  }
+  if (!campusData) return;
+  campusMode = true;
+  document.body.classList.add('campus-mode');
+  drawCampus();
+  const panel = document.getElementById('campusPanel');
+  panel.hidden = false;
+  // Over the map itself, not the filter bar above it in the same column.
+  const mapEl = document.getElementById('map');
+  panel.style.top = (mapEl.offsetTop + 12) + 'px';
+  panel.style.maxHeight = (mapEl.offsetHeight - 24) + 'px';
+  document.getElementById('campusTitle').textContent = `${(schools()[selectedSchool] || {}).name || selectedSchool}`;
+  document.getElementById('campusQ').value = '';
+  renderCampusResults('');
+  document.getElementById('campusQ').focus();
+  leafletMap.flyToBounds(campusData.bbox, { padding: [20, 20], duration: 0.6 });
+}
+function exitCampus(){
+  campusMode = false;
+  document.body.classList.remove('campus-mode');
+  if (campusLayer) { leafletMap.removeLayer(campusLayer); campusLayer = null; }
+  campusActive = null;
+  const panel = document.getElementById('campusPanel');
+  if (panel) panel.hidden = true;
+  if (leafletMap && currentData) leafletMap.flyTo(centre(), 13, { duration: 0.6 });
+}
+function bldgLabel(b){
+  return b.name && b.ref && !b.name.includes(b.ref) ? `${b.name} (${b.ref})` : (b.name || (b.ref ? `${t('cm_building', 'Building')} ${b.ref}` : b.addr));
+}
+function drawCampus(){
+  if (campusLayer) leafletMap.removeLayer(campusLayer);
+  campusLayer = L.layerGroup().addTo(leafletMap);
+  campusData.buildings.forEach((b, i) => {
+    const poly = L.polygon(b.poly, { className: 'campus-bldg' + (campusActive === i ? ' active' : '') }).addTo(campusLayer);
+    poly.bindTooltip(esc(bldgLabel(b)), { direction: 'center', className: 'campus-tip', permanent: !!b.ref && b.ref.length <= 3, opacity: 0.95 });
+    poly.on('click', () => focusBuilding(i));
+  });
+  const icon = k => L.divIcon({ className: '', html: `<div class="campus-poi poi-${k}"></div>`, iconSize: [9, 9] });
+  campusData.pois.forEach(p => {
+    const m = L.marker(p.at, { icon: icon(p.kind), interactive: true }).addTo(campusLayer);
+    const label = { entrance: t('cm_entrance', 'Entrance'), library: t('cm_library', 'Library'), cafe: t('cm_cafe', 'Café'),
+                    restaurant: t('cm_restaurant', 'Restaurant'), fast_food: t('cm_restaurant', 'Restaurant'),
+                    toilets: t('cm_toilets', 'Toilets'), bicycle_parking: t('cm_bikes', 'Bike parking') }[p.kind] || p.kind;
+    m.bindTooltip(esc(p.name ? `${label}: ${p.name}` : label), { direction: 'top' });
+    nameMarker(m, p.name ? `${label}: ${p.name}` : label);
+  });
+}
+function focusBuilding(i, room){
+  campusActive = i;
+  drawCampus();
+  const b = campusData.buildings[i];
+  // On a narrow map the panel spans its width, so frame the building below it.
+  const panel = document.getElementById('campusPanel'), mapEl = document.getElementById('map');
+  const wide = panel.offsetWidth > mapEl.offsetWidth * 0.6;
+  leafletMap.flyToBounds(b.poly, wide
+    ? { paddingTopLeft: [30, panel.offsetHeight + 40], paddingBottomRight: [30, 30], maxZoom: 18, duration: 0.5 }
+    : { padding: [60, 60], maxZoom: 18, duration: 0.5 });
+  const note = document.getElementById('campusNote');
+  note.innerHTML = `<b>${esc(bldgLabel(b))}</b>${b.addr ? ` · ${esc(b.addr)}` : ''}${b.levels ? ` · ${esc(b.levels)} ${t('cm_floors', 'floors')}` : ''}`
+    + (room ? `<br>${t('cm_room_in', 'Room')} <b>${esc(room)}</b> ${t('cm_room_is', 'is in this building — follow the signs inside for the floor.')}` : '');
+  note.hidden = false;
+}
+
+const ROOM_CODE = /^([A-ZÅÄÖ]{1,3})[\s:.-]*(\d{1,4}[A-Z]?)$/;
+const norm = s => String(s || '').toUpperCase().replace(/\s+/g, '');
+// Ranked hits: [{kind:'room'|'building', i (building index), at, label, room}]
+function campusSearch(q){
+  if (!campusData) return [];
+  const raw = q.trim();
+  if (!raw) return [];
+  const n = norm(raw);
+  const hits = [];
+  // 1. A room OSM has mapped, exactly.
+  campusData.rooms.forEach(r => {
+    if (norm(r.ref) === n || norm(r.name) === n) hits.push({ kind: 'room', at: r.at, label: r.ref, room: r.ref, level: r.level });
+  });
+  // 2. A room code: its letters are the building.
+  const m = n.match(ROOM_CODE);
+  if (m) {
+    const letters = m[1];
+    campusData.buildings.forEach((b, i) => {
+      const ref = norm(b.ref), name = norm(b.name), alt = norm(b.alt);
+      if (ref === letters || new RegExp(`^${letters}-?HUSET\\b|^${letters}-?HUS\\b`).test(name) || new RegExp(`^${letters}-?HUSET`).test(alt)) {
+        hits.push({ kind: 'building', i, label: bldgLabel(b), room: raw.toUpperCase() });
+      }
+    });
+  }
+  // 3. Building name, ref or address containing the text.
+  if (raw.length >= 2) {
+    const low = raw.toLowerCase();
+    campusData.buildings.forEach((b, i) => {
+      if (hits.some(h => h.i === i)) return;
+      if ([b.name, b.ref, b.alt, b.addr].some(v => v && String(v).toLowerCase().includes(low))) {
+        hits.push({ kind: 'building', i, label: bldgLabel(b) });
+      }
+    });
+  }
+  return hits.slice(0, 12);
+}
+function renderCampusResults(q){
+  const list = document.getElementById('campusResults');
+  const note = document.getElementById('campusNote');
+  note.hidden = true;
+  const hits = campusSearch(q);
+  if (!q.trim()) {
+    list.innerHTML = `<li class="cm-hint">${t('cm_hint', 'Type a room code like D2 or Q31, or a building name.')} ${campusData.buildings.length} ${t('cm_bldgs', 'buildings mapped')}${campusData.rooms.length ? `, ${campusData.rooms.length} ${t('cm_rooms', 'rooms')}` : ''}.</li>`;
+    return;
+  }
+  if (!hits.length) {
+    list.innerHTML = `<li class="cm-hint">${t('cm_none', 'Nothing found. Not every building is labelled in OpenStreetMap — try the building’s name or street address.')}</li>`;
+    return;
+  }
+  list.innerHTML = hits.map((h, k) => `<li><button type="button" class="cm-hit" data-k="${k}">${h.kind === 'room'
+      ? `${t('cm_room', 'Room')} ${esc(h.label)}${h.level != null ? ` · ${t('cm_level', 'level')} ${esc(h.level)}` : ''}`
+      : `${h.room ? `${esc(h.room)} → ` : ''}${esc(h.label)}`}</button></li>`).join('');
+  list.querySelectorAll('.cm-hit').forEach(btn => btn.addEventListener('click', () => {
+    const h = hits[Number(btn.dataset.k)];
+    if (h.kind === 'room') {
+      leafletMap.flyTo(h.at, 19, { duration: 0.5 });
+      L.popup().setLatLng(h.at).setContent(`${t('cm_room', 'Room')} <b>${esc(h.label)}</b>`).openOn(leafletMap);
+    } else focusBuilding(h.i, h.room);
+  }));
+  // Enter on a single obvious answer goes straight there.
+  if (hits.length === 1 && hits[0].kind === 'building') focusBuilding(hits[0].i, hits[0].room);
 }
 
 function renderSidebar(){
@@ -5637,6 +5840,14 @@ setMoveBy(profile.move_to, false);
 document.getElementById('discordCopy').addEventListener('click', async (e) => {
   try { await navigator.clipboard.writeText(discordCommand()); e.target.textContent = t('link_copied', '✓ Copied'); }
   catch (err) { window.prompt(t('copy_link_prompt', 'Copy this:'), discordCommand()); }
+});
+
+document.getElementById('campusBtn').addEventListener('click', openCampus);
+document.getElementById('campusExit').addEventListener('click', exitCampus);
+document.getElementById('campusQ').addEventListener('input', e => renderCampusResults(e.target.value));
+// Esc leaves the campus map — unless the compare dialog is open, which Esc closes first.
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && campusMode && document.getElementById('compareModal').hidden) exitCampus();
 });
 
 const isoEl = document.getElementById('isoToggle');
