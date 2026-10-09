@@ -1407,6 +1407,43 @@
     border:1px solid var(--rule); border-radius:2px; padding:5px 6px; width:100%;
   }
   .compare-foot{ margin:0; padding:10px 16px 14px; font-size:11px; line-height:1.5; color:var(--dim); }
+  #market{ padding:14px 16px; }
+  .mk-card h3{ margin:0 0 6px; font-size:15px; }
+  .gated p, .mk-p{ margin:0 0 6px; font-size:12px; line-height:1.5; color:var(--dim); }
+  .gate-bar{ height:4px; background:var(--rule); margin:4px 0; }
+  .gate-bar i{ display:block; height:100%; background:var(--accent-ink); }
+  .gate-cap{ font:10px/1.5 var(--mono); color:var(--faint); margin:6px 0 0; }
+  .mk-foot{ margin:4px 2px 12px; }
+  .verdict{ font-family:var(--figure, inherit); font-weight:800; font-size:22px; margin:2px 0 2px; }
+  .verdict.better{ color:var(--leaf); }
+  .verdict.tighter{ color:var(--clay); }
+  :root[data-theme="light"] .verdict.better, :root[data-theme="light"] .mk-comps b.up, :root[data-theme="light"] .pw b.up{ color:#3d6b2a; }
+  :root[data-theme="light"] .verdict.tighter, :root[data-theme="light"] .mk-comps b.down{ color:#a14a2c; }
+  .mk-comps{ list-style:none; padding:0; margin:8px 0; }
+  .mk-comps li{ display:flex; justify-content:space-between; font:11px/1.9 var(--mono); color:var(--dim); border-bottom:1px solid var(--rule); }
+  .mk-comps b{ color:var(--ink); font-weight:600; }
+  .mk-comps b.up, .pw b.up{ color:var(--leaf); }
+  .mk-comps b.down{ color:var(--clay); }
+  .spark{ display:block; width:100%; height:48px; color:var(--accent-ink); margin-top:6px; }
+  .p3{ margin:8px 0 4px; padding-left:20px; }
+  .p3 li{ margin-bottom:9px; font-size:12px; }
+  .p3-open{ font:700 13px/1.3 var(--display) !important; color:var(--ink) !important; text-transform:none !important; letter-spacing:0 !important; text-align:left; }
+  .p3-sub{ display:block; font:10px/1.5 var(--mono); color:var(--faint); margin:1px 0 4px; }
+  .p3 .fact{ display:inline-block; }
+  .p3-rules{ margin-top:10px; font-size:11.5px; color:var(--dim); }
+  .p3-rules summary{ cursor:pointer; font:600 10px/1.6 var(--mono); text-transform:uppercase; letter-spacing:0.06em; color:var(--accent-ink); }
+  .p3-rules p{ line-height:1.5; }
+  table.pw{ width:100%; border-collapse:collapse; font-size:11.5px; margin-top:6px; }
+  table.pw th, table.pw td{ text-align:left; padding:5px 4px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  table.pw thead th{ font:600 9px/1.3 var(--mono); text-transform:uppercase; letter-spacing:0.06em; color:var(--dim); }
+  table.pw td{ font-family:var(--mono); }
+  table.pw .p3-sub{ display:inline; margin:0; }
+  table.pw .na{ color:var(--faint); }
+  .df-key{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; font:10px/1.4 var(--mono); color:var(--dim); margin-top:6px; }
+  .df-key .sw{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .df-key .sw.easy{ background:var(--leaf); } .df-key .sw.mid{ background:var(--ochre); }
+  .df-key .sw.hard{ background:var(--clay); } .df-key .sw.none{ background:var(--empty); }
+  #diffChip .sw{ border-radius:50%; background:conic-gradient(var(--leaf) 0 33%, var(--ochre) 0 66%, var(--clay) 0); }
   .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -1801,6 +1838,7 @@
              provider, and belongs to the page rather than to any city. -->
         <button id="groceryChip" hidden
                 title="Hide chain supermarkets" data-i18n-title="hide_shops"><span class="sw"></span><span data-i18n="shops">Shops</span></button>
+        <button id="diffChip" class="off" hidden type="button" aria-pressed="false"><span class="sw"></span><span data-i18n="difficulty">Difficulty</span></button>
       </div>
     </div>
 
@@ -1864,6 +1902,7 @@
     <div class="tabs">
       <button id="tabListings" class="active" onclick="switchTab('listings')" data-i18n="tab_listings">LISTINGS</button>
       <button id="tabQueues" onclick="switchTab('queues')" data-i18n="tab_queues">QUEUES TO JOIN</button>
+      <button id="tabMarket" onclick="switchTab('market')" data-i18n="tab_market">MARKET</button>
     </div>
     <div id="listingsView">
       <!-- Outside #panelHeader on purpose: renderSidebar() rewrites that on
@@ -1912,6 +1951,7 @@
       <div id="listings"></div>
       <div id="compareBar" hidden></div>
     </div>
+    <div id="market" style="display:none"></div>
     <div id="queues">
       <div id="coverageNote" hidden></div>
       <div class="queue-card profile-card" id="profileCard"></div>
@@ -2084,6 +2124,43 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  tab_market: 'MARKNAD',
+  difficulty: 'Svårighet',
+  gated: 'Aktiveras när mer data har samlats in',
+  gated_start: 'Insamlingen har nyss börjat — titta tillbaka om några veckor.',
+  spark_l: 'Lediga bostäder per dag',
+  mk_h: 'Hur marknaden ser ut',
+  mk_better: 'Bättre än vanligt', mk_typical: 'Ungefär som vanligt', mk_tighter: 'Trängre än vanligt',
+  mk_avail: 'Lediga bostäder', mk_rent: 'Hyra per m²', mk_diff: 'Ködagar som krävs',
+  mk_better_s: 'bättre', mk_worse_s: 'sämre',
+  mk_basis: 'De senaste 7 dagarna mot de 8 veckorna före.',
+  mk_since: 'Registrerat sedan',
+  mk_foot: 'Registrerat från Nästets egna hämtningar. En slutsiffra sparas bara när vi såg bostaden inom sex timmar innan den stängde, och även då kan sena sökande ha drivit upp den riktiga.',
+  p3_h: 'Välj dina 3',
+  p3_need: 'Fyll i dina SSSB-ködagar under Köer att gå med i så föreslår den vilka tre du ska söka.',
+  p3_none: 'Inga SSSB-bostäder klarar dina filter just nu.',
+  p3_strong: 'troligen din', p3_good: 'god chans', p3_now: 'leder nu, kan bli omsprungen', p3_long: 'långskott',
+  p3_real: 'Baserat på registrerade avslut: den ledandes siffra slutar oftast',
+  p3_higher: 'högre än den står ett dygn innan.',
+  p3_rough: 'Använder en tumregel — ledande +15 % vid sista dagen — tills tillräckligt många avslut registrerats.',
+  p3_rules_h: 'Så fungerar SSSB:s ansökningar',
+  p3_rules: 'Du kan ha tre ansökningar samtidigt. Står du först i kön till flera erbjuder SSSB dig en av dem — du väljer inte vilken — så sök bara sådant du verkligen skulle ta. Att tacka nej upprepade gånger kan kosta dina ködagar, och utan kårmedlemskap stannar dagarna på 90. Reglerna ändras: kontrollera på sssb.se innan du förlitar dig på det här.',
+  pw_h: 'Hur länge tills du troligen får en',
+  pw_need: 'Fyll i dina SSSB-ködagar under Köer att gå med i för att se det här.',
+  pw_now: 'inom räckhåll nu', pw_in: 'om ungefär', pw_months: 'månader',
+  pw_basis: 'Vad registrerade avslut gick för (median), mot din löpande räkning. Varje dag du väntar lägger till en dag — gapet krymper en mot en.',
+  pw_med: 'Typiskt', pw_when: 'För dig',
+  cls_corr: 'rum', cls_1: '1 rum', cls_2: '2+ rum',
+  rl_h: 'Tillbaka på marknaden',
+  rl_n: 'av dagens bostäder har varit ute förut — markerade på sina rader.',
+  rl_none: 'Ingen av dagens bostäder har setts förut.',
+  rl_partial: 'Historiken är fortfarande kort, så äldre återkomster kan inte kännas igen än',
+  rl_last: 'Stängde senast', rl_went: 'gick för', rl_badge: 'tillbaka på marknaden',
+  df_h: 'Svårighetskarta',
+  df_on: 'Slå på Svårighet ovanför kartan för att färga varje område efter hur många ködagar bostäderna där brukar gå för.',
+  df_easy: 'lättare', df_mid: 'mitten', df_hard: 'svårare', df_none: 'för få avslut',
+  df_title: 'Färga områden efter hur många ködagar bostäderna där brukar gå för',
+  df_tip: 'brukar kräva',
   value_vs: 'typiskt för den här sortens bostad här är',
   value_n: 'jämförda',
   good_value: 'prisvärd',
@@ -3563,7 +3640,8 @@ function renderMap(){
       // which is worth seeing when you're browsing with the sliders and not
       // when you're hunting for one street name.
       if (isEmpty && searchQuery.trim()) return;
-      const color = isEmpty ? 'var(--empty)' : groupColor(area.group);
+      const dc = difficultyMode ? diffColor(name) : undefined;
+      const color = difficultyMode ? (dc || 'var(--empty)') : isEmpty ? 'var(--empty)' : groupColor(area.group);
       const size = isEmpty ? 16 : 14 + Math.min(count, 6) * 3;
 
       const icon = L.divIcon({
@@ -3575,8 +3653,10 @@ function renderMap(){
       nameMarker(marker, count > 0 ? `${name} — ${count} ${t('n_available', 'available')}`
                                    : `${name} — ${t('none_available', 'none available')}`);
       marker.on('click', () => selectArea(name));
+      const diffNote = difficultyMode && historyData && historyData.areas[name] && historyData.areas[name].n >= 3
+        ? ` · ${t('df_tip', 'typically')} ${num(historyData.areas[name].median)} ${t('days_word', 'days')}` : '';
       if (count > 0) {
-        marker.bindTooltip(`${name} · ${count} available`, { direction:'top' });
+        marker.bindTooltip(`${name} · ${count} available${diffNote}`, { direction:'top' });
       } else {
         marker.bindTooltip(`${name} · ${filtersActive() ? 'none match your filters' : 'none available'}`,
                            { direction:'top', opacity:0.7 });
@@ -3953,6 +4033,7 @@ function toggleBrowseAll(){
     currentTab = 'listings';
     document.getElementById('tabListings').classList.add('active');
     document.getElementById('tabQueues').classList.remove('active');
+    document.getElementById('tabMarket').classList.remove('active');
   }
   const hadQuery = searchQuery.trim() !== '';
   searchQuery = '';
@@ -4575,6 +4656,8 @@ function rowPersonal(l){
       ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>`
       : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`);
   }
+  const rl = historyData && historyData.relisted && historyData.relisted[l.id];
+  if (rl) facts.push(`<span class="fact you" title="${esc(`${t('rl_last', 'Last closed')} ${rl.last_closed}${rl.last_final_days ? ` · ${t('rl_went', 'went for')} ${num(rl.last_final_days)} ${t('days_word', 'days')}` : ''}`)}">${rl.times > 1 ? `${t('rl_badge', 'back on the market')} ×${rl.times}` : t('rl_badge', 'back on the market')}</span>`);
   const val = valueBadge(l);
   if (val) facts.push(`<span class="fact you value" title="${esc(val.title)}">${t('good_value', 'good value')}</span>`);
   if (profile.budget && l.rent_sek != null && rentShown(l) > profile.budget) facts.push(`<span class="fact you">${t('over_budget', 'over budget')}</span>`);
@@ -4713,11 +4796,198 @@ function whenLine(l){
   return bits.length ? `<div class="row-when">${bits.join(' · ')}</div>` : '';
 }
 
+// ── Market tab: how things look now, and what the history says ───────────
+// Every card here reads history-<city>.json, and every one is gated: until
+// enough has been recorded it says so, with how far along it is, rather than
+// putting a confident number on three data points.
+const GATE_UNITS = { days: ['days of data', 'dagars data'], closings: ['closings recorded', 'avslut registrerade'],
+                     'comparable listings': ['comparable listings', 'jämförbara bostäder'] };
+function gatedNote(name){
+  const g = gate(name);
+  const lead = t('gated', 'Will be enabled when more data has been collected');
+  if (!g) return `<p class="gated">${lead}. ${t('gated_start', 'Recording started recently — check back in a few weeks.')}</p>`;
+  const pct = Math.min(100, Math.round(g.have / Math.max(1, g.need) * 100));
+  const unit = (GATE_UNITS[g.unit] || [g.unit, g.unit])[lang === 'sv' ? 1 : 0];
+  return `<div class="gated"><p>${lead}.</p>
+    <div class="gate-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${g.need}" aria-valuenow="${Math.min(g.have, g.need)}"
+      aria-label="${esc(unit)}"><i style="width:${pct}%"></i></div>
+    <p class="gate-cap">${num(g.have)} / ${num(g.need)} ${unit}</p></div>`;
+}
+
+function sparkline(series){
+  if (!series || series.length < 2) return '';
+  const w = 280, h = 48, ys = series.map(p => p[1]);
+  const max = Math.max(...ys, 1), min = Math.min(...ys, 0);
+  const pts = series.map((p, i) => `${(i / (series.length - 1) * w).toFixed(1)},${(h - (p[1] - min) / (max - min || 1) * (h - 4) - 2).toFixed(1)}`).join(' ');
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img"
+    aria-label="${t('spark_l', 'Listings available per day')}: ${series[0][0]} ${ys[0]} → ${series[series.length - 1][0]} ${ys[ys.length - 1]}">
+    <polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+}
+
+function marketCard(){
+  const head = `<h3>${t('mk_h', 'How the market looks')}</h3>`;
+  const g = gate('market');
+  const m = historyData && historyData.market;
+  if (!g || !g.ready || !m) return head + gatedNote('market');
+  const verdict = { better: t('mk_better', 'Better than usual'), typical: t('mk_typical', 'About usual'),
+                    tighter: t('mk_tighter', 'Tighter than usual') }[m.verdict];
+  const pctTxt = v => `${v > 0 ? '+' : ''}${Math.round(v * 100)}%`;
+  const labels = { availability: t('mk_avail', 'Listings available'), rent: t('mk_rent', 'Rent per m²'),
+                   difficulty: t('mk_diff', 'Queue days needed') };
+  const comps = Object.entries(m.components).map(([k, v]) =>
+    `<li><span>${labels[k] || k}</span><b class="${v > 0.05 ? 'up' : v < -0.05 ? 'down' : ''}">${pctTxt(v)} ${v >= 0 ? t('mk_better_s', 'better') : t('mk_worse_s', 'worse')}</b></li>`).join('');
+  return `${head}<p class="verdict ${m.verdict}">${verdict}</p>
+    <p class="mk-p">${t('mk_basis', 'The last 7 days against the 8 weeks before them.')}</p>
+    <ul class="mk-comps">${comps}</ul>
+    ${sparkline(m.series)}
+    <p class="gate-cap">${t('mk_since', 'Recorded since')} ${historyData.since || '—'}</p>`;
+}
+
+// ── Pick your 3 ──
+// SSSB lets you hold three applications at a time. The leader's figure you see
+// keeps climbing until the deadline, so "I lead it now" is not "I'll get it":
+// recorded closings say by how much it typically climbs in the last day.
+const UPLIFT_FALLBACK = { median: 1.15, p75: 1.3 };
+function pickThree(){
+  const mine = profileDaysNow();
+  if (mine == null || !currentData) return null;
+  const g = gate('pick3');
+  const up = g && g.ready && historyData.uplift && historyData.uplift.median_ratio
+    ? { median: historyData.uplift.median_ratio, p75: historyData.uplift.p75_ratio || historyData.uplift.median_ratio, real: true }
+    : { ...UPLIFT_FALLBACK, real: false };
+  const rank = { strong: 0, good: 1, now: 2, long: 3 };
+  const cands = currentData.listings
+    .filter(l => typeof l.queue_days === 'number' && activeProviders.has(l.provider)
+      && passesFilters(l) && markOf(l.id) !== 'hidden')
+    .map(l => {
+      const expect = l.queue_days * up.median, safe = l.queue_days * up.p75;
+      const status = mine >= safe ? 'strong' : mine >= expect ? 'good' : mine >= l.queue_days ? 'now' : 'long';
+      const cm = schoolMetrics(currentData.areas[l.area] || l) || {};
+      return { l, status, expect, bike: typeof cm.bike_min === 'number' ? cm.bike_min : 999 };
+    });
+  // Among ones you'd likely win, prefer what you'd actually want — you may be
+  // offered any of them — so saved first, then the shorter ride. Long shots
+  // go by how close they are.
+  cands.sort((a, b) => rank[a.status] - rank[b.status]
+    || (a.status === 'long' ? a.expect - b.expect
+      : (markOf(b.l.id) === 'saved') - (markOf(a.l.id) === 'saved') || a.bike - b.bike));
+  return { picks: cands.slice(0, 3), up, mine, total: cands.length };
+}
+
+function pickCard(){
+  const head = `<h3>${t('p3_h', 'Pick your 3')}</h3>`;
+  const res = pickThree();
+  if (!res) return head + `<p class="mk-p">${t('p3_need', 'Add your SSSB queue days under Queues to join and this suggests which three to apply for.')}</p>`;
+  if (!res.picks.length) return head + `<p class="mk-p">${t('p3_none', 'No SSSB listings pass your filters right now.')}</p>`;
+  const label = { strong: t('p3_strong', 'likely yours'), good: t('p3_good', 'good chance'),
+                  now: t('p3_now', 'leading now, may be overtaken'), long: t('p3_long', 'long shot') };
+  const items = res.picks.map(({ l, status, expect }) => `<li>
+      <button type="button" class="link-btn p3-open" onclick="selectListing('${esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"))}')">${esc(l.address || l.area)}</button>
+      <span class="p3-sub">${esc(l.area)} · ${num(l.queue_days)} → ~${num(Math.round(expect))} ${t('days_word', 'days')}</span>
+      <span class="fact you ${status === 'strong' || status === 'good' ? 'lead' : ''}">${label[status]}</span></li>`).join('');
+  const basis = res.up.real
+    ? `${t('p3_real', 'Based on recorded closings: the leader’s figure typically ends')} ${Math.round((res.up.median - 1) * 100)}% ${t('p3_higher', 'higher than it stands a day before.')}`
+    : `${t('p3_rough', 'Using a rule of thumb — leader +15% by the deadline — until enough closings are recorded.')}`;
+  return `${head}<ol class="p3">${items}</ol>
+    <p class="gate-cap">${basis}</p>
+    ${res.up.real ? '' : gatedNote('pick3')}
+    <details class="p3-rules"><summary>${t('p3_rules_h', 'How SSSB applications work')}</summary>
+      <p>${t('p3_rules', 'You can hold three applications at a time. If you end up first in line for more than one, SSSB offers you one of them — you don’t choose which — so only apply for places you would actually take. Turning down offers repeatedly can cost you your queue days, and without student union membership your days stop at 90. Rules change: check sssb.se before you rely on this.')}</p>
+    </details>`;
+}
+
+// ── Projected wait ──
+function waitCard(){
+  const head = `<h3>${t('pw_h', 'How long until you’re likely to get one')}</h3>`;
+  const g = gate('projected_wait');
+  if (!g || !g.ready) return head + gatedNote('projected_wait');
+  const mine = profileDaysNow();
+  if (mine == null) return head + `<p class="mk-p">${t('pw_need', 'Add your SSSB queue days under Queues to join to see this.')}</p>`;
+  const wanted = new Set((profile.watch && profile.watch.areas) || []);
+  const segs = Object.entries(historyData.segments || {})
+    .filter(([, v]) => v.n >= 3)
+    .map(([k, v]) => { const [area, cls] = k.split('|'); return { area, cls, ...v }; })
+    .sort((a, b) => (wanted.has(b.area) - wanted.has(a.area)) || b.n - a.n)
+    .slice(0, 10);
+  if (!segs.length) return head + gatedNote('projected_wait');
+  const clsName = { corridor: t('cls_corr', 'room'), '1room': t('cls_1', '1 room'), '2plus': t('cls_2', '2+ rooms') };
+  const rows = segs.map(s => {
+    const gap = s.median - mine;
+    const when = gap <= 0 ? `<b class="up">${t('pw_now', 'within reach now')}</b>`
+      : `${t('pw_in', 'in about')} ${gap < 60 ? gap + ' ' + t('days_word', 'days') : Math.round(gap / 30.4) + ' ' + t('pw_months', 'months')}`;
+    return `<tr><th scope="row">${esc(s.area)} <span class="p3-sub">${clsName[s.cls] || s.cls}</span></th>
+      <td>${num(s.median)}</td><td>${when}</td><td class="na">${s.n}</td></tr>`;
+  }).join('');
+  return `${head}<p class="mk-p">${t('pw_basis', 'What recorded closings went for (median), against your running count. Each day you wait adds a day — the gap shrinks one-for-one.')}</p>
+    <table class="pw"><thead><tr><th scope="col">${t('c_area', 'Area')}</th><th scope="col">${t('pw_med', 'Typical')}</th>
+    <th scope="col">${t('pw_when', 'For you')}</th><th scope="col">n</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function relistCard(){
+  const n = historyData && historyData.relisted ? Object.keys(historyData.relisted).length : 0;
+  const head = `<h3>${t('rl_h', 'Back on the market')}</h3>`;
+  const g = gate('relisting');
+  const body = n
+    ? `<p class="mk-p">${n} ${t('rl_n', 'of today’s listings were listed before — marked on their rows.')}</p>`
+    : `<p class="mk-p">${t('rl_none', 'None of today’s listings has been seen before.')}</p>`;
+  return head + body + (g && !g.ready ? `<p class="gate-cap">${t('rl_partial', 'History is still short, so older re-listings can’t be recognised yet')} (${num(g.have)} / ${num(g.need)} ${t('days_word', 'days')}).</p>` : '');
+}
+
+function diffCard(){
+  const head = `<h3>${t('df_h', 'Difficulty map')}</h3>`;
+  if (!diffReady()) return head + gatedNote('difficulty');
+  return head + `<p class="mk-p">${t('df_on', 'Switch on Difficulty above the map to colour each area by the queue days its places typically went for.')}</p>
+    <div class="df-key"><span class="sw easy"></span>${t('df_easy', 'easier')} <span class="sw mid"></span>${t('df_mid', 'middle')} <span class="sw hard"></span>${t('df_hard', 'harder')} <span class="sw none"></span>${t('df_none', 'too few closings')}</div>`;
+}
+
+function renderMarket(){
+  const el = document.getElementById('market');
+  if (!el) return;
+  const hasQueue = currentData && currentData.listings.some(l => typeof l.queue_days === 'number')
+    || Object.keys((currentData && currentData.areas) || {}).length > 0;
+  el.innerHTML = [marketCard(), hasQueue ? pickCard() : '', hasQueue ? waitCard() : '', hasQueue ? diffCard() : '', relistCard()]
+    .filter(Boolean).map(c => `<div class="queue-card mk-card">${c}</div>`).join('')
+    + `<p class="gate-cap mk-foot">${t('mk_foot', 'Recorded from Nästet’s own scrapes. A final figure is only kept when we saw the listing within six hours of it closing, and even then late applicants can push the real one higher.')}</p>`;
+}
+
+// ── Difficulty map mode ──
+let difficultyMode = false;
+function diffReady(){
+  const g = gate('difficulty');
+  return !!(g && g.ready && historyData.areas);
+}
+// Ranked among the city's own areas, so the three colours always split them
+// rather than an absolute scale that suits one city and not another.
+function diffColor(name){
+  const a = historyData.areas[name];
+  if (!a || a.n < 3) return null;
+  const meds = Object.values(historyData.areas).filter(v => v.n >= 3).map(v => v.median).sort((x, y) => x - y);
+  // Where this area ranks among them, 0 (easiest) to 1 (hardest); ties take
+  // the lower rank.
+  const pos = meds.length > 1 ? meds.indexOf(a.median) / (meds.length - 1) : 0.5;
+  return pos <= 1 / 3 ? 'var(--leaf)' : pos <= 2 / 3 ? 'var(--ochre)' : 'var(--clay)';
+}
+function syncDiffChip(){
+  const chip = document.getElementById('diffChip');
+  if (!chip) return;
+  chip.hidden = !currentData || !Object.keys(currentData.areas || {}).length;
+  const ready = diffReady();
+  if (!ready) difficultyMode = false;
+  chip.classList.toggle('off', !difficultyMode);
+  chip.setAttribute('aria-pressed', String(difficultyMode));
+  const g = gate('difficulty');
+  chip.title = ready ? t('df_title', 'Colour areas by how many queue days places there typically went for')
+    : `${t('gated', 'Will be enabled when more data has been collected')}${g ? ` (${g.have}/${g.need})` : ''}`;
+}
+
 function renderSidebar(){
   syncClearChip();
   renderWatch();
   document.getElementById('listingsView').style.display = currentTab === 'listings' ? 'block' : 'none';
   document.getElementById('queues').style.display = currentTab === 'queues' ? 'block' : 'none';
+  document.getElementById('market').style.display = currentTab === 'market' ? 'block' : 'none';
+  syncDiffChip();
+  if (currentTab === 'market') renderMarket();
   if (currentTab !== 'listings') return;
 
   const header = document.getElementById('panelHeader');
@@ -4850,6 +5120,7 @@ function switchTab(tab){
   currentTab = tab;
   document.getElementById('tabListings').classList.toggle('active', tab === 'listings');
   document.getElementById('tabQueues').classList.toggle('active', tab === 'queues');
+  document.getElementById('tabMarket').classList.toggle('active', tab === 'market');
   renderSidebar();
 }
 
@@ -5060,6 +5331,14 @@ document.getElementById('legend').addEventListener('click', (e) => {
 document.getElementById('providerChips').addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (!btn) return;
+  if (btn.id === 'diffChip') {
+    // Not ready yet: the Market tab says how far along the data is.
+    if (!diffReady()) { switchTab('market'); return; }
+    difficultyMode = !difficultyMode;
+    syncDiffChip();
+    renderMap();
+    return;
+  }
   if (btn.id === 'groceryChip') {
     // Shares the chip row with the provider filters but isn't one — it toggles a
     // map layer, and touches neither the listings nor any count.
