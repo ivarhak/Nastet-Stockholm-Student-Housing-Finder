@@ -9,7 +9,7 @@
 import { dispatchWorkflow } from './github.js';
 import { checkFreshness } from './health.js';
 import { handleInteraction } from './discord.js';
-import { handleNotify } from './notify.js';
+import { handleNotify, runNotify } from './notify.js';
 
 export default {
   async scheduled(event, env, ctx) {
@@ -37,5 +37,13 @@ export async function runCron(env) {
   const health = await checkFreshness(env);
   console.log(`freshness: ${health.ageH === null ? 'unknown' : health.ageH.toFixed(1) + ' h'}`
     + `${health.stale ? ' — STALE' : ''}${health.posted ? ' — posted to admin channel' : ''}`);
-  return { dispatch, health };
+  // Fallback for the workflow's own /notify call; a no-op when nothing changed.
+  let notify = null;
+  try {
+    notify = await runNotify(env);
+    console.log(`notify: ${JSON.stringify(notify)}`);
+  } catch (e) {
+    console.log(`notify: failed — ${e && e.message}`);
+  }
+  return { dispatch, health, notify };
 }

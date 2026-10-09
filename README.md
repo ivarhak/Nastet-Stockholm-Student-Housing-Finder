@@ -226,6 +226,49 @@ One-time setup, about ten minutes:
 
 Tests run with `npm test` in `worker/` and need nothing but Node.
 
+### Discord alerts (optional)
+
+The same Worker runs a Discord bot: `/watch set` saves a watch, and the bot
+DMs you when a listing you could get turns up, when one you were told about
+now needs more queue days than you have, and the day before a deadline. It
+needs no gateway connection — Discord calls the Worker, and the Worker calls
+Discord's REST API.
+
+1. **Create the app.** [Discord developer portal](https://discord.com/developers/applications)
+   → *New Application*. From *General Information* copy the **Application ID**
+   and **Public Key**; from *Bot* → *Reset Token* copy the **bot token**. Under
+   *Installation*, tick both **Guild Install** and **User Install** (scopes
+   `applications.commands`, plus `bot` for guilds) and copy the **Install Link**.
+2. **Give the Worker its secrets:**
+   ```bash
+   wrangler secret put DISCORD_PUBLIC_KEY
+   wrangler secret put DISCORD_BOT_TOKEN
+   wrangler secret put NOTIFY_SECRET        # any long random string, e.g. `openssl rand -hex 32`
+   wrangler deploy
+   ```
+3. **Point Discord at it:** *General Information* → *Interactions Endpoint URL*
+   = `https://nastet.<your-subdomain>.workers.dev/interactions`. Discord sends
+   a signed test request; saving only succeeds if the Worker answers it.
+4. **Register the command:**
+   ```bash
+   DISCORD_APP_ID=… DISCORD_BOT_TOKEN=… npm run register-commands
+   ```
+5. **Let the publish workflow ping it** (so DMs go out minutes after new data
+   rather than at the next hourly cron): add repository secrets
+   `NOTIFY_URL` = `https://nastet.<your-subdomain>.workers.dev/notify` and
+   `NOTIFY_SECRET` = the same string as in step 2.
+6. **Show it on the site:** set `DISCORD_INVITE` in `index.html` to the Install
+   Link. The watch panel then offers "Prefer Discord?" with the command
+   already filled in from the form.
+7. **Per-city digest channels (optional):** create a channel webhook and
+   `wrangler secret put DIGEST_WEBHOOK_STOCKHOLM` (or `_GOTEBORG`, `_LUND`);
+   each publish with new listings posts a summary there.
+
+What's stored, in the `SUBS` KV namespace under the user's Discord id: city,
+queue days and the date they were given, max rent, areas, whether to send
+every new listing, the DM channel id and the listing ids already sent. Nothing
+else. `/watch stop` deletes it; so does six months without a command.
+
 
 
 The workflow caches two files between runs, both worth understanding:

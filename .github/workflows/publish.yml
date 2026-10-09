@@ -420,3 +420,26 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # Tells the Cloudflare Worker the new data is live, so Discord watches hear
+  # about a match minutes after it's published rather than at the next cron.
+  # Skipped until the two secrets exist (see "Discord alerts" in the README);
+  # the Worker's hourly cron covers it either way.
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the Worker
+        env:
+          NOTIFY_URL: ${{ secrets.NOTIFY_URL }}
+          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
+        run: |
+          if [ -z "$NOTIFY_URL" ] || [ -z "$NOTIFY_SECRET" ]; then
+            echo "NOTIFY_URL / NOTIFY_SECRET not set — Discord notifications run from the Worker's cron only."
+            exit 0
+          fi
+          body="{\"at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
+          sig=$(printf '%s' "$body" | openssl dgst -sha256 -hmac "$NOTIFY_SECRET" -hex | sed 's/^.*= //')
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$NOTIFY_URL" \
+                 -H 'Content-Type: application/json' -H "X-Nastet-Signature: sha256=$sig" --data "$body") || true
+          echo "worker answered HTTP $code"

@@ -1328,6 +1328,13 @@
     margin-top:10px; padding-top:9px; border-top:1px solid var(--rule);
     font:11px/1.5 var(--mono); color:var(--dim);
   }
+  #discordBox{ margin-top:12px; padding-top:10px; border-top:1px solid var(--rule); }
+  #discordCmd{ display:block; font:11px/1.5 var(--mono); color:var(--ink); background:var(--bg);
+    border:1px solid var(--rule); padding:7px 8px; word-break:break-word; }
+  #discordBox .watch-actions{ align-items:center; }
+  #discordCopy{ font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; padding:9px 12px;
+    background:none; color:var(--accent-ink); border:1px solid var(--accent-ink); cursor:pointer; }
+  #discordInvite{ font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; color:var(--accent-ink); }
   #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
 
   /* ── On this device: profile, marks, compare, last visit ───────────────── */
@@ -1986,6 +1993,14 @@
           </div>
           <div id="watchStatus" hidden></div>
           <div id="watchPermNote" hidden></div>
+          <div id="discordBox" hidden>
+            <p data-i18n="dc_p"><b>Prefer Discord?</b> Our bot can DM you instead — no tab to keep open. Add it, then paste this command anywhere you can talk to it:</p>
+            <code id="discordCmd"></code>
+            <div class="watch-actions">
+              <button type="button" id="discordCopy" data-i18n="dc_copy">Copy command</button>
+              <a id="discordInvite" target="_blank" rel="noopener" data-i18n="dc_add">Add the bot ↗</a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="panel-header" id="panelHeader">
@@ -2168,6 +2183,9 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  dc_p: '<b>Hellre Discord?</b> Vår bot kan skicka DM i stället — ingen flik behöver vara öppen. Lägg till den och klistra sedan in det här kommandot där du kan prata med den:',
+  dc_copy: 'Kopiera kommandot',
+  dc_add: 'Lägg till boten ↗',
   nz_quiet: 'tyst', nz_moderate: 'måttligt buller', nz_noisy: 'bullrigt', nz_very: 'mycket bullrigt',
   nz_title: 'Modellerat buller från väg- och spårtrafik vid huset (dygnsmedel, Stockholms bullerkarta 2022). Ungefärligt: den vet inte åt vilket håll ett rum ligger.',
   more: 'till',
@@ -4288,6 +4306,30 @@ function announceMatches(){
   });
 }
 
+// The bot's install link from the Discord developer portal (Installation →
+// Install Link). Empty hides the Discord option entirely.
+const DISCORD_INVITE = '';
+
+// The same watch as the form above, written as the bot's slash command.
+function discordCommand(){
+  const days = document.getElementById('watchDays').value.trim();
+  const rent = document.getElementById('watchRent').value.trim();
+  const areas = [...document.querySelectorAll('#watchAreas input:checked')].map(i => i.value);
+  const bits = [`/watch set city:${currentCity || cityIndex.default}`];
+  if (days !== '') bits.push(`days:${Math.round(Number(days))}`);
+  if (rent !== '' && Number(rent) > 0) bits.push(`max_rent:${Math.round(Number(rent))}`);
+  if (areas.length) bits.push(`areas:${areas.join(', ')}`);
+  if (days === '') bits.push('all_new:True');
+  return bits.join(' ');
+}
+function renderDiscord(){
+  const box = document.getElementById('discordBox');
+  box.hidden = !DISCORD_INVITE;
+  if (box.hidden) return;
+  document.getElementById('discordInvite').href = DISCORD_INVITE;
+  document.getElementById('discordCmd').textContent = discordCommand();
+}
+
 function renderWatch(){
   const box = document.getElementById('watchBox');
   if (!box || !currentData) return;
@@ -4301,6 +4343,7 @@ function renderWatch(){
   if (box.hidden) return;
   renderWatchAreas(areas);
   renderWatchStatus();
+  renderDiscord();
   // Offer the profile's running count once, without fighting someone typing.
   const days = document.getElementById('watchDays');
   if (!watch && !watchDaysFilled && days.value === '' && profileDaysNow() != null) {
@@ -5588,6 +5631,13 @@ function setMoveBy(v, persist){
 }
 moveByEl.addEventListener('change', () => { setMoveBy(moveByEl.value, true); render(); });
 setMoveBy(profile.move_to, false);
+
+// The command follows the form as it's filled in.
+['input', 'change'].forEach(ev => document.getElementById('watchPanel').addEventListener(ev, () => renderDiscord()));
+document.getElementById('discordCopy').addEventListener('click', async (e) => {
+  try { await navigator.clipboard.writeText(discordCommand()); e.target.textContent = t('link_copied', '✓ Copied'); }
+  catch (err) { window.prompt(t('copy_link_prompt', 'Copy this:'), discordCommand()); }
+});
 
 const isoEl = document.getElementById('isoToggle');
 isoEl.checked = showIso;

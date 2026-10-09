@@ -1,6 +1,10 @@
 # Cloudflare Worker for Nästet — see the "Worker and Discord bot" section of the
 # README for the one-time setup. Secrets are NOT in this file; they're set with
-# `wrangler secret put <NAME>` and live only in Cloudflare.
+# `wrangler secret put <NAME>` and live only in Cloudflare:
+#   GITHUB_TOKEN, ADMIN_WEBHOOK_URL          — the hourly dispatch and stale alert
+#   DISCORD_PUBLIC_KEY, DISCORD_BOT_TOKEN    — the /watch bot
+#   NOTIFY_SECRET                            — signs the workflow's /notify ping
+#   DIGEST_WEBHOOK_<CITY>                    — optional per-city digest channels
 name = "nastet"
 main = "src/index.js"
 compatibility_date = "2026-10-01"
