@@ -65,7 +65,7 @@ FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
 PLAN_WIDTH = 640
 PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
 PLAN_PARSER = 4              # bump when find_plan_links changes, to re-check old misses
-MAX_NEW_PLANS_PER_RUN = 25   # politeness: a cold cache fills over a few runs
+MAX_NEW_PLANS_PER_RUN = 60   # covers a full SSSB list (~40) in one run; cached after that
 
 
 def plan_key(listing_id: str) -> str:

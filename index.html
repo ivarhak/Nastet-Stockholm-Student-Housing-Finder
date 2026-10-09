@@ -1491,6 +1491,8 @@
   .hc-plan figcaption{ font:10px/1.5 var(--mono); margin-top:3px; }
   .hc-plan a{ color:var(--accent-ink); }
   .fact.nz{ color:var(--dim); }
+  .row-acts .plan-btn{ color:var(--accent-ink); }
+  .plan-box img{ display:block; max-width:100%; height:auto; margin:0 auto; background:#fff; }
   .fact.nz-noisy, .fact.nz-very_noisy{ color:var(--accent-ink); border-color:var(--accent-ink); }
   .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.10; stroke:var(--leaf); stroke-width:1.5; stroke-dasharray:5 5; }
   .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; }
@@ -2229,6 +2231,9 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  fp_btn: '▦ Planritning',
+  fp_with: 'med planritning',
+  hc_click: 'Klicka för att se alla',
   cm_open: 'Campuskarta och salsökning',
   cm_exit: 'Tillbaka till bostäder',
   cm_q_l: 'Hitta en sal eller byggnad',
@@ -3808,6 +3813,8 @@ function renderMap(){
         marker.bindTooltip(`${name} · ${filtersActive() ? 'none match your filters' : 'none available'}`,
                            { direction:'top', opacity:0.7 });
       }
+      // After the tooltip is bound, so the card can replace it.
+      if (count > 0) attachHoverCard(marker, inArea, name);
       markers.push(marker);
     });
   }
@@ -4092,6 +4099,18 @@ function newTagTitle(l){
     : `First seen ${ago} — listings stay marked NEW for ${hours}h`;
 }
 
+// Long Swedish place names next to a big rent figure have to break somewhere,
+// and overflow-wrap would break them at any letter ("Lappkärrsb / erget").
+// A soft hyphen before a common place-name ending gives the line breaker a
+// proper place to break ("Lappkärrs- / berget") and shows nothing otherwise.
+const NAME_ENDINGS = /(berget|backen|bergen|vägen|gatan|holmen|dalen|torget|parken|staden|gården|hamra|viken|ängen|tunet|lunden|höjden|kullen|stigen|slingan|byn)$/i;
+function softBreak(name){
+  return String(name || '').split(' ').map(w => {
+    const m = w.length > 10 && w.match(NAME_ENDINGS);
+    return m && m.index >= 4 ? w.slice(0, m.index) + '\u00AD' + w.slice(m.index) : w;
+  }).join(' ');
+}
+
 function rowHtml(l, newIds, index = 0, featured = false){
   const commuteRef = currentData.areas[l.area] || l;
   const cm = schoolMetrics(commuteRef);
@@ -4100,7 +4119,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
   // shows in the area's gauges, where it's labelled as transit.
   const commute = cm && typeof cm.bike_min === 'number' ? bikeLabel(cm) : '';
   const areaRow = isAreaProvider(l.provider);
-  const title = areaRow ? l.area : (l.address || l.area);
+  const title = softBreak(areaRow ? l.area : (l.address || l.area));
   // BF ads lead with their area (their title is the street address); SSSB rows
   // lead with the area as the title, so they don't repeat it. Both then show the
   // apartment type where the source states one.
@@ -4937,13 +4956,34 @@ function rowPersonal(l){
   const id = esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
   const btn = (kind, on, off) => `<button type="button" class="mark${m === kind ? ' on' : ''}" aria-pressed="${m === kind}" onclick="event.stopPropagation();setMark('${id}','${kind}')">${m === kind ? on : off}</button>`;
   const cmp = compareIds.includes(l.id);
+  const plan = l.floorplan ? `<button type="button" class="mark plan-btn" onclick="event.stopPropagation();openPlan('${id}')">${t('fp_btn', '▦ Floor plan')}</button>` : '';
   return `${facts.length ? `<div class="row-you">${facts.join('')}</div>` : ''}
     <div class="row-acts">
       ${btn('saved', t('m_saved', '★ Saved'), t('m_save', '☆ Save'))}
       ${btn('applied', t('m_applied', '✓ Applied'), t('m_apply', 'Applied?'))}
       ${btn('hidden', t('m_unhide', 'Unhide'), t('m_hide', 'Hide'))}
       <button type="button" class="mark${cmp ? ' on' : ''}" aria-pressed="${cmp}" onclick="event.stopPropagation();toggleCompare('${id}')">${cmp ? t('m_comparing', '✓ Compare') : t('m_compare', '+ Compare')}</button>
+      ${plan}
     </div>`;
+}
+
+// The floor plan, large, in the same dialog the compare view uses.
+function openPlan(id){
+  const l = currentData && currentData.listings.find(x => x.id === id);
+  if (!l || !l.floorplan) return;
+  const modal = document.getElementById('compareModal');
+  modal.innerHTML = `<div class="compare-box plan-box" role="dialog" aria-modal="true" aria-labelledby="planTitle">
+    <div class="compare-head"><h3 id="planTitle">${esc(l.address || l.area)} · ${t('fp_alt', 'Floor plan')}</h3>
+      <button type="button" class="back" id="compareClose">${t('close', 'Close')} ✕</button></div>
+    <div class="compare-scroll"><img src="${esc(l.floorplan)}" alt="${t('fp_alt', 'Floor plan')} — ${esc(l.address || l.area)}"></div>
+    ${l.floorplan_src ? `<p class="compare-foot"><a href="${esc(l.floorplan_src)}" target="_blank" rel="noopener">${t('fp_open', 'Original floor plan ↗')}</a></p>` : ''}</div>`;
+  modal.hidden = false;
+  const close = () => { modal.hidden = true; document.removeEventListener('keydown', onKey); };
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  modal.onclick = e => { if (e.target === modal) close(); };
+  document.getElementById('compareClose').onclick = close;
+  document.getElementById('compareClose').focus();
 }
 
 // Hidden listings and the since-visit filter, applied to whatever list is
@@ -5267,12 +5307,16 @@ function noiseText(n){
 }
 const NOISE_TITLE = () => t('nz_title', 'Modelled road and rail traffic noise at the building (24 h average, Stockholm noise map 2022). Indicative: it can’t tell which side of the building a room faces.');
 
-function hoverCardHtml(rows){
+function hoverCardHtml(rows, heading){
   const l = rows[0];
   if (rows.length > 1) {
-    return `<div class="hc-title">${esc(l.address || l.area)}</div>
-      <ul class="hc-list">${rows.slice(0, 5).map(r => `<li>${esc(r.type || '')}${r.size_sqm ? ' · ' + r.size_sqm + ' m²' : ''}${r.rent_sek ? ' · <b>' + num(rentShown(r)) + ' kr</b>' : ''}${r.queue_days != null ? ' · ' + num(r.queue_days) + ' d' : ''}</li>`).join('')}</ul>
-      ${rows.length > 5 ? `<div class="hc-sub">+${rows.length - 5} ${t('more', 'more')}</div>` : ''}`;
+    const sorted = sortListings(rows);
+    const plans = rows.filter(r => r.floorplan).length;
+    return `<div class="hc-title">${esc(heading || l.address || l.area)}</div>
+      <div class="hc-sub">${rows.length} ${t('n_available', 'available')}${plans ? ` · ${plans} ${t('fp_with', 'with floor plan')}` : ''}</div>
+      <ul class="hc-list">${sorted.slice(0, 6).map(r => `<li>${esc(r.address && heading ? r.address + ' · ' : '')}${esc(r.type || '')}${r.size_sqm ? ' · ' + r.size_sqm + ' m²' : ''}${r.rent_sek ? ' · <b>' + num(rentShown(r)) + ' kr</b>' : ''}${r.queue_days != null ? ' · ' + num(r.queue_days) + ' d' : ''}${r.floorplan ? ' ▦' : ''}</li>`).join('')}</ul>
+      ${rows.length > 6 ? `<div class="hc-sub">+${rows.length - 6} ${t('more', 'more')}</div>` : ''}
+      <div class="hc-sub">${t('hc_click', 'Click to see them all')}</div>`;
   }
   const facts = [
     l.type, l.size_sqm ? l.size_sqm + ' m²' : null,
@@ -5295,10 +5339,10 @@ function hoverCardHtml(rows){
       ${l.floorplan_src ? `<figcaption><a href="${esc(l.floorplan_src)}" target="_blank" rel="noopener">${t('fp_open', 'Original floor plan ↗')}</a></figcaption>` : ''}</figure>`
       : `<div class="hc-sub">${t('fp_none', 'No floor plan published for this one.')}</div>`}`;
 }
-function showHoverCard(marker, rows){
+function showHoverCard(marker, rows, heading){
   clearTimeout(hoverHideTimer);
   const card = document.getElementById('hoverCard');
-  card.innerHTML = hoverCardHtml(rows);
+  card.innerHTML = hoverCardHtml(rows, heading);
   card.hidden = false;
   const map = document.getElementById('map').getBoundingClientRect();
   const p = leafletMap.latLngToContainerPoint(marker.getLatLng());
@@ -5317,13 +5361,17 @@ function hideHoverCard(delay = 120){
   clearTimeout(hoverHideTimer);
   hoverHideTimer = setTimeout(() => { const c = document.getElementById('hoverCard'); if (c) c.hidden = true; }, delay);
 }
-function attachHoverCard(marker, rows){
+function attachHoverCard(marker, rows, heading){
   if (canHover) {
     // The card says more than the tooltip did, so the tooltip goes.
     marker.unbindTooltip();
-    marker.on('mouseover', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => showHoverCard(marker, rows), 150); });
+    marker.on('mouseover', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => showHoverCard(marker, rows, heading), 150); });
     marker.on('mouseout', () => hideHoverCard());
-  } else {
+    // A click opens the area or listing in the sidebar; the card has done its job.
+    marker.on('click', () => hideHoverCard(0));
+  } else if (!heading) {
+    // On touch a tap on an area already opens its list, so the card is only
+    // for single listings there.
     marker.on('click', () => showHoverCard(marker, rows));
   }
 }
