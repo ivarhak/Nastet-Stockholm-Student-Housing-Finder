@@ -21,6 +21,17 @@ class EnrichTest(unittest.TestCase):
         self.assertIn("https://sssb.se/media/abc/bild.jpg", links)
         self.assertNotIn("https://sssb.se/kontakt", links)
 
+    def test_widget_documents(self):
+        # The shape run 462 got back from SSSB's objektdokument widget.
+        body = ('cb({"html":{"alert":"","objektdokument":"\\n<div class=\\"ObjektDokument\\">\\n<ul>\\n'
+                '<li class=\\"DokumentItem TypVanrit\\">\\n<a class=\\"btn\\" target=\\"_blank\\" '
+                'href=\\"//minasidor.sssb.se/spin/?id=207375&amp;idHash=ASkuk3mI9-o\\">Planritning</a></li>'
+                '<li class=\\"DokumentItem TypOvrigt\\"><a href=\\"/x\\">Info</a></li></ul></div>"}})')
+        docs = enrich.documents_from_widget(body)
+        self.assertEqual(docs[0][0], "TypVanrit")
+        self.assertEqual(docs[0][1], "//minasidor.sssb.se/spin/?id=207375&idHash=ASkuk3mI9-o")
+        self.assertEqual(len(docs), 2)
+
     def test_db_from_attrs(self):
         self.assertEqual(enrich.db_from_attrs({"OBJECTID": 7, "dB_intervall": "55-60 dBA"}), 55.0)
         self.assertEqual(enrich.db_from_attrs({"LEQ24": 62}), 62.0)

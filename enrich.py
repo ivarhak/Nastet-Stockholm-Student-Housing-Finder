@@ -64,7 +64,7 @@ FLOORPLAN_DIR = DATA / "floorplans"
 FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
 PLAN_WIDTH = 640
 PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
-PLAN_PARSER = 3              # bump when find_plan_links changes, to re-check old misses
+PLAN_PARSER = 4              # bump when find_plan_links changes, to re-check old misses
 MAX_NEW_PLANS_PER_RUN = 25   # politeness: a cold cache fills over a few runs
 
 
@@ -95,10 +95,31 @@ def find_plan_links(html: str, base: str) -> list[str]:
 # The object page fills its "pdf-links" box with a script widget
 # (data-widget="objektdokument"); the documents come from SSSB's widget
 # endpoint, keyed by the same refid as the page.
+# Only the JSONP form answers (without callback= it's HTTP 400). The reply is
+# cb({"html": {"objektdokument": "<div class=ObjektDokument><ul><li
+# class='DokumentItem TypVanrit'><a href='//minasidor.sssb.se/spin/?id=…'>…"}})
+# — one <li> per document, typed by class; TypVanrit is the floor plan.
 WIDGET_URLS = [
-    "https://minasidor.sssb.se/widgets/?refid={refid}&widgets%5B%5D=objektdokument",
     "https://minasidor.sssb.se/widgets/?callback=cb&refid={refid}&widgets%5B%5D=objektdokument",
 ]
+PLAN_DOC_TYPES = ("TypVanrit", "TypPlan", "TypRitning")
+
+
+def documents_from_widget(body: str) -> list[tuple[str, str, str]]:
+    """[(type class, href, link text)] from the objektdokument JSONP reply."""
+    m = re.search(r"^[\w$.]*\((.*)\)\s*;?\s*$", body.strip(), re.S)
+    try:
+        payload = json.loads(m.group(1) if m else body)
+        html = (payload.get("html") or {}).get("objektdokument") or ""
+    except (ValueError, AttributeError):
+        html = body
+    docs = []
+    for li in re.finditer(r'<li[^>]*class="[^"]*\b(Typ\w+)[^"]*"[^>]*>(.*?)</li>', html, re.S):
+        a = re.search(r'href="([^"]+)"[^>]*>(.*?)</a>', li.group(2), re.S)
+        if a:
+            text = re.sub(r"<[^>]+>|\s+", " ", a.group(2)).strip()
+            docs.append((li.group(1), a.group(1).replace("&amp;", "&"), text))
+    return docs
 
 
 def widget_plan_links(session, page_url: str, debug: bool) -> list[str]:
@@ -113,13 +134,12 @@ def widget_plan_links(session, page_url: str, debug: bool) -> list[str]:
             if debug:
                 print(f"    widget {url}: {type(e).__name__}: {e}")
             continue
-        body = r.text.replace("\\/", "/").replace("\\u002F", "/")
-        found = [u.replace("&amp;", "&") for u in re.findall(r'(?:https?:)?//[^"\'\s<>]+?\.pdf[^"\'\s<>]*', body, re.I)]
-        found += [urljoin(page_url, u) for u in re.findall(r'["\'](/[^"\'\s<>]+?\.pdf[^"\'\s<>]*)', body, re.I)]
+        docs = documents_from_widget(r.text)
         if debug:
-            print(f"    widget {url}: HTTP {r.status_code}, {len(body):,} chars, pdfs {found[:3]} — head {body[:300]!r}")
-        if found:
-            return [("https:" + u) if u.startswith("//") else u for u in found]
+            print(f"    widget: HTTP {r.status_code}, documents {[(t, txt) for t, _, txt in docs]}")
+        plans = [h for t, h, txt in docs if t in PLAN_DOC_TYPES or re.search(r"ritning|plan", txt, re.I)]
+        if plans:
+            return [urljoin(page_url, h) if not h.startswith("//") else "https:" + h for h in plans]
     return []
 
 
