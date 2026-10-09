@@ -147,6 +147,7 @@ jobs:
             data/floorplans
             data/isochrone_cache.json
             data/noise_cache.json
+            data/campus_cache.json
           key: nastet-enrich-cache-
           restore-keys: |
             nastet-enrich-cache-
@@ -381,6 +382,7 @@ jobs:
             data/floorplans
             data/isochrone_cache.json
             data/noise_cache.json
+            data/campus_cache.json
           key: nastet-enrich-cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Save scrape caches

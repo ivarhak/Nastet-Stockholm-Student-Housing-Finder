@@ -12,6 +12,7 @@ paths), so a normal hourly run makes almost no requests:
   data/floorplans/<key>.png + index.json   rendered page 1 of each SSSB plan PDF
   data/isochrone_cache.json                one Valhalla polygon set per campus
   data/noise_cache.json                    noise band per ~10 m grid point
+  data/campus_cache.json                   OSM buildings and rooms per campus map
 
 Verbose on purpose, like monitor.py: these sources can only be reached from
 CI, so the log is the debugger.
@@ -375,10 +376,114 @@ def enrich_noise(site: Path, payloads: dict) -> None:
     save(NOISE_CACHE, cache)
 
 
+# ── Campus maps ──────────────────────────────────────────────────────────────
+# Buildings, mapped rooms, entrances and a few amenities for the campuses the
+# page offers a campus map for, from OpenStreetMap. Room search in the page
+# works from these: a room code's letters name its building ("D2" → building
+# D / D-huset), and any room OSM has mapped indoors is matched exactly.
+# Refreshed monthly; the campus barely changes and Overpass is a shared service.
+
+CAMPUSES = {
+    # school id: (city, south, west, north, east)
+    "KTH": ("stockholm", 59.3440, 18.0600, 59.3545, 18.0790),
+    "SU": ("stockholm", 59.3590, 18.0440, 59.3720, 18.0680),
+}
+CAMPUS_CACHE = DATA / "campus_cache.json"
+CAMPUS_MAX_AGE_DAYS = 30
+
+
+def _ring(geom):
+    """[[lat, lon], …] at 5 decimals, thinned to every other vertex past 40."""
+    pts = [[round(p["lat"], 5), round(p["lon"], 5)] for p in geom or []]
+    return pts[::2] + [pts[-1]] if len(pts) > 40 else pts
+
+
+def _center(pts):
+    return [round(sum(p[0] for p in pts) / len(pts), 6), round(sum(p[1] for p in pts) / len(pts), 6)] if pts else None
+
+
+def campus_from_elements(elements: list) -> dict:
+    buildings, rooms, pois = [], [], []
+    for e in elements:
+        tags = e.get("tags") or {}
+        if e["type"] == "way" and e.get("geometry"):
+            pts = _ring(e["geometry"])
+        elif e["type"] == "relation":
+            outer = [m for m in e.get("members", []) if m.get("role") == "outer" and m.get("geometry")]
+            pts = _ring(outer[0]["geometry"]) if outer else []
+        else:
+            pts = []
+        at = [round(e["lat"], 6), round(e["lon"], 6)] if "lat" in e else _center(pts)
+        if not at:
+            continue
+        if tags.get("building") and pts:
+            name, ref = tags.get("name"), tags.get("ref") or tags.get("building:ref")
+            if not (name or ref or tags.get("addr:street")):
+                continue   # an unnamed shed is no use to a room search
+            buildings.append({"name": name, "ref": ref, "alt": tags.get("alt_name") or tags.get("old_name"),
+                              "addr": " ".join(filter(None, [tags.get("addr:street"), tags.get("addr:housenumber")])) or None,
+                              "levels": tags.get("building:levels"), "poly": pts, "at": at})
+        elif tags.get("indoor") == "room" or tags.get("room"):
+            ref = tags.get("ref") or tags.get("name")
+            if ref:
+                rooms.append({"ref": ref, "name": tags.get("name"), "level": tags.get("level"), "at": at})
+        elif tags.get("entrance") or tags.get("amenity") in ("library", "cafe", "restaurant", "fast_food", "bicycle_parking", "toilets"):
+            kind = "entrance" if tags.get("entrance") else tags["amenity"]
+            if kind == "bicycle_parking" and not tags.get("name"):
+                continue
+            pois.append({"kind": kind, "name": tags.get("name") or tags.get("ref"), "at": at})
+    return {"buildings": buildings, "rooms": rooms, "pois": pois}
+
+
+def enrich_campus(site: Path, payloads: dict) -> None:
+    from monitor import OVERPASS_URLS
+    cache = load(CAMPUS_CACHE, {})
+    for sid, (city, s, w, n, e) in CAMPUSES.items():
+        if city not in payloads:
+            continue
+        rec = cache.get(sid)
+        if not rec or rec.get("at", "") < (now() - timedelta(days=CAMPUS_MAX_AGE_DAYS)).isoformat():
+            bbox = f"{s},{w},{n},{e}"
+            query = f"""[out:json][timeout:90];
+(
+  way["building"]({bbox});
+  relation["building"]({bbox});
+  node["indoor"="room"]({bbox});
+  way["indoor"="room"]({bbox});
+  node["entrance"]({bbox});
+  node["amenity"~"^(library|cafe|restaurant|fast_food|bicycle_parking|toilets)$"]({bbox});
+);
+out geom tags;"""
+            for url in OVERPASS_URLS:
+                try:
+                    r = requests.post(url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=120)
+                    r.raise_for_status()
+                    data = campus_from_elements(r.json().get("elements", []))
+                    rec = {"at": now().isoformat(timespec="seconds"), **data}
+                    cache[sid] = rec
+                    refs = sorted({b["ref"] for b in data["buildings"] if b.get("ref")})[:40]
+                    names = sorted({b["name"] for b in data["buildings"] if b.get("name")})[:25]
+                    print(f"  campus {sid}: {url} → {len(data['buildings'])} buildings, "
+                          f"{len(data['rooms'])} rooms, {len(data['pois'])} points")
+                    print(f"    building refs: {refs}")
+                    print(f"    building names: {names}")
+                    break
+                except Exception as ex:  # noqa: BLE001
+                    print(f"  campus {sid}: {url} → {type(ex).__name__}: {ex}")
+        if rec and rec.get("buildings"):
+            out = {k: rec[k] for k in ("buildings", "rooms", "pois")}
+            out["bbox"] = [[s, w], [n, e]]
+            (site / f"campus-{sid}.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")),
+                                                     encoding="utf-8")
+            payloads[city].setdefault("campus_maps", {})[sid] = f"campus-{sid}.json"
+            print(f"campus {sid}: published {len(rec['buildings'])} buildings")
+    save(CAMPUS_CACHE, cache)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--site", default="_site")
-    ap.add_argument("--only", default="floorplans,isochrones,noise")
+    ap.add_argument("--only", default="floorplans,isochrones,noise,campus")
     a = ap.parse_args(argv)
     site = Path(a.site)
     payloads = {}
@@ -387,7 +492,8 @@ def main(argv=None) -> int:
     if not payloads:
         print("enrich: no payloads in", site)
         return 0
-    steps = {"floorplans": enrich_floorplans, "isochrones": enrich_isochrones, "noise": enrich_noise}
+    steps = {"floorplans": enrich_floorplans, "isochrones": enrich_isochrones, "noise": enrich_noise,
+             "campus": enrich_campus}
     for name in a.only.split(","):
         fn = steps.get(name.strip())
         if not fn:
