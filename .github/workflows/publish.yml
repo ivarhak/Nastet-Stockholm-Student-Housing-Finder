@@ -37,6 +37,7 @@ on:
       - 'vendor/**'
       - 'history.py'
       - 'og_image.py'
+      - 'enrich.py'
       - '.github/workflows/publish.yml'
 
 permissions:
@@ -135,6 +136,20 @@ jobs:
           restore-keys: |
             nastet-scrape-cache-
             sshf-scrape-cache-
+
+      # The enrich caches (floor plans, isochrones, noise) under a key of their
+      # own: adding paths to the scrape cache above would change its version
+      # hash, and the next run would start cold — every listing NEW again.
+      - name: Restore enrich caches
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/floorplans
+            data/isochrone_cache.json
+            data/noise_cache.json
+          key: nastet-enrich-cache-
+          restore-keys: |
+            nastet-enrich-cache-
 
       - name: Scrape SSSB + Bostadsförmedlingen
         # Fails the job on a scrape error, on purpose: Pages keeps serving the
@@ -306,6 +321,12 @@ jobs:
           print(f"robots.txt + sitemap.xml written for {site}")
           PY
 
+      # Floor plans, bike isochrones and noise, written into the assembled
+      # payloads. Never fails the deploy — enrich.py logs what it couldn't get.
+      - name: Enrich listings
+        continue-on-error: true
+        run: python enrich.py --site _site
+
       # ── History ─────────────────────────────────────────────────────────────
       # Every scrape is a snapshot; what rooms actually went for, how the market
       # compares with usual and whether a flat is back on the market all need
@@ -350,6 +371,17 @@ jobs:
               commit --quiet -m "history: run ${{ github.run_id }}"
           git push --quiet origin HEAD:refs/heads/data
           echo "history pushed: $(git log -1 --format='%h')"
+
+      - name: Save enrich caches
+        if: always()
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/floorplans
+            data/isochrone_cache.json
+            data/noise_cache.json
+          key: nastet-enrich-cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Save scrape caches
         # Always a fresh key so the newest listings become the next run's

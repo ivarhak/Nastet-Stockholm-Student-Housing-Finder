@@ -26,3 +26,5 @@ cryptography>=42.0
 Pillow>=10.1
 fonttools>=4.47
 brotli>=1.1
+# Build-time only: rendering page 1 of SSSB's floor-plan PDFs (enrich.py).
+pymupdf>=1.24

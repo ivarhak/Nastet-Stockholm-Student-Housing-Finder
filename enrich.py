@@ -1,0 +1,380 @@
+"""Build-time extras for the published payloads: floor plans, bike isochrones
+and road/rail noise.
+
+    python enrich.py --site _site [--only floorplans,isochrones,noise]
+
+Runs after the site is assembled and edits _site/listings-<city>.json in
+place. Every part is optional: a source that refuses or changes shape prints
+why and leaves the payload as it was — none of this is worth failing a deploy
+over. Everything fetched is cached under data/ (see the workflow's cache
+paths), so a normal hourly run makes almost no requests:
+
+  data/floorplans/<key>.png + index.json   rendered page 1 of each SSSB plan PDF
+  data/isochrone_cache.json                one Valhalla polygon set per campus
+  data/noise_cache.json                    noise band per ~10 m grid point
+
+Verbose on purpose, like monitor.py: these sources can only be reached from
+CI, so the log is the debugger.
+"""
+import argparse
+import hashlib
+import io
+import json
+import re
+import sys
+import time
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from monitor import CITIES, USER_AGENT  # noqa: E402
+
+DATA = Path(__file__).resolve().parent / "data"
+BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              f"(KHTML, like Gecko) Chrome/126 Safari/537.36 {USER_AGENT}")
+
+
+def now():
+    return datetime.now(timezone.utc)
+
+
+def load(path, default):
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return default
+
+
+def save(path, obj):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_text(json.dumps(obj, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+# ── Floor plans ──────────────────────────────────────────────────────────────
+# SSSB's object page links a PDF floor plan. Page 1 is rendered to a small PNG
+# and published under /floorplans/, linking back to the original. Keyed by the
+# listing id (the physical room), so a room re-listed next year reuses its plan.
+
+PLAN_LINK_RE = re.compile(r"plan|ritning|layout", re.I)
+FLOORPLAN_DIR = DATA / "floorplans"
+FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
+PLAN_WIDTH = 640
+PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
+MAX_NEW_PLANS_PER_RUN = 25   # politeness: a cold cache fills over a few runs
+
+
+def plan_key(listing_id: str) -> str:
+    return hashlib.sha1(listing_id.encode("utf-8")).hexdigest()[:16]
+
+
+def find_plan_links(html: str, base: str) -> list[str]:
+    """Candidate floor-plan URLs on an object page: PDF links first, then
+    images, either named like a plan in the href or the link text."""
+    links = []
+    for m in re.finditer(r'<a\b[^>]*href="([^"]+)"[^>]*>(.*?)</a>', html, re.I | re.S):
+        href, text = m.group(1), re.sub(r"<[^>]+>", " ", m.group(2))
+        if PLAN_LINK_RE.search(href) or PLAN_LINK_RE.search(text):
+            links.append(urljoin(base, href.replace("&amp;", "&")))
+    for m in re.finditer(r'(?:src|href|data-src)="([^"]+\.(?:pdf|png|jpe?g|webp)[^"]*)"', html, re.I):
+        if PLAN_LINK_RE.search(m.group(1)):
+            links.append(urljoin(base, m.group(1).replace("&amp;", "&")))
+    pdfs = [u for u in links if ".pdf" in u.lower()]
+    seen, out = set(), []
+    for u in pdfs + links:
+        if u not in seen:
+            seen.add(u)
+            out.append(u)
+    return out
+
+
+def render_plan(blob: bytes, content_type: str) -> bytes | None:
+    """PNG bytes, PLAN_WIDTH wide, from a PDF (page 1) or an image."""
+    from PIL import Image
+    if blob[:4] == b"%PDF" or "pdf" in content_type:
+        import fitz  # PyMuPDF
+        doc = fitz.open(stream=blob, filetype="pdf")
+        if not doc.page_count:
+            return None
+        page = doc[0]
+        zoom = PLAN_WIDTH / max(1, page.rect.width)
+        pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
+        img = Image.open(io.BytesIO(pix.tobytes("png")))
+    else:
+        img = Image.open(io.BytesIO(blob))
+        img = img.convert("RGB")
+        if img.width > PLAN_WIDTH:
+            img = img.resize((PLAN_WIDTH, round(img.height * PLAN_WIDTH / img.width)), Image.LANCZOS)
+    # Plans are line drawings: a 64-colour palette keeps them sharp and small.
+    out = io.BytesIO()
+    img.convert("RGB").quantize(colors=64).save(out, "PNG", optimize=True)
+    return out.getvalue()
+
+
+def enrich_floorplans(site: Path, payloads: dict) -> None:
+    index = load(FLOORPLAN_INDEX, {})
+    session = requests.Session()
+    session.headers.update({"User-Agent": BROWSER_UA, "Accept-Language": "sv,en;q=0.8"})
+    fetched = attached = 0
+    shown_debug = False
+    for city, data in payloads.items():
+        for l in data["listings"]:
+            if l.get("provider") != "SSSB" or not l.get("url"):
+                continue
+            key = plan_key(l["id"])
+            rec = index.get(key)
+            stale_miss = (rec and not rec.get("file")
+                          and rec.get("checked", "") < (now() - timedelta(days=PLAN_RETRY_DAYS)).isoformat())
+            if (rec is None or stale_miss) and fetched < MAX_NEW_PLANS_PER_RUN:
+                fetched += 1
+                rec = {"checked": now().isoformat(timespec="seconds"), "file": None, "src": None}
+                try:
+                    page = session.get(l["url"], timeout=20)
+                    page.raise_for_status()
+                    cands = find_plan_links(page.text, page.url)
+                    if not shown_debug:
+                        # The first page's candidates, so a changed page layout
+                        # shows up here rather than as silently missing plans.
+                        shown_debug = True
+                        pdfs = re.findall(r'href="([^"]+\.pdf[^"]*)"', page.text, re.I)[:5]
+                        print(f"  floorplans: first object page {page.url} ({len(page.text):,} chars) — "
+                              f"plan candidates {cands[:3]}, any pdf links {pdfs}")
+                    for url in cands[:3]:
+                        r = session.get(url, timeout=30)
+                        if not r.ok or len(r.content) < 1000:
+                            continue
+                        png = render_plan(r.content, r.headers.get("Content-Type", ""))
+                        if png:
+                            FLOORPLAN_DIR.mkdir(parents=True, exist_ok=True)
+                            (FLOORPLAN_DIR / f"{key}.png").write_bytes(png)
+                            rec.update(file=f"{key}.png", src=url)
+                            break
+                    time.sleep(0.5)
+                except Exception as e:  # noqa: BLE001 — one room must not stop the rest
+                    print(f"  floorplans: {l['id']}: {type(e).__name__}: {e}")
+                index[key] = rec
+            if rec and rec.get("file") and (FLOORPLAN_DIR / rec["file"]).exists():
+                out = site / "floorplans" / rec["file"]
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_bytes((FLOORPLAN_DIR / rec["file"]).read_bytes())
+                l["floorplan"] = f"floorplans/{rec['file']}"
+                l["floorplan_src"] = rec["src"]
+                attached += 1
+    save(FLOORPLAN_INDEX, index)
+    have = sum(1 for r in index.values() if r.get("file"))
+    print(f"floorplans: {attached} attached · {fetched} pages checked this run · "
+          f"{have}/{len(index)} rooms in the cache have a plan")
+
+
+# ── Bike isochrones ──────────────────────────────────────────────────────────
+# One request per campus to Valhalla's public server (the same one monitor.py
+# routes bikes on), refreshed monthly — streets don't move faster than that.
+
+ISOCHRONE_URL = "https://valhalla1.openstreetmap.de/isochrone"
+ISOCHRONE_CACHE = DATA / "isochrone_cache.json"
+CONTOURS = [10, 15, 20, 30, 45]
+ISOCHRONE_MAX_AGE_DAYS = 30
+
+
+def round_coords(geom):
+    """5 decimals (~1 m) — Valhalla returns 6, and the file is a third smaller."""
+    if isinstance(geom, list):
+        return [round_coords(g) for g in geom] if geom and isinstance(geom[0], list) \
+            else [round(v, 5) for v in geom]
+    return geom
+
+
+def enrich_isochrones(site: Path, payloads: dict) -> None:
+    cache = load(ISOCHRONE_CACHE, {})
+    asked = 0
+    for city, data in payloads.items():
+        schools = data.get("schools") or CITIES.get(city, {}).get("schools") or {}
+        out = {}
+        for sid, school in schools.items():
+            coords = school.get("coords")
+            if not coords:
+                continue
+            ckey = f"{coords[0]:.5f},{coords[1]:.5f}|{','.join(map(str, CONTOURS))}"
+            rec = cache.get(ckey)
+            fresh = rec and rec.get("at", "") > (now() - timedelta(days=ISOCHRONE_MAX_AGE_DAYS)).isoformat()
+            if not fresh:
+                asked += 1
+                req = {"locations": [{"lat": coords[0], "lon": coords[1]}], "costing": "bicycle",
+                       "costing_options": {"bicycle": {"bicycle_type": "hybrid"}},
+                       "contours": [{"time": m} for m in CONTOURS],
+                       "polygons": True, "denoise": 0.5, "generalize": 40}
+                try:
+                    r = requests.get(ISOCHRONE_URL, params={"json": json.dumps(req)},
+                                     headers={"User-Agent": USER_AGENT}, timeout=40)
+                    r.raise_for_status()
+                    fc = r.json()
+                    feats = [{"type": "Feature", "properties": {"min": f["properties"].get("contour")},
+                              "geometry": {"type": f["geometry"]["type"],
+                                           "coordinates": round_coords(f["geometry"]["coordinates"])}}
+                             for f in fc.get("features", [])]
+                    if feats:
+                        rec = {"at": now().isoformat(timespec="seconds"), "features": feats}
+                        cache[ckey] = rec
+                        print(f"  isochrones: {city}/{sid}: {len(feats)} contours "
+                              f"({len(json.dumps(feats)) // 1024} KB)")
+                    else:
+                        print(f"  isochrones: {city}/{sid}: no features in response "
+                              f"{json.dumps(fc)[:200]}")
+                    time.sleep(1.0)
+                except Exception as e:  # noqa: BLE001
+                    print(f"  isochrones: {city}/{sid}: {type(e).__name__}: {e}"
+                          f"{' (keeping the older copy)' if rec else ''}")
+            if rec and rec.get("features"):
+                # Largest first, so the smaller rings draw on top.
+                feats = sorted(rec["features"], key=lambda f: -(f["properties"]["min"] or 0))
+                out[sid] = {"type": "FeatureCollection", "features": feats}
+        if out:
+            (site / f"isochrones-{city}.json").write_text(
+                json.dumps({"contours": CONTOURS, "schools": out}, separators=(",", ":")))
+            data["isochrones"] = f"isochrones-{city}.json"
+        print(f"isochrones: {city}: {len(out)}/{len(schools)} campuses")
+    save(ISOCHRONE_CACHE, cache)
+    print(f"isochrones: {asked} requested this run")
+
+
+# ── Noise (Stockholm) ────────────────────────────────────────────────────────
+# Stockholm stad's noise map (Bullerkartan 2022): modelled 24 h equivalent
+# level from road and rail traffic, published as an ArcGIS feature service.
+# Indicative only — modelled at the façade, not measured, and blind to which
+# side of the building a room faces. The service URL is looked up from its
+# ArcGIS Online item so a re-published layer is followed automatically.
+
+NOISE_ITEM = "https://www.arcgis.com/sharing/rest/content/items/ce2b61853e594b7fa70de53eed7e9ef2"
+NOISE_CACHE = DATA / "noise_cache.json"
+NOISE_CITIES = {"stockholm"}
+MAX_NOISE_LOOKUPS_PER_RUN = 200
+DB_RE = re.compile(r"(\d{2})\s*(?:[-–]\s*(\d{2}))?")
+
+
+def noise_band(db_low: float) -> str:
+    if db_low < 45:
+        return "quiet"
+    if db_low < 55:
+        return "moderate"
+    if db_low < 65:
+        return "noisy"
+    return "very_noisy"
+
+
+def noise_service(session) -> list[str]:
+    """Query URLs of the polygon layers behind the noise map item."""
+    item = session.get(NOISE_ITEM, params={"f": "json"}, timeout=20).json()
+    url = item.get("url")
+    print(f"  noise: item '{item.get('title')}' type={item.get('type')} url={url}")
+    if not url:
+        return []
+    url = url.rstrip("/")
+    if re.search(r"/\d+$", url):
+        return [url + "/query"]
+    svc = session.get(url, params={"f": "json"}, timeout=20).json()
+    layers = svc.get("layers") or []
+    print(f"  noise: layers {[(x.get('id'), x.get('name'), x.get('geometryType')) for x in layers][:8]}")
+    return [f"{url}/{x['id']}/query" for x in layers
+            if x.get("geometryType") in (None, "esriGeometryPolygon")]
+
+
+def db_from_attrs(attrs: dict) -> float | None:
+    """The lower bound of the dB interval, from whichever attribute holds it."""
+    for k, v in attrs.items():
+        if v is None:
+            continue
+        name = k.lower()
+        if isinstance(v, (int, float)) and any(w in name for w in ("db", "leq", "niva", "nivå", "ljud", "klass", "grid")):
+            if 30 <= v <= 90:
+                return float(v)
+        if isinstance(v, str) and ("db" in v.lower() or any(w in name for w in ("db", "leq", "niva", "klass", "intervall"))):
+            m = DB_RE.search(v)
+            if m and 30 <= int(m.group(1)) <= 90:
+                return float(m.group(1))
+    return None
+
+
+def enrich_noise(site: Path, payloads: dict) -> None:
+    cache = load(NOISE_CACHE, {})
+    session = requests.Session()
+    session.headers.update({"User-Agent": USER_AGENT})
+    layers, looked, attached, shown = None, 0, 0, False
+    for city, data in payloads.items():
+        if city not in NOISE_CITIES:
+            continue
+        for l in data["listings"]:
+            coords = l.get("coords") or (data.get("areas", {}).get(l.get("area"), {}) or {}).get("coords")
+            if not coords:
+                continue
+            # ~10 m grid: buildings on the same corner share a lookup.
+            key = f"{coords[0]:.4f},{coords[1]:.4f}"
+            if key not in cache and looked < MAX_NOISE_LOOKUPS_PER_RUN:
+                if layers is None:
+                    try:
+                        layers = noise_service(session)
+                    except Exception as e:  # noqa: BLE001
+                        print(f"noise: service lookup failed: {type(e).__name__}: {e}")
+                        layers = []
+                if not layers:
+                    break
+                looked += 1
+                best = None
+                for q in layers:
+                    try:
+                        r = session.get(q, params={
+                            "geometry": f"{coords[1]},{coords[0]}", "geometryType": "esriGeometryPoint",
+                            "inSR": 4326, "spatialRel": "esriSpatialRelIntersects",
+                            "outFields": "*", "returnGeometry": "false", "f": "json"}, timeout=20)
+                        feats = r.json().get("features") or []
+                        if not shown and feats:
+                            shown = True
+                            print(f"  noise: sample attributes {feats[0].get('attributes')}")
+                        for f in feats:
+                            db = db_from_attrs(f.get("attributes") or {})
+                            if db is not None and (best is None or db > best):
+                                best = db
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  noise: {key}: {type(e).__name__}: {e}")
+                # Outside every modelled band means below the lowest one.
+                cache[key] = {"db": best, "at": now().isoformat(timespec="seconds")}
+                time.sleep(0.2)
+            rec = cache.get(key)
+            if rec is not None:
+                db = rec.get("db")
+                l["noise"] = {"db": db, "band": noise_band(db) if db is not None else "quiet"}
+                attached += 1
+        print(f"noise: {city}: {attached} listings tagged · {looked} lookups this run")
+    save(NOISE_CACHE, cache)
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--site", default="_site")
+    ap.add_argument("--only", default="floorplans,isochrones,noise")
+    a = ap.parse_args(argv)
+    site = Path(a.site)
+    payloads = {}
+    for p in sorted(site.glob("listings-*.json")):
+        payloads[p.stem.removeprefix("listings-")] = json.loads(p.read_text(encoding="utf-8"))
+    if not payloads:
+        print("enrich: no payloads in", site)
+        return 0
+    steps = {"floorplans": enrich_floorplans, "isochrones": enrich_isochrones, "noise": enrich_noise}
+    for name in a.only.split(","):
+        fn = steps.get(name.strip())
+        if not fn:
+            continue
+        print(f"── enrich: {name}")
+        try:
+            fn(site, payloads)
+        except Exception as e:  # noqa: BLE001 — extras never fail a deploy
+            print(f"::warning title=enrich {name}::{type(e).__name__}: {e}")
+    for city, data in payloads.items():
+        (site / f"listings-{city}.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

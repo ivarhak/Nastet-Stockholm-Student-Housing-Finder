@@ -461,6 +461,7 @@
   .map-col{
     flex:1;
     min-width:0;
+    position:relative;
     display:flex;
     flex-direction:column;
   }
@@ -1459,6 +1460,30 @@
   .profile-card .qh-acts .link-btn{ font:10px/1.5 var(--mono); color:var(--accent-ink); text-transform:none; letter-spacing:0; text-decoration:underline; border:none; padding:0; }
   .nowrap{ white-space:nowrap; }
   :root[data-theme="light"] .qh-ok .qh-dot{ color:#3d6b2a; }
+  #hoverCard{
+    position:absolute; z-index:1200; width:320px; max-width:calc(100% - 16px);
+    background:var(--panel); border:1px solid var(--border); padding:12px 13px;
+    box-shadow:4px 4px 0 color-mix(in srgb, var(--bg) 70%, transparent);
+    font-size:12px; color:var(--ink); pointer-events:auto;
+  }
+  #hoverCard[hidden]{ display:none; }
+  .hc-head{ display:flex; justify-content:space-between; gap:10px; }
+  .hc-title{ font-weight:800; font-size:15px; line-height:1.2; }
+  .hc-sub{ font:10px/1.5 var(--mono); color:var(--faint); margin-top:2px; }
+  .hc-rent{ font-weight:800; font-size:20px; text-align:right; white-space:nowrap; }
+  .hc-rent span{ display:block; font:9px/1.3 var(--mono); color:var(--dim); font-weight:400; }
+  .hc-facts{ font:10.5px/1.5 var(--mono); color:var(--dim); margin-top:6px; }
+  .hc-lead{ font:11px/1.5 var(--mono); color:var(--ink); margin-top:4px; }
+  .hc-chips{ display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+  .hc-chips:empty{ display:none; }
+  .hc-list{ margin:6px 0 0; padding-left:16px; font:11px/1.6 var(--mono); color:var(--dim); }
+  .hc-plan{ margin:9px 0 0; }
+  .hc-plan img{ display:block; width:100%; height:auto; background:#fff; border:1px solid var(--rule); }
+  .hc-plan figcaption{ font:10px/1.5 var(--mono); margin-top:3px; }
+  .hc-plan a{ color:var(--accent-ink); }
+  .fact.nz{ color:var(--dim); }
+  .fact.nz-noisy, .fact.nz-very_noisy{ color:var(--accent-ink); border-color:var(--accent-ink); }
+  .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.10; stroke:var(--leaf); stroke-width:1.5; stroke-dasharray:5 5; }
   .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -1805,6 +1830,9 @@
         <input type="range" id="maxCommute" min="5" max="90" value="45" step="5">
         <span id="maxCommuteLabel">45 min</span>
       </div>
+      <label class="allin-toggle" id="isoToggleWrap" hidden>
+        <input type="checkbox" id="isoToggle"> <span id="isoLabel" data-i18n="iso_l">Show reach on map</span>
+      </label>
     </div>
 
     <div class="control">
@@ -1910,6 +1938,7 @@
     </div>
 
     <div id="map"></div>
+    <div id="hoverCard" hidden role="tooltip" onmouseenter="clearTimeout(hoverHideTimer)" onmouseleave="hideHoverCard()"></div>
 
   </div>
 
@@ -2139,6 +2168,13 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  nz_quiet: 'tyst', nz_moderate: 'måttligt buller', nz_noisy: 'bullrigt', nz_very: 'mycket bullrigt',
+  nz_title: 'Modellerat buller från väg- och spårtrafik vid huset (dygnsmedel, Stockholms bullerkarta 2022). Ungefärligt: den vet inte åt vilket håll ett rum ligger.',
+  more: 'till',
+  fp_alt: 'Planritning', fp_open: 'Originalritningen ↗', fp_none: 'Ingen planritning publicerad för den här.',
+  iso_l: 'Visa räckvidd på kartan',
+  iso_short: 'Räckvidd på kartan',
+  c_noise: 'Trafikbuller',
   qh_h: 'Köhälsa',
   qh_unset: 'Fyll i dina uppgifter ovan för att kontrollera den här kön.',
   qh_cap_on: 'Dina dagar slutar räknas vid 90 den',
@@ -3238,6 +3274,7 @@ function render(){
   renderMeta();
   recentreForCity();
   renderMap();
+  syncIsochrones();
   renderSidebar();
 }
 
@@ -3609,6 +3646,7 @@ function nameMarker(marker, label){
 }
 
 function renderMap(){
+  hideHoverCard(0);
   lastSplitSignature = splitSignature();
   markers.forEach(m => leafletMap.removeLayer(m));
   markers = [];
@@ -3663,6 +3701,7 @@ function renderMap(){
             if (rows[0].url && selectedListingId === rows[0].id) window.open(rows[0].url, '_blank');
             else selectListing(rows[0].id);
           });
+          attachHoverCard(marker, rows);
           markers.push(marker);
         });
         return;
@@ -3723,6 +3762,7 @@ function renderMap(){
       if (l.url && selectedListingId === l.id) window.open(l.url, '_blank');
       else selectListing(l.id);
     });
+    attachHoverCard(marker, [l]);
     markers.push(marker);
   });
 }
@@ -4002,6 +4042,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
   if (l.elevator === true) extras.push(t('elevator', 'elevator'));
   if (l.balcony === true) extras.push(t('balcony', 'balcony'));
   if (l.max_years != null) extras.push('max ' + l.max_years + ' år');
+  if (noiseText(l.noise)) extras.push(noiseText(l.noise));
   // Area-level, so it only applies to SSSB rows; BF ads carry their own coords
   // and aren't grouped into an area with a precomputed figure.
   const near = areaRow && !selectedArea && commuteRef && commuteRef.nearest_grocery;
@@ -4382,7 +4423,7 @@ const store = {
     catch (e) { /* private window or sandboxed preview: works for this visit only */ }
   },
 };
-const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-allin', 'nastet-theme'];
+const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-allin', 'nastet-iso', 'nastet-theme'];
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 // Everything that reaches the profile — typed in, read back from storage, or
@@ -4490,6 +4531,7 @@ function forgetDevice(){
   STORE_KEYS.forEach(k => store.set(k, null));
   profile = {}; marks = {}; compareIds = []; sinceVisit = null; onlySince = false;
   allInMode = false; document.getElementById('allInToggle').checked = false; setMoveBy(null, false);
+  showIso = false; document.getElementById('isoToggle').checked = false; syncIsochrones();
   renderProfile(); renderCompareBar(); renderSidebar();
 }
 
@@ -4714,6 +4756,7 @@ function openCompare(){
     [t('c_movein', 'Move-in'), l => l.move_in],
     [t('c_bike', 'Bike to campus'), l => { const m = metric(l); return typeof m.bike_min === 'number' ? m.bike_min + ' min' : null; }],
     [t('c_floor', 'Floor'), l => l.floor],
+    [t('c_noise', 'Traffic noise'), l => noiseText(l.noise)],
   ];
   const modal = document.getElementById('compareModal');
   modal.innerHTML = `<div class="compare-box" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
@@ -5107,6 +5150,121 @@ function syncDiffChip(){
     : `${t('gated', 'Will be enabled when more data has been collected')}${g ? ` (${g.have}/${g.need})` : ''}`;
 }
 
+// ── Map hover card ────────────────────────────────────────────────────────
+// A bigger look at a listing without leaving the map: the row's facts, the
+// floor plan where we have one, and the noise level. With a mouse it opens on
+// hover (after a beat, so sweeping across the map doesn't flicker cards); on a
+// touchscreen the tap that selects a marker opens it too.
+const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+let hoverTimer = null, hoverHideTimer = null;
+const NOISE_LABEL = () => ({ quiet: t('nz_quiet', 'quiet'), moderate: t('nz_moderate', 'moderate noise'),
+                             noisy: t('nz_noisy', 'noisy'), very_noisy: t('nz_very', 'very noisy') });
+function noiseText(n){
+  if (!n || !n.band) return null;
+  const db = n.db == null ? '< 45 dB' : `${Math.round(n.db)}+ dB`;
+  return `${NOISE_LABEL()[n.band] || n.band} · ${db}`;
+}
+const NOISE_TITLE = () => t('nz_title', 'Modelled road and rail traffic noise at the building (24 h average, Stockholm noise map 2022). Indicative: it can’t tell which side of the building a room faces.');
+
+function hoverCardHtml(rows){
+  const l = rows[0];
+  if (rows.length > 1) {
+    return `<div class="hc-title">${esc(l.address || l.area)}</div>
+      <ul class="hc-list">${rows.slice(0, 5).map(r => `<li>${esc(r.type || '')}${r.size_sqm ? ' · ' + r.size_sqm + ' m²' : ''}${r.rent_sek ? ' · <b>' + num(rentShown(r)) + ' kr</b>' : ''}${r.queue_days != null ? ' · ' + num(r.queue_days) + ' d' : ''}</li>`).join('')}</ul>
+      ${rows.length > 5 ? `<div class="hc-sub">+${rows.length - 5} ${t('more', 'more')}</div>` : ''}`;
+  }
+  const facts = [
+    l.type, l.size_sqm ? l.size_sqm + ' m²' : null,
+    l.floor != null ? (Number(l.floor) === 0 ? t('ground_floor', 'ground floor') : t('floor', 'floor ') + l.floor) : null,
+    l.move_in ? `${t('w_movein', 'move-in')} ${String(l.move_in).slice(0, 10)}` : null,
+  ].filter(Boolean).map(esc).join(' · ');
+  const lead = typeof l.queue_days === 'number' ? `${num(l.queue_days)} ${t('queue_days_f', 'queue days')}`
+    : l.deadline ? `${t('apply_by', 'apply by ')}${String(l.deadline).slice(0, 10)}` : '';
+  const nz = noiseText(l.noise);
+  const mine = profileDaysNow();
+  const you = mine != null && typeof l.queue_days === 'number'
+    ? (mine >= l.queue_days ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>` : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`) : '';
+  return `<div class="hc-head"><div><div class="hc-title">${esc(l.address || l.area)}</div>
+      <div class="hc-sub">${esc(l.area || '')}${l.landlord && l.landlord !== l.provider ? ' · ' + esc(l.landlord) : ''}</div></div>
+      ${l.rent_sek ? `<div class="hc-rent">${num(rentShown(l))}<span>${allInMode ? t('per_month_allin', 'kr / month all-in') : t('per_month_unit', 'kr / month')}</span></div>` : ''}</div>
+    <div class="hc-facts">${facts}</div>
+    ${lead ? `<div class="hc-lead">${lead}${l.applicants != null ? ` · ${l.applicants} ${t('applied', 'applied')}` : ''}</div>` : ''}
+    <div class="hc-chips">${you}${nz ? `<span class="fact nz nz-${l.noise.band}" title="${esc(NOISE_TITLE())}">${esc(nz)}</span>` : ''}</div>
+    ${l.floorplan ? `<figure class="hc-plan"><img src="${esc(l.floorplan)}" alt="${t('fp_alt', 'Floor plan')}" loading="lazy" width="320">
+      ${l.floorplan_src ? `<figcaption><a href="${esc(l.floorplan_src)}" target="_blank" rel="noopener">${t('fp_open', 'Original floor plan ↗')}</a></figcaption>` : ''}</figure>`
+      : `<div class="hc-sub">${t('fp_none', 'No floor plan published for this one.')}</div>`}`;
+}
+function showHoverCard(marker, rows){
+  clearTimeout(hoverHideTimer);
+  const card = document.getElementById('hoverCard');
+  card.innerHTML = hoverCardHtml(rows);
+  card.hidden = false;
+  const map = document.getElementById('map').getBoundingClientRect();
+  const p = leafletMap.latLngToContainerPoint(marker.getLatLng());
+  const w = card.offsetWidth, h = card.offsetHeight;
+  // Beside the marker, flipped to whichever side has room, kept inside the map.
+  let x = p.x + 16, y = p.y - h / 2;
+  if (x + w > map.width - 8) x = p.x - w - 16;
+  x = Math.max(8, x); y = Math.max(8, Math.min(y, map.height - h - 8));
+  // The card lives beside #map (inside it, the tile filter would tint it too),
+  // so offset by where the map sits within the column.
+  const col = card.offsetParent ? card.offsetParent.getBoundingClientRect() : map;
+  card.style.left = (x + map.left - col.left) + 'px'; card.style.top = (y + map.top - col.top) + 'px';
+}
+function hideHoverCard(delay = 120){
+  clearTimeout(hoverTimer);
+  clearTimeout(hoverHideTimer);
+  hoverHideTimer = setTimeout(() => { const c = document.getElementById('hoverCard'); if (c) c.hidden = true; }, delay);
+}
+function attachHoverCard(marker, rows){
+  if (canHover) {
+    // The card says more than the tooltip did, so the tooltip goes.
+    marker.unbindTooltip();
+    marker.on('mouseover', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => showHoverCard(marker, rows), 150); });
+    marker.on('mouseout', () => hideHoverCard());
+  } else {
+    marker.on('click', () => showHoverCard(marker, rows));
+  }
+}
+
+// ── Bike isochrones: what the commute slider means on the ground ─────────
+// Drawn for the selected campus at the contour nearest the slider (at or above
+// it), so the shaded area is "where Max commute reaches by bike".
+let isoData = null, isoCity = null, isoLayer = null;
+let showIso = store.get('nastet-iso', false) === true;
+async function loadIsochrones(){
+  const city = currentCity || cityIndex.default;
+  if (isoCity === city) return isoData;
+  isoCity = city; isoData = null;
+  const file = currentData && currentData.isochrones;
+  if (!file) return null;
+  try { const r = await fetch('./' + file, { cache: 'no-store' }); isoData = r.ok ? await r.json() : null; }
+  catch (e) { isoData = null; }
+  return isoData;
+}
+let isoSeq = 0;
+async function syncIsochrones(){
+  const seq = ++isoSeq;
+  const wrap = document.getElementById('isoToggleWrap');
+  if (wrap) wrap.hidden = !(currentData && currentData.isochrones);
+  if (isoLayer) { leafletMap.removeLayer(isoLayer); isoLayer = null; }
+  if (!showIso || !currentData || !currentData.isochrones) return;
+  const data = await loadIsochrones();
+  // A slider drag fires many of these; only the latest may draw.
+  if (seq !== isoSeq) return;
+  if (isoLayer) { leafletMap.removeLayer(isoLayer); isoLayer = null; }
+  const fc = data && data.schools && data.schools[selectedSchool];
+  if (!fc) return;
+  const mins = fc.features.map(f => f.properties.min).filter(m => m != null).sort((a, b) => a - b);
+  const pick = mins.find(m => m >= maxCommuteMin) ?? mins[mins.length - 1];
+  const feat = fc.features.find(f => f.properties.min === pick);
+  if (!feat) return;
+  isoLayer = L.geoJSON(feat, { className: 'iso-area', interactive: false }).addTo(leafletMap);
+  isoLayer.bringToBack();
+  const lab = document.getElementById('isoLabel');
+  if (lab) lab.textContent = `${t('iso_short', 'Reach on map')} · ${pick} min`;
+}
+
 function renderSidebar(){
   syncClearChip();
   renderWatch();
@@ -5430,6 +5588,14 @@ function setMoveBy(v, persist){
 }
 moveByEl.addEventListener('change', () => { setMoveBy(moveByEl.value, true); render(); });
 setMoveBy(profile.move_to, false);
+
+const isoEl = document.getElementById('isoToggle');
+isoEl.checked = showIso;
+isoEl.addEventListener('change', () => {
+  showIso = isoEl.checked;
+  store.set('nastet-iso', showIso || null);
+  syncIsochrones();
+});
 
 const allInEl = document.getElementById('allInToggle');
 allInEl.checked = allInMode;
