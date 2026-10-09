@@ -1,0 +1,1370 @@
+{
+ "af-12697": {
+  "address": "Kämnärsvägen 42",
+  "area": "Proto",
+  "class": "1room",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6817,
+  "size": 22.8,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 42:22.8:3"
+ },
+ "af-12835": {
+  "address": "Kämnärsvägen 60",
+  "area": "Sagoeken",
+  "class": "1room",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    11
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 5387,
+  "size": 22.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 60:22.0:4"
+ },
+ "af-12872": {
+  "address": "Kämnärsvägen 60",
+  "area": "Sagoeken",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    11
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 5387,
+  "size": 22.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 60:22.0:5"
+ },
+ "af-13127": {
+  "address": "Tunavägen 33",
+  "area": "Marathon",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    22
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6830,
+  "size": 23.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Tunavägen 33:23.0:6"
+ },
+ "af-13192": {
+  "address": "Tunavägen 31 E",
+  "area": "Marathon",
+  "class": "2plus",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    14
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8303,
+  "size": 38.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Tunavägen 31 E:38.0:3"
+ },
+ "af-13219": {
+  "address": "Tunavägen 31 F",
+  "area": "Marathon",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    21
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8177,
+  "size": 40.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Tunavägen 31 F:40.0:1"
+ },
+ "af-13358": {
+  "address": "Kämnärsvägen 86",
+  "area": "Hippocampus",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6955,
+  "size": 25.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 86:25.0:2"
+ },
+ "af-13577": {
+  "address": "Kämnärsvägen 1",
+  "area": "Pireus",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6579,
+  "size": 23.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 1:23.0:1"
+ },
+ "af-14305": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    11
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9348,
+  "size": 48.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:48.0:1"
+ },
+ "af-14307": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6934,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:27.0:1"
+ },
+ "af-14310": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    13
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9787,
+  "size": 51.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:51.0:2"
+ },
+ "af-14316": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    7
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7185,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:27.0:2"
+ },
+ "af-14322": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    12
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9787,
+  "size": 51.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:51.0:3"
+ },
+ "af-14328": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    9
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7185,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:27.0:3"
+ },
+ "af-14334": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8314,
+  "size": 43.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:43.0:4"
+ },
+ "af-14340": {
+  "address": "Kämnärsvägen 61",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    9
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6746,
+  "size": 24.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 61:24.0:4"
+ },
+ "af-14346": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6997,
+  "size": 34.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:34.0:1"
+ },
+ "af-14347": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    9
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9348,
+  "size": 48.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:48.0:1"
+ },
+ "af-14352": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    7
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6557,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:1"
+ },
+ "af-14356": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-09",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    15
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6934,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:1"
+ },
+ "af-14358": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7310,
+  "size": 35.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:35.0:2"
+ },
+ "af-14364": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    3
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6808,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:2"
+ },
+ "af-14370": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7185,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:2"
+ },
+ "af-14376": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6808,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:3"
+ },
+ "af-14382": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7185,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:3"
+ },
+ "af-14388": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6934,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:4"
+ },
+ "af-14394": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    10
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7310,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:27.0:4"
+ },
+ "af-14400": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6746,
+  "size": 24.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:24.0:5"
+ },
+ "af-14406": {
+  "address": "Kämnärsvägen 63",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6620,
+  "size": 22.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 63:22.0:5"
+ },
+ "af-14412": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    8
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6307,
+  "size": 23.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:23.0:1"
+ },
+ "af-14418": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6934,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:27.0:1"
+ },
+ "af-14424": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6746,
+  "size": 26.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:26.0:2"
+ },
+ "af-14430": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    7
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8407,
+  "size": 38.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:38.0:3"
+ },
+ "af-14436": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7185,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:27.0:3"
+ },
+ "af-14442": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7812,
+  "size": 41.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:41.0:4"
+ },
+ "af-14445": {
+  "address": "Kämnärsvägen 65",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-09",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    15
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6746,
+  "size": 24.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 65:24.0:4"
+ },
+ "af-14448": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    11
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9787,
+  "size": 55.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:55.0:1"
+ },
+ "af-14454": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    8
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7310,
+  "size": 29.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:29.0:2"
+ },
+ "af-14460": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    7
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7310,
+  "size": 29.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:29.0:3"
+ },
+ "af-14466": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    8
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7436,
+  "size": 29.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:29.0:4"
+ },
+ "af-14472": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7436,
+  "size": 29.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:29.0:5"
+ },
+ "af-14478": {
+  "address": "Kämnärsvägen 67",
+  "area": "Troja",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-15",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    3
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 6871,
+  "size": 26.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 67:26.0:6"
+ },
+ "af-1876": {
+  "address": "Magistratsvägen 57 N",
+  "area": "Delphi",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    23
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4759,
+  "size": 25.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Magistratsvägen 57 N:25.0:2"
+ },
+ "af-2944": {
+  "address": "Ällingavägen 1 J",
+  "area": "Vildanden",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    19
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4935,
+  "size": 26.8,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Ällingavägen 1 J:26.8:4"
+ },
+ "af-3230": {
+  "address": "Magistratsvägen 55 S",
+  "area": "Delphi",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    18
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7277,
+  "size": 61.0,
+  "type": "2 Rum",
+  "unit": "AF Bostäder:Magistratsvägen 55 S:61.0:2"
+ },
+ "af-3721": {
+  "address": "Ällingavägen 20",
+  "area": "Vildanden",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    25
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4038,
+  "size": 25.5,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Ällingavägen 20:25.5:1"
+ },
+ "af-3740": {
+  "address": "Ällingavägen 5 B",
+  "area": "Vildanden",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    23
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4289,
+  "size": 25.5,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Ällingavägen 5 B:25.5:2"
+ },
+ "af-4127": {
+  "address": "Kämnärsvägen 51 A",
+  "area": "Kämnärsrätten",
+  "class": "2plus",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    17
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8363,
+  "size": 73.3,
+  "type": "4 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 51 A:73.3:1"
+ },
+ "af-4130": {
+  "address": "Kämnärsvägen 41 F",
+  "area": "Kämnärsrätten",
+  "class": "2plus",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    12
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8187,
+  "size": 64.5,
+  "type": "3 Rum",
+  "unit": "AF Bostäder:Kämnärsvägen 41 F:64.5:3"
+ },
+ "af-4983": {
+  "address": "Magistratsvägen 55 L",
+  "area": "Delphi",
+  "class": "corridor",
+  "deadline": "2026-10-09",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    21
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4709,
+  "size": 19.8,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Magistratsvägen 55 L:19.8:3"
+ },
+ "af-5791": {
+  "address": "Ällingavägen 1 J",
+  "area": "Vildanden",
+  "class": "corridor",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 3705,
+  "size": 19.2,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Ällingavägen 1 J:19.2:3"
+ },
+ "af-5910": {
+  "address": "Tunavägen 39 H",
+  "area": "Sparta",
+  "class": "corridor",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 5144,
+  "size": 18.7,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Tunavägen 39 H:18.7:6"
+ },
+ "af-5954": {
+  "address": "Tunavägen 39 H",
+  "area": "Sparta",
+  "class": "corridor",
+  "deadline": "2026-10-12",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    8
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4977,
+  "size": 18.7,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Tunavägen 39 H:18.7:6"
+ },
+ "af-5994": {
+  "address": "Tunavägen 39 H",
+  "area": "Sparta",
+  "class": "corridor",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    15
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4809,
+  "size": 18.7,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Tunavägen 39 H:18.7:4"
+ },
+ "af-6856": {
+  "address": "Södra Esplanaden 30 B",
+  "area": "Parentesen",
+  "class": "corridor",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 3856,
+  "size": 18.5,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Södra Esplanaden 30 B:18.5:4"
+ },
+ "af-7037": {
+  "address": "Ällingavägen 9 B",
+  "area": "Vildanden",
+  "class": "corridor",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    16
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 3546,
+  "size": 19.2,
+  "type": "Korridorrum",
+  "unit": "AF Bostäder:Ällingavägen 9 B:19.2:2"
+ },
+ "af-8562": {
+  "address": "Utbrytningsgränden 1 B",
+  "area": "Klosterängen",
+  "class": "1room",
+  "deadline": "2026-10-11",
+  "first_seen": "2026-10-09T20:12:29.506892+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-09T20:12:29.506892+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-09T20:12:29.506892+00:00",
+    null,
+    20
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4006,
+  "size": 22.0,
+  "type": "1 Rum",
+  "unit": "AF Bostäder:Utbrytningsgränden 1 B:22.0:2"
+ }
+}
