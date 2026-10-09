@@ -1393,6 +1393,20 @@
   .compare-table td{ font-family:var(--mono); color:var(--ink); }
   .compare-table .na{ color:var(--faint); }
   .compare-table a{ color:var(--accent-ink); }
+  .row-when{ font:10px/1.4 var(--mono); color:var(--faint); margin-top:3px; }
+  .row-when .soon{ color:var(--accent-ink); font-weight:600; }
+  .fact.you.value{ color:var(--teal); border-color:var(--teal); }
+  :root[data-theme="light"] .fact.you.value{ color:#28625a; border-color:#28625a; }
+  .allin-toggle{
+    display:flex; align-items:center; gap:6px; margin-top:6px; cursor:pointer;
+    font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--dim);
+  }
+  .allin-toggle input{ accent-color:var(--ochre); margin:0; }
+  .date-filter{
+    font:12px/1 var(--mono); color:var(--ink); background:var(--bg);
+    border:1px solid var(--rule); border-radius:2px; padding:5px 6px; width:100%;
+  }
+  .compare-foot{ margin:0; padding:10px 16px 14px; font-size:11px; line-height:1.5; color:var(--dim); }
   .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -1755,6 +1769,9 @@
         <input type="range" id="maxRent" min="3000" max="13000" value="13000" step="250">
         <span id="maxRentLabel" class="any">Any</span>
       </div>
+      <label class="allin-toggle" title="Rent plus estimated electricity and home insurance. Hover a rent figure for the workings." data-i18n-title="allin_t">
+        <input type="checkbox" id="allInToggle"> <span data-i18n="allin_l">All-in cost</span>
+      </label>
     </div>
 
     <div class="control">
@@ -1823,6 +1840,13 @@
         <div class="slider-row">
           <input type="range" id="minYears" min="0" max="10" value="0" step="1">
           <span id="minYearsLabel" class="any">Any</span>
+        </div>
+      </div>
+
+      <div class="control">
+        <label for="moveBy" data-i18n="move_by">Move in by</label>
+        <div class="slider-row">
+          <input type="date" id="moveBy" class="date-filter">
         </div>
       </div>
 
@@ -2060,6 +2084,29 @@ const I18N = { sv: {
   per_month: ' kr/mån · ',
   queue_days_f: 'ködagar',
   back_all: '← Alla bostäder',
+  value_vs: 'typiskt för den här sortens bostad här är',
+  value_n: 'jämförda',
+  good_value: 'prisvärd',
+  el_incl: 'ingår i hyran',
+  el_schablon: 'schablonavgift',
+  el_own: 'eget avtal, uppskattat',
+  el_corr: 'ej angivet — ingår oftast för rum',
+  el_unk: 'ej angivet — uppskattat',
+  ai_rent: 'Hyra', ai_el: 'El', ai_ins: 'Hemförsäkring',
+  ai_csn: 'av en hel CSN-månad',
+  ai_dated: 'Uppskattningar kontrollerade',
+  c_allin: 'Allt inräknat / månad',
+  ai_foot: 'Allt inräknat = hyra + el + hemförsäkring, uppskattat. El ~150 kWh i månaden à ~1,6 kr/kWh med nätavgift; försäkring ~118 kr för en student i Stockholm; CSN är heltidsbidrag plus lån, 14 725 kr i månaden. Kollektivtrafik räknas inte — den beror på hur du tar dig fram. Kontrollerat',
+  per_month_allin: 'kr / mån allt inräknat',
+  allin_l: 'Allt inräknat',
+  allin_t: 'Hyra plus uppskattad el och hemförsäkring. Håll muspekaren över en hyra för uträkningen.',
+  move_by: 'Inflytt senast',
+  w_movein: 'inflytt',
+  w_listed_today: 'upplagd i dag',
+  w_listed: 'upplagd för',
+  w_d_ago: 'd sedan',
+  w_closes_today: 'stänger i dag',
+  w_closes_in: 'stänger om',
   // On this device: profile, marks, compare, last visit
   profile_import_q: 'Länken innehåller en Nästet-profil. Ladda den på den här enheten? Den ersätter profilen som finns sparad här.',
   profile_link: 'Profillänk',
@@ -2628,6 +2675,7 @@ async function loadData(triggerRefresh){
     }
   }
   lastGeneratedAt = currentData.generated_at;
+  loadHistory(city).then(() => render());
   pruneMarks();
   noteVisit();
   applyProviderChrome();
@@ -3039,7 +3087,10 @@ function passesFilters(l){
   // standing over areas that no longer contain anything you asked for.
   if (!matchesSearch(l, searchQuery.trim().toLowerCase())) return false;
   if (maxQueueDays !== null && l.queue_days != null && l.queue_days > maxQueueDays) return false;
-  if (maxRentSek !== null && l.rent_sek != null && Number(l.rent_sek) > maxRentSek) return false;
+  if (maxRentSek !== null && l.rent_sek != null && rentShown(l) > maxRentSek) return false;
+  // Same rule as every other filter: a listing that doesn't state a move-in
+  // date isn't excluded by one.
+  if (moveByDate && l.move_in && String(l.move_in).slice(0, 10) > moveByDate) return false;
   if (minSizeSqm !== null && l.size_sqm != null && Number(l.size_sqm) < minSizeSqm) return false;
   const floor = l.floor == null ? null : Number(l.floor);
   if (floor != null && !Number.isNaN(floor)) {
@@ -3055,7 +3106,7 @@ function passesFilters(l){
 // Which of the cog's filters are engaged — drives the badge on the cog so
 // collapsing the panel can't hide the fact that it's still narrowing things.
 function advancedActiveCount(){
-  return [minSizeSqm, minFloor, maxFloor, minYears].filter(v => v !== null).length;
+  return [minSizeSqm, minFloor, maxFloor, minYears, moveByDate].filter(v => v !== null).length;
 }
 
 function filtersActive(){
@@ -3869,9 +3920,10 @@ function rowHtml(l, newIds, index = 0, featured = false){
           <div>
             <button type="button" class="area-name row-open" onclick="event.stopPropagation();handleRowClick('${l.id.replace(/'/g,"\\'")}')">${title}</button>
             <div class="details">${sub}${l.size_sqm ? l.size_sqm + ' m² · ' : ''}${commute}</div>
+            ${whenLine(l)}
           </div>
         </div>
-        ${l.rent_sek ? `<div class="rent"><div class="rent-fig">${num(l.rent_sek)}</div><div class="rent-unit">${t('per_month_unit', 'kr / month')}</div></div>` : ''}
+        ${l.rent_sek ? `<div class="rent" title="${esc(allInTitle(allIn(l)))}"><div class="rent-fig">${num(rentShown(l))}</div><div class="rent-unit">${allInMode ? t('per_month_allin', 'kr / month all-in') : t('per_month_unit', 'kr / month')}</div></div>` : ''}
       </div>
       ${leaderLabel ? `<div class="leader"><span>${leaderLabel}</span><span class="dots"></span><span class="leader-val${hasQueue ? '' : ' soon'}">${leaderValue}</span></div>` : ''}
       ${hasQueue ? `<div class="qbar" title="${num(l.queue_days)} ${t('queue_days_f', 'queue days')} ${t('qbar_of', 'on the 0–2 000 day scale the queue-days filter uses')}"><i style="width:${pct}%"></i><span class="qbar-cap">${t('qbar_cap', 'of 2 000 d')}</span></div>` : ''}
@@ -4217,7 +4269,7 @@ const store = {
     catch (e) { /* private window or sandboxed preview: works for this visit only */ }
   },
 };
-const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-theme'];
+const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-allin', 'nastet-theme'];
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 // Everything that reaches the profile — typed in, read back from storage, or
@@ -4324,6 +4376,7 @@ function forgetDevice(){
   if (!window.confirm(t('forget_q', 'Remove your profile, saved and hidden listings, compare list and last-visit record from this device?'))) return;
   STORE_KEYS.forEach(k => store.set(k, null));
   profile = {}; marks = {}; compareIds = []; sinceVisit = null; onlySince = false;
+  allInMode = false; document.getElementById('allInToggle').checked = false; setMoveBy(null, false);
   renderProfile(); renderCompareBar(); renderSidebar();
 }
 
@@ -4375,7 +4428,7 @@ function renderProfile(){
   bind('pfBf', i => saveProfile({ bf_since: i.value || undefined }));
   bind('pfBudget', i => saveProfile({ budget: intOrNull(i.value) }));
   bind('pfFrom', i => saveProfile({ move_from: i.value || undefined }));
-  bind('pfTo', i => saveProfile({ move_to: i.value || undefined }));
+  bind('pfTo', i => { saveProfile({ move_to: i.value || undefined }); setMoveBy(profile.move_to, false); });
 }
 
 // ── Marks: saved / applied / hidden, per listing ──
@@ -4444,6 +4497,9 @@ function openCompare(){
     [t('c_rent', 'Rent / month'), l => l.rent_sek != null ? num(l.rent_sek) + ' kr' : null],
     [t('c_size', 'Size'), l => l.size_sqm ? l.size_sqm + ' m²' : null],
     [t('c_sqm', 'kr per m²'), l => l.rent_sek && l.size_sqm ? num(Math.round(l.rent_sek / l.size_sqm)) : null],
+    [t('ai_el', 'Electricity'), l => { const a = allIn(l); return a ? `${num(a.el.kr)} kr — ${a.el.note}` : null; }],
+    [t('ai_ins', 'Home insurance'), l => l.rent_sek != null ? `~${num(ALLIN.insurance)} kr` : null],
+    [t('c_allin', 'All-in / month'), l => { const a = allIn(l); return a ? `${num(a.total)} kr · ${a.csnShare}% ${t('ai_csn', 'of a full CSN month')}` : null; }],
     [t('c_queue', 'Queue days (leader)'), l => l.queue_days != null ? num(l.queue_days) : null],
     [t('c_apps', 'Applicants'), l => l.applicants],
     [t('c_deadline', 'Apply by'), l => l.deadline],
@@ -4459,7 +4515,8 @@ function openCompare(){
       <thead><tr><th scope="col"></th>${ls.map(l => `<th scope="col">${esc(l.address || l.area)}</th>`).join('')}</tr></thead>
       <tbody>${rows.map(([label, f]) => `<tr><th scope="row">${label}</th>${ls.map(l => `<td>${cell(f(l))}</td>`).join('')}</tr>`).join('')}
       <tr><th scope="row"></th>${ls.map(l => `<td>${l.url ? `<a href="${esc(l.url)}" target="_blank" rel="noopener">${t('c_open', 'Open listing ↗')}</a>` : ''}</td>`).join('')}</tr>
-      </tbody></table></div></div>`;
+      </tbody></table></div>
+    <p class="compare-foot">${t('ai_foot', 'All-in = rent + electricity + home insurance, estimated. Electricity ~150 kWh a month at ~1.6 kr/kWh with the grid fee; insurance ~118 kr for a student in Stockholm; CSN is the full-time grant and loan, 14 725 kr a month. Transit is left out — it depends on how you commute. Checked')} ${ALLIN.checked}.</p></div>`;
   modal.hidden = false;
   const close = () => { modal.hidden = true; document.removeEventListener('keydown', onKey); };
   const onKey = e => { if (e.key === 'Escape') close(); };
@@ -4518,7 +4575,9 @@ function rowPersonal(l){
       ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>`
       : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`);
   }
-  if (profile.budget && l.rent_sek > profile.budget) facts.push(`<span class="fact you">${t('over_budget', 'over budget')}</span>`);
+  const val = valueBadge(l);
+  if (val) facts.push(`<span class="fact you value" title="${esc(val.title)}">${t('good_value', 'good value')}</span>`);
+  if (profile.budget && l.rent_sek != null && rentShown(l) > profile.budget) facts.push(`<span class="fact you">${t('over_budget', 'over budget')}</span>`);
   if (sinceVisit && sinceVisit.city === currentCity && sinceVisit.fresh.has(l.id)) facts.push(`<span class="fact you">${t('since_last', 'new since last visit')}</span>`);
   const m = markOf(l.id);
   const id = esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
@@ -4549,6 +4608,109 @@ function hiddenFooter(n){
   return `<div class="list-end"><button type="button" class="link-btn" onclick="showHidden=!showHidden;renderSidebar()">${showHidden
     ? t('hide_hidden', 'Hide the ones you hid')
     : `${n} ${t('n_hidden', 'hidden')} · ${t('show', 'show')}`}</button></div>`;
+}
+
+// ── History summaries: history-<city>.json, published by history.py ──────
+// Fetched alongside the listings but never waited on: every feature that uses
+// it is an extra, and each carries a gate saying whether enough has been
+// collected yet. Missing file (first deploys, local --serve) = all gates shut.
+let historyData = null;
+async function loadHistory(city){
+  try {
+    const res = await fetch(`./history-${city}.json`, { cache: 'no-store' });
+    historyData = res.ok ? await res.json() : null;
+  } catch (e) { historyData = null; }
+  if (historyData && historyData.city && historyData.city !== city) historyData = null;
+}
+function gate(name){
+  return (historyData && historyData.gates && historyData.gates[name]) || null;
+}
+
+// Same buckets as history.type_class(), so a listing is compared with the
+// comparables it was counted among.
+function typeClass(l){
+  const ty = String(l.type || '').toLowerCase();
+  if (/korridor|corridor|kollektiv/.test(ty)) return 'corridor';
+  const m = ty.match(/^\s*(\d+)\s*(rum|room)/);
+  if (m) return Number(m[1]) <= 1 ? '1room' : '2plus';
+  if (/studio|student|etta/.test(ty)) return '1room';
+  const size = Number(l.size_sqm) || 0;
+  if (size && size < 20) return 'corridor';
+  return !size || size < 40 ? '1room' : '2plus';
+}
+
+// Cheapest quarter of comparable listings (same provider and kind of home,
+// open now or closed in the last 60 days) by rent per m².
+function valueBadge(l){
+  const g = gate('value');
+  if (!g || !g.ready || !l.rent_sek || !l.size_sqm) return null;
+  const v = (historyData.value || {})[`${l.provider}|${typeClass(l)}`];
+  if (!v || v.n < g.need) return null;
+  const sqm = l.rent_sek / l.size_sqm;
+  if (sqm > v.p25) return null;
+  return { title: `${num(Math.round(sqm))} kr/m² — ${t('value_vs', 'typical for this kind of home here is')} ${num(Math.round(v.median_rent_sqm))} kr/m² (${v.n} ${t('value_n', 'compared')})` };
+}
+
+// ── All-in monthly cost ───────────────────────────────────────────────────
+// Rent plus what nearly everyone also pays every month. Estimates, dated,
+// and shown with their workings wherever a total appears. Transit is left out
+// on purpose: it depends on the commute, and the bike figure is right there.
+const ALLIN = {
+  checked: '2026-10',
+  // Electricity for a small flat: ~150 kWh/month at ~1.6 kr/kWh all-in plus
+  // the grid's fixed fee. "Schablon" is the landlord's flat-rate charge.
+  el: { schablon: 240, flat: 400 },
+  insurance: 118,          // student home insurance, Stockholm, per month
+  csn: 14725,              // CSN grant + loan, full-time, per month (13 592 kr / 4 weeks)
+};
+function elEstimate(l){
+  if (l.el_included === true || l.el_mode === 'included') return { kr: 0, note: t('el_incl', 'included in rent') };
+  if (l.el_mode === 'schablon') return { kr: ALLIN.el.schablon, note: t('el_schablon', 'flat-rate charge') };
+  if (l.el_mode === 'excluded') return { kr: ALLIN.el.flat, note: t('el_own', 'own contract, estimated') };
+  // Not stated: corridor rooms almost always include it; flats rarely do.
+  return typeClass(l) === 'corridor'
+    ? { kr: 0, note: t('el_corr', 'not stated — usually included for rooms') }
+    : { kr: ALLIN.el.flat, note: t('el_unk', 'not stated — estimated') };
+}
+function allIn(l){
+  if (l.rent_sek == null) return null;
+  const rent = Number(l.rent_sek);
+  const el = elEstimate(l);
+  const total = rent + el.kr + ALLIN.insurance;
+  return { total, rent, el, insurance: ALLIN.insurance, csnShare: Math.round(total / ALLIN.csn * 100) };
+}
+function allInTitle(a){
+  return [`${t('ai_rent', 'Rent')} ${num(a.rent)} kr`,
+          `${t('ai_el', 'Electricity')} ${num(a.el.kr)} kr (${a.el.note})`,
+          `${t('ai_ins', 'Home insurance')} ~${num(a.insurance)} kr`,
+          `= ${num(a.total)} kr · ${a.csnShare}% ${t('ai_csn', 'of a full CSN month')}`,
+          `${t('ai_dated', 'Estimates checked')} ${ALLIN.checked}`].join('\n');
+}
+let allInMode = store.get('nastet-allin', false) === true;
+// What the rent figure, the rent filter and the rent sort all read.
+function rentShown(l){
+  if (l.rent_sek == null) return null;
+  return allInMode ? allIn(l).total : Number(l.rent_sek);
+}
+
+// ── Dates on a listing: move-in, how long it's been up, when it closes ────
+let moveByDate = null;   // YYYY-MM-DD, from the "Move in by" filter
+function listedDays(l){
+  const from = l.published_at ? String(l.published_at).slice(0, 10)
+    : l.first_seen ? new Date(l.first_seen).toLocaleDateString('sv-SE', { timeZone: STHLM }) : null;
+  return from && ISO_DAY.test(from) ? Math.max(0, daysBetween(from, todayISO())) : null;
+}
+function whenLine(l){
+  const bits = [];
+  if (l.move_in) bits.push(`${t('w_movein', 'move-in')} ${String(l.move_in).slice(0, 10)}`);
+  const d = listedDays(l);
+  if (d != null) bits.push(d === 0 ? t('w_listed_today', 'listed today') : `${t('w_listed', 'listed')} ${d} ${t('w_d_ago', 'd ago')}`);
+  if (l.deadline && ISO_DAY.test(String(l.deadline).slice(0, 10))) {
+    const left = daysBetween(todayISO(), String(l.deadline).slice(0, 10));
+    if (left === 0) bits.push(`<span class="soon">${t('w_closes_today', 'closes today')}</span>`);
+    else if (left > 0) bits.push(left <= 2 ? `<span class="soon">${t('w_closes_in', 'closes in')} ${left} d</span>` : `${t('w_closes_in', 'closes in')} ${left} d`);
+  }
+  return bits.length ? `<div class="row-when">${bits.join(' · ')}</div>` : '';
 }
 
 function renderSidebar(){
@@ -4859,8 +5021,29 @@ document.getElementById('advToggle').addEventListener('click', (e) => {
   if (leafletMap) setTimeout(() => leafletMap.invalidateSize(), 0);
 });
 
+// Move-in deadline: the same fact as the profile's "move in by", so each keeps
+// the other current.
+const moveByEl = document.getElementById('moveBy');
+function setMoveBy(v, persist){
+  moveByDate = v && ISO_DAY.test(v) ? v : null;
+  moveByEl.value = moveByDate || '';
+  if (persist) { saveProfile({ move_to: moveByDate || undefined }); renderProfile(); }
+  refreshAdvBadge();
+}
+moveByEl.addEventListener('change', () => { setMoveBy(moveByEl.value, true); render(); });
+setMoveBy(profile.move_to, false);
+
+const allInEl = document.getElementById('allInToggle');
+allInEl.checked = allInMode;
+allInEl.addEventListener('change', () => {
+  allInMode = allInEl.checked;
+  store.set('nastet-allin', allInMode || null);
+  render();
+});
+
 document.getElementById('advReset').addEventListener('click', () => {
   advSliders.forEach(s => s.reset());
+  setMoveBy(null, true);
   refreshAdvBadge();
   render();
 });
@@ -5075,6 +5258,7 @@ async function pollForChanges(){
         currentData = data;
         lastGeneratedAt = data.generated_at;
         noteVisit();
+        loadHistory(currentCity || cityIndex.default).then(() => render());
         // A scheduled scrape can change which providers have listings, so the
         // chips have to be rebuilt here too — not only on first load.
         applyProviderChrome();
