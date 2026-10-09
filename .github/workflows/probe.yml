@@ -1,0 +1,31 @@
+name: Probe campus sources
+
+# Manual only. Answers "what does the campus search have to work with?"
+# without touching the site.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/floorplans
+            data/isochrone_cache.json
+            data/noise_cache.json
+            data/campus_cache.json
+          key: nastet-enrich-cache-
+          restore-keys: |
+            nastet-enrich-cache-
+      - name: Probe
+        run: python scripts/probe_campus.py
