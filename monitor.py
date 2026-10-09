@@ -2361,6 +2361,13 @@ def fetch_bostadsformedlingen() -> list[dict]:
         print(f"  links: {links_from_feed} of {len(listings)} from the feed's own Url field"
               + (f", {guessed} from a shape-matched ad number" if guessed else "")
               + (f", {fallback} fell back to a search-page link" if fallback else ""))
+        # The history store keys re-listings on apartment_id and "days listed"
+        # on published_at; a drop in either number means the feed renamed it.
+        n_pub = sum(1 for l in listings if l.get("published_at"))
+        n_apt = sum(1 for l in listings if l.get("apartment_id"))
+        sample = next((l for l in listings if l.get("published_at")), {})
+        print(f"  published_at on {n_pub}/{len(listings)} (e.g. {sample.get('published_at')!r}), "
+              f"apartment_id on {n_apt}/{len(listings)}")
         # These four come from fields the feed was only recently confirmed to
         # carry, so show how many ads actually filled them in.
         stated = {name: sum(1 for l in listings if l[name] is not None)

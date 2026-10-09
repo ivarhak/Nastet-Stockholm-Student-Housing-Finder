@@ -37,7 +37,9 @@ on:
       - '.github/workflows/publish.yml'
 
 permissions:
-  contents: read
+  # write, for one thing only: pushing the history store to the `data` branch.
+  # main is never written by this workflow.
+  contents: write
   pages: write
   id-token: write
 
@@ -143,6 +145,9 @@ jobs:
             echo "UI-only push, and the cache already has listings — redeploying without scraping."
           else
             python monitor.py --once
+            # Tells the history step this run produced a real observation; a
+            # UI-only redeploy must not be recorded as a second sighting.
+            touch .scraped
           fi
 
       - name: Assemble the site
@@ -275,6 +280,51 @@ jobs:
               '</urlset>\n')
           print(f"robots.txt + sitemap.xml written for {site}")
           PY
+
+      # ── History ─────────────────────────────────────────────────────────────
+      # Every scrape is a snapshot; what rooms actually went for, how the market
+      # compares with usual and whether a flat is back on the market all need
+      # memory. That lives on its own `data` branch (see history.py) so it never
+      # clutters main, and so it survives the Actions cache being evicted — the
+      # cache is a convenience, this is a record.
+      - name: Check out the history branch
+        run: |
+          if git fetch --quiet --depth=1 origin data 2>/dev/null; then
+            git worktree add --quiet _data FETCH_HEAD
+            echo "history branch at $(git -C _data log -1 --format='%h %cs %s')"
+          else
+            git worktree add --quiet --detach _data
+            git -C _data checkout --quiet --orphan data
+            git -C _data rm -rf --quiet . || true
+            echo "no history branch yet — this run starts it"
+          fi
+
+      - name: Update history
+        run: |
+          if [ -f .scraped ]; then
+            python history.py update --history _data/history
+          else
+            echo "no scrape this run — history left as it was"
+          fi
+          # Summaries are published every run, scrape or not, so a UI-only
+          # redeploy still ships them.
+          python history.py summarize --history _data/history --out _site
+
+      - name: Save history
+        if: always()
+        # Losing one run's observations is a shrug; failing a publish over it
+        # would not be.
+        continue-on-error: true
+        run: |
+          [ -f .scraped ] || { echo "nothing to save"; exit 0; }
+          cd _data
+          git add -A
+          if git diff --cached --quiet; then echo "history unchanged"; exit 0; fi
+          git -c user.name="nastet-bot" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit --quiet -m "history: run ${{ github.run_id }}"
+          git push --quiet origin HEAD:refs/heads/data
+          echo "history pushed: $(git log -1 --format='%h')"
 
       - name: Save scrape caches
         # Always a fresh key so the newest listings become the next run's
