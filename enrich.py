@@ -63,6 +63,7 @@ FLOORPLAN_DIR = DATA / "floorplans"
 FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
 PLAN_WIDTH = 640
 PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
+PLAN_PARSER = 2              # bump when find_plan_links changes, to re-check old misses
 MAX_NEW_PLANS_PER_RUN = 25   # politeness: a cold cache fills over a few runs
 
 
@@ -126,10 +127,12 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
             key = plan_key(l["id"])
             rec = index.get(key)
             stale_miss = (rec and not rec.get("file")
-                          and rec.get("checked", "") < (now() - timedelta(days=PLAN_RETRY_DAYS)).isoformat())
+                          and (rec.get("parser") != PLAN_PARSER
+                               or rec.get("checked", "") < (now() - timedelta(days=PLAN_RETRY_DAYS)).isoformat()))
             if (rec is None or stale_miss) and fetched < MAX_NEW_PLANS_PER_RUN:
                 fetched += 1
-                rec = {"checked": now().isoformat(timespec="seconds"), "file": None, "src": None}
+                rec = {"checked": now().isoformat(timespec="seconds"), "file": None, "src": None,
+                       "parser": PLAN_PARSER}
                 try:
                     page = session.get(l["url"], timeout=20)
                     page.raise_for_status()
@@ -138,9 +141,15 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
                         # The first page's candidates, so a changed page layout
                         # shows up here rather than as silently missing plans.
                         shown_debug = True
-                        pdfs = re.findall(r'href="([^"]+\.pdf[^"]*)"', page.text, re.I)[:5]
                         print(f"  floorplans: first object page {page.url} ({len(page.text):,} chars) — "
-                              f"plan candidates {cands[:3]}, any pdf links {pdfs}")
+                              f"plan candidates {cands[:3]}")
+                        # Where the page mentions a plan, and what it loads —
+                        # enough to find the real source if it's fetched by script.
+                        for m in list(re.finditer(r"planritning|ritning|floor ?plan|\.pdf|bilagor|dokument", page.text, re.I))[:8]:
+                            snip = page.text[max(0, m.start() - 160):m.end() + 160].replace("\n", " ")
+                            print(f"    …{snip}…")
+                        apis = sorted(set(re.findall(r'["\'](/[^"\']*(?:api|Api|widget|ajax)[^"\']*)["\']', page.text)))[:15]
+                        print(f"    script-ish paths: {apis}")
                     for url in cands[:3]:
                         r = session.get(url, timeout=30)
                         if not r.ok or len(r.content) < 1000:
@@ -174,7 +183,9 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
 
 ISOCHRONE_URL = "https://valhalla1.openstreetmap.de/isochrone"
 ISOCHRONE_CACHE = DATA / "isochrone_cache.json"
-CONTOURS = [10, 15, 20, 30, 45]
+CONTOURS = [10, 15, 20, 30, 45, 60]
+# Valhalla's default service limit is four contours per request.
+CONTOUR_BATCH = 4
 ISOCHRONE_MAX_AGE_DAYS = 30
 
 
@@ -201,28 +212,30 @@ def enrich_isochrones(site: Path, payloads: dict) -> None:
             fresh = rec and rec.get("at", "") > (now() - timedelta(days=ISOCHRONE_MAX_AGE_DAYS)).isoformat()
             if not fresh:
                 asked += 1
-                req = {"locations": [{"lat": coords[0], "lon": coords[1]}], "costing": "bicycle",
-                       "costing_options": {"bicycle": {"bicycle_type": "hybrid"}},
-                       "contours": [{"time": m} for m in CONTOURS],
-                       "polygons": True, "denoise": 0.5, "generalize": 40}
+                feats = []
                 try:
-                    r = requests.get(ISOCHRONE_URL, params={"json": json.dumps(req)},
-                                     headers={"User-Agent": USER_AGENT}, timeout=40)
-                    r.raise_for_status()
-                    fc = r.json()
-                    feats = [{"type": "Feature", "properties": {"min": f["properties"].get("contour")},
-                              "geometry": {"type": f["geometry"]["type"],
-                                           "coordinates": round_coords(f["geometry"]["coordinates"])}}
-                             for f in fc.get("features", [])]
+                    for i in range(0, len(CONTOURS), CONTOUR_BATCH):
+                        # POST with a JSON body, the same shape monitor.py's
+                        # working /route calls use.
+                        req = {"locations": [{"lat": coords[0], "lon": coords[1]}], "costing": "bicycle",
+                               "contours": [{"time": m} for m in CONTOURS[i:i + CONTOUR_BATCH]],
+                               "polygons": True, "denoise": 0.5, "generalize": 40}
+                        r = requests.post(ISOCHRONE_URL, json=req, headers={"User-Agent": USER_AGENT}, timeout=40)
+                        if not r.ok:
+                            raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
+                        fc = r.json()
+                        feats += [{"type": "Feature", "properties": {"min": f["properties"].get("contour")},
+                                   "geometry": {"type": f["geometry"]["type"],
+                                                "coordinates": round_coords(f["geometry"]["coordinates"])}}
+                                  for f in fc.get("features", [])]
+                        time.sleep(1.0)
                     if feats:
                         rec = {"at": now().isoformat(timespec="seconds"), "features": feats}
                         cache[ckey] = rec
                         print(f"  isochrones: {city}/{sid}: {len(feats)} contours "
                               f"({len(json.dumps(feats)) // 1024} KB)")
                     else:
-                        print(f"  isochrones: {city}/{sid}: no features in response "
-                              f"{json.dumps(fc)[:200]}")
-                    time.sleep(1.0)
+                        print(f"  isochrones: {city}/{sid}: no features in response")
                 except Exception as e:  # noqa: BLE001
                     print(f"  isochrones: {city}/{sid}: {type(e).__name__}: {e}"
                           f"{' (keeping the older copy)' if rec else ''}")
@@ -250,6 +263,7 @@ NOISE_ITEM = "https://www.arcgis.com/sharing/rest/content/items/ce2b61853e594b7f
 NOISE_CACHE = DATA / "noise_cache.json"
 NOISE_CITIES = {"stockholm"}
 MAX_NOISE_LOOKUPS_PER_RUN = 200
+NOISE_CACHE_VERSION = 2          # bump to re-query every point after a parsing change
 DB_RE = re.compile(r"(\d{2})\s*(?:[-–]\s*(\d{2}))?")
 
 
@@ -276,12 +290,18 @@ def noise_service(session) -> list[str]:
     svc = session.get(url, params={"f": "json"}, timeout=20).json()
     layers = svc.get("layers") or []
     print(f"  noise: layers {[(x.get('id'), x.get('name'), x.get('geometryType')) for x in layers][:8]}")
-    return [f"{url}/{x['id']}/query" for x in layers
-            if x.get("geometryType") in (None, "esriGeometryPolygon")]
+    polys = [x for x in layers if x.get("geometryType") in (None, "esriGeometryPolygon")]
+    # Road and rail only, when there's a layer for exactly that — the other
+    # one adds aircraft, which isn't what the chip says it measures.
+    road_rail = [x for x in polys if re.search(r"väg.{0,6}tåg", x.get("name", ""), re.I)
+                 and not re.search(r"flyg", x.get("name", ""), re.I)]
+    return [f"{url}/{x['id']}/query" for x in (road_rail or polys)]
 
 
 def db_from_attrs(attrs: dict) -> float | None:
     """The lower bound of the dB interval, from whichever attribute holds it."""
+    if isinstance(attrs.get("ISOV1"), (int, float)):     # Bullerkartan 2022
+        return float(attrs["ISOV1"])
     for k, v in attrs.items():
         if v is None:
             continue
@@ -310,7 +330,8 @@ def enrich_noise(site: Path, payloads: dict) -> None:
                 continue
             # ~10 m grid: buildings on the same corner share a lookup.
             key = f"{coords[0]:.4f},{coords[1]:.4f}"
-            if key not in cache and looked < MAX_NOISE_LOOKUPS_PER_RUN:
+            if (key not in cache or cache[key].get("v") != NOISE_CACHE_VERSION) \
+                    and looked < MAX_NOISE_LOOKUPS_PER_RUN:
                 if layers is None:
                     try:
                         layers = noise_service(session)
@@ -320,7 +341,7 @@ def enrich_noise(site: Path, payloads: dict) -> None:
                 if not layers:
                     break
                 looked += 1
-                best = None
+                best, best_hi = None, None
                 for q in layers:
                     try:
                         r = session.get(q, params={
@@ -332,18 +353,23 @@ def enrich_noise(site: Path, payloads: dict) -> None:
                             shown = True
                             print(f"  noise: sample attributes {feats[0].get('attributes')}")
                         for f in feats:
-                            db = db_from_attrs(f.get("attributes") or {})
+                            attrs = f.get("attributes") or {}
+                            db = db_from_attrs(attrs)
                             if db is not None and (best is None or db > best):
                                 best = db
+                                hi = attrs.get("ISOV2")
+                                best_hi = float(hi) if isinstance(hi, (int, float)) else None
                     except Exception as e:  # noqa: BLE001
                         print(f"  noise: {key}: {type(e).__name__}: {e}")
                 # Outside every modelled band means below the lowest one.
-                cache[key] = {"db": best, "at": now().isoformat(timespec="seconds")}
+                cache[key] = {"db": best, "hi": best_hi, "v": NOISE_CACHE_VERSION,
+                              "at": now().isoformat(timespec="seconds")}
                 time.sleep(0.2)
             rec = cache.get(key)
             if rec is not None:
                 db = rec.get("db")
-                l["noise"] = {"db": db, "band": noise_band(db) if db is not None else "quiet"}
+                l["noise"] = {"db": db, "hi": rec.get("hi"),
+                              "band": noise_band(db) if db is not None else "quiet"}
                 attached += 1
         print(f"noise: {city}: {attached} listings tagged · {looked} lookups this run")
     save(NOISE_CACHE, cache)

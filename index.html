@@ -5204,7 +5204,7 @@ const NOISE_LABEL = () => ({ quiet: t('nz_quiet', 'quiet'), moderate: t('nz_mode
                              noisy: t('nz_noisy', 'noisy'), very_noisy: t('nz_very', 'very noisy') });
 function noiseText(n){
   if (!n || !n.band) return null;
-  const db = n.db == null ? '< 45 dB' : `${Math.round(n.db)}+ dB`;
+  const db = n.db == null ? '< 45 dB' : n.hi != null ? `${Math.round(n.db)}–${Math.round(n.hi)} dB` : `${Math.round(n.db)}+ dB`;
   return `${NOISE_LABEL()[n.band] || n.band} · ${db}`;
 }
 const NOISE_TITLE = () => t('nz_title', 'Modelled road and rail traffic noise at the building (24 h average, Stockholm noise map 2022). Indicative: it can’t tell which side of the building a room faces.');
