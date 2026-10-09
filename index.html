@@ -1714,17 +1714,20 @@
     <h3 data-i18n="lg_who_h">Who runs this</h3>
     <p data-i18n="lg_who">Nästet is a personal, non-commercial project by Ivar Håkansson, a student in Stockholm. It is free, carries no advertising, and nothing on it is for sale. To get in touch, <a href="https://github.com/ivarhak/Nastet-Stockholm-Student-Housing-Finder/issues" target="_blank" rel="noopener noreferrer">open an issue on GitHub</a>.</p>
 
-    <h3 data-i18n="lg_collect_h">What is collected about you: nothing</h3>
-    <p data-i18n="lg_collect">There are no accounts, no sign-up, no forms, no analytics and no tracking cookies. I do not record what you search for, which listings you look at, or that you visited at all. There is no database of visitors here to sell, to leak, or to hand to anyone who asks.</p>
+    <h3 data-i18n="lg_collect_h">What is collected about you: nothing, unless you use the Discord bot</h3>
+    <p data-i18n="lg_collect">There are no accounts, no sign-up, no analytics and no tracking cookies. I do not record what you search for, which listings you look at, or that you visited at all. The one exception is the optional Discord bot, described below — and only if you start it yourself.</p>
 
     <h3 data-i18n="lg_device_h">What is stored on your device</h3>
-    <p data-i18n="lg_device">One item, <code>nastet-theme</code>, which remembers whether you chose the light or dark theme. It is written when you click the toggle and it never leaves your browser. A watch you set up lives in this page's address instead of in storage — which means it sits in your URL bar and your bookmarks, and is never sent to me or to anyone else.</p>
+    <p data-i18n="lg_device">Everything you set up on this site is kept in your own browser and never sent anywhere: <code>nastet-theme</code> (light or dark), <code>nastet-profile</code> (the queue days, dates, budget and move-in window you entered, and a watch), <code>nastet-marks</code> (listings you saved, applied to or hid), <code>nastet-compare</code> (your compare list), <code>nastet-seen</code> (which listings were up on your last visit, for "since your last visit"), <code>nastet-allin</code> and <code>nastet-iso</code> (two display switches). "Forget this device" under Queues to join deletes all of them. A profile link or a watch in the address bar carries those numbers inside the link itself — anyone you send it to can read them, and nobody else. Calendar reminders are built in your browser and downloaded straight to you.</p>
 
     <h3 data-i18n="lg_third_h">Who your browser talks to</h3>
     <p data-i18n="lg_third">Loading any web page reveals your IP address to whoever serves it. This page is hosted on <b>GitHub Pages</b> and its map tiles come from <b>CARTO</b>; everything else — the typefaces and the map library included — is served from this site itself. Those two companies see your IP address in their own logs, under their own privacy policies. I get nothing back from them — no report, no counts, no identities.</p>
 
+    <h3 data-i18n="lg_discord_h">The Discord bot (optional)</h3>
+    <p data-i18n="lg_discord">If you use <code>/watch set</code>, the bot keeps, under your Discord user id: the city, your queue days and the date you gave them, max rent, areas, whether you want every new listing, the id of your DM channel with the bot, and which listings it has already told you about. That is all — no name, no messages. It is stored by <b>Cloudflare</b> (Workers KV), which runs the bot, and Discord itself of course handles the messages under its own policy. <code>/watch stop</code> deletes it immediately; a watch nobody has touched for six months is deleted automatically.</p>
+
     <h3 data-i18n="lg_rights_h">Your rights</h3>
-    <p data-i18n="lg_rights">Because I hold no personal data about you, there is nothing for me to show you, correct or erase — but ask anyway if you think that is wrong, and I will tell you exactly what I have. You can also complain to <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>, the Swedish data protection authority.</p>
+    <p data-i18n="lg_rights">If you have not used the Discord bot, I hold no personal data about you and there is nothing to show, correct or erase. If you have, <code>/watch show</code> displays everything kept and <code>/watch stop</code> erases it — or ask, and I will do it for you. You can also complain to <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>, the Swedish data protection authority.</p>
 
     <h3 data-i18n="lg_official_h">Not official</h3>
     <p data-i18n="lg_official">Nästet is not affiliated with, endorsed by or run by SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH or any other landlord or university. It reads listings those organisations publish openly and draws them on a map.</p>
@@ -1738,7 +1741,7 @@
     <h3 data-i18n="lg_code_h">The code</h3>
     <p data-i18n="lg_code">Nästet is open source under the MIT licence, and is provided as is, without warranty of any kind. Use it at your own risk.</p>
 
-    <p class="legal-date" data-i18n="lg_updated">Last updated 2026-09-18.</p>
+    <p class="legal-date" data-i18n="lg_updated">Last updated 2026-10-09.</p>
   </div>
 </div>
 
@@ -2163,14 +2166,16 @@ const I18N = { sv: {
   lg_h: 'Integritet & villkor',
   lg_who_h: 'Vem som driver det här',
   lg_who: 'Nästet är ett personligt, icke-kommersiellt projekt av Ivar Håkansson, student i Stockholm. Det är gratis, har ingen reklam, och ingenting på sidan är till salu. Hör av dig genom att <a href="https://github.com/ivarhak/Nastet-Stockholm-Student-Housing-Finder/issues" target="_blank" rel="noopener noreferrer">skapa ett ärende på GitHub</a>.',
-  lg_collect_h: 'Vad som samlas in om dig: ingenting',
-  lg_collect: 'Det finns inga konton, ingen registrering, inga formulär, ingen analys och inga spårningskakor. Jag registrerar inte vad du söker på, vilka bostäder du tittar på, eller ens att du varit här. Det finns ingen besökardatabas att sälja, läcka eller lämna ifrån sig.',
+  lg_collect_h: 'Vad som samlas in om dig: ingenting, om du inte använder Discord-boten',
+  lg_collect: 'Det finns inga konton, ingen registrering, ingen analys och inga spårningskakor. Jag registrerar inte vad du söker på, vilka bostäder du tittar på, eller ens att du varit här. Enda undantaget är den valfria Discord-boten, som beskrivs nedan — och bara om du själv startar den.',
   lg_device_h: 'Vad som sparas på din enhet',
-  lg_device: 'En enda sak: <code>nastet-theme</code>, som minns om du valde ljust eller mörkt läge. Den skrivs när du klickar på knappen och lämnar aldrig din webbläsare. En bevakning du ställer in ligger i sidans adress i stället för i lagringen — den sitter alltså i adressfältet och i dina bokmärken, och skickas aldrig till mig eller någon annan.',
+  lg_discord_h: 'Discord-boten (valfri)',
+  lg_discord: 'Om du använder <code>/watch set</code> sparar boten, under ditt Discord-användar-id: stad, dina ködagar och datumet du angav dem, maxhyra, områden, om du vill ha varje ny bostad, id:t för din DM-kanal med boten och vilka bostäder den redan berättat om. Inget mer — inget namn, inga meddelanden. Det lagras hos <b>Cloudflare</b> (Workers KV), som kör boten, och Discord hanterar förstås meddelandena enligt sin egen policy. <code>/watch stop</code> raderar det direkt; en bevakning som ingen rört på sex månader raderas automatiskt.',
+  lg_device: 'Allt du ställer in här sparas i din egen webbläsare och skickas ingenstans: <code>nastet-theme</code> (ljust eller mörkt), <code>nastet-profile</code> (ködagar, datum, budget och inflyttningsfönster du fyllt i, samt en bevakning), <code>nastet-marks</code> (bostäder du sparat, sökt eller dolt), <code>nastet-compare</code> (din jämförelselista), <code>nastet-seen</code> (vilka bostäder som fanns vid ditt senaste besök) och <code>nastet-allin</code> och <code>nastet-iso</code> (två visningsval). "Glöm den här enheten" under Köer att gå med i raderar allt. En profillänk eller en bevakning i adressfältet bär siffrorna i själva länken — den du skickar den till kan läsa dem, ingen annan. Kalenderpåminnelser skapas i din webbläsare och laddas ner direkt till dig.',
   lg_third_h: 'Vem din webbläsare pratar med',
   lg_third: 'Att ladda vilken webbsida som helst avslöjar din IP-adress för den som levererar den. Den här sidan ligger på <b>GitHub Pages</b> och kartrutorna kommer från <b>CARTO</b>; allt annat — typsnitten och kartbiblioteket också — levereras från sidan själv. De två företagen ser din IP-adress i sina egna loggar, under sina egna integritetspolicyer. Jag får ingenting tillbaka från dem — ingen rapport, inga siffror, inga identiteter.',
   lg_rights_h: 'Dina rättigheter',
-  lg_rights: 'Eftersom jag inte har några personuppgifter om dig finns det ingenting för mig att visa, rätta eller radera — men fråga ändå om du tror att det är fel, så berättar jag exakt vad jag har. Du kan också klaga hos <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>.',
+  lg_rights: 'Har du inte använt Discord-boten har jag inga personuppgifter om dig, och det finns inget att visa, rätta eller radera. Har du det visar <code>/watch show</code> allt som sparats och <code>/watch stop</code> raderar det — eller hör av dig så gör jag det åt dig. Du kan också klaga hos <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">Integritetsskyddsmyndigheten (IMY)</a>.',
   lg_official_h: 'Inte officiellt',
   lg_official: 'Nästet är inte kopplat till, godkänt av eller drivet av SSSB, Bostadsförmedlingen, SGS Studentbostäder, AF Bostäder, KTH eller någon annan hyresvärd eller något lärosäte. Sidan läser annonser som de organisationerna publicerar öppet och ritar ut dem på en karta.',
   lg_apply_h: 'Sök hos källan',
@@ -2179,7 +2184,7 @@ const I18N = { sv: {
   lg_landlord: 'Är du hyresvärd eller bostadsförmedlare och hellre slipper se dina annonser här, så säg till, så tas de bort — ingen diskussion, ingen jurist behövs. Samma länk som ovan.',
   lg_code_h: 'Koden',
   lg_code: 'Nästet är öppen källkod under MIT-licens och tillhandahålls i befintligt skick, utan garantier av något slag. Använd på egen risk.',
-  lg_updated: 'Senast uppdaterad 2026-09-18.',
+  lg_updated: 'Senast uppdaterad 2026-10-09.',
 
   perm_install: 'Den här webbläsaren visar bara notiser för en installerad app. Använd Dela → Lägg till på hemskärmen, öppna Nästet därifrån och slå på bevakningen igen.',
   perm_denied: 'Notiser är blockerade för den här sidan — tillåt dem i webbläsarens webbplatsinställningar och slå sedan på bevakningen igen.',

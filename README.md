@@ -15,12 +15,39 @@ tracked. If you want to support the work, there's a Ko-fi link in the header.
 re-scraped hourly. Read-only; run it locally for desktop notifications
 and an on-demand Refresh. See section 4.
 
-Two pieces:
+The pieces:
 - `monitor.py` — runs on your machine: Selenium scraping for SSSB, plain HTTP
   fetches for the other three providers, commute math, and a small local API.
 - `index.html` — the UI. Served by the script itself locally, and published
   as-is to GitHub Pages, where it reads a pre-scraped `listings-<city>.json`
   instead of the API.
+- `history.py` — the site's memory: every published scrape is recorded on the
+  `data` branch, and summaries (`history-<city>.json`) drive the Market tab.
+- `enrich.py` — build-time extras: SSSB floor plans, bike isochrones per
+  campus, Stockholm's road and rail noise, and campus building maps.
+- `og_image.py` — the link-preview picture, drawn with the live count.
+- `worker/` — a Cloudflare Worker that keeps the hourly schedule and runs the
+  optional Discord bot (section 4).
+
+What the page does beyond the map:
+- **Your queues** (Queues tab): queue days, dates, budget and move-in window,
+  kept in your browser only. Every listing then says whether you would lead it
+  today, and queue health warns before the 90-day union cap or the
+  Bostadsförmedlingen fee date, with calendar reminders (.ics). Carry it to
+  another device with a link or QR code.
+- **Marks and compare**: save, mark as applied, or hide any listing; compare
+  up to three side by side, including an **all-in monthly cost** (rent +
+  electricity + insurance, assumptions dated) and its share of a CSN month.
+- **Since your last visit**: what's new and what's gone.
+- **Market tab**: how the market compares with usual, *Pick your 3*, how long
+  until you're likely to get a place, a difficulty map mode, and listings that
+  are back on the market. Each waits until enough history exists, and says how
+  far along it is until then.
+- **On the map**: hover a listing for a bigger card with the floor plan and
+  noise level; shade where your max bike commute reaches; open a campus map and
+  find a room by its code (KTH and SU so far).
+- **Shareable links**: `?listing=<id>` and `?area=<name>` open straight to a
+  listing or area.
 
 
 ## 1. Setup
