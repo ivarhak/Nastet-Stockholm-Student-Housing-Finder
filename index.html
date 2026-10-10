@@ -474,6 +474,11 @@
     filter:saturate(1.25) contrast(1.05) sepia(0.12);
   }
   .leaflet-container{background:var(--bg);font-family:var(--mono);}
+  /* On phones (device pixel ratio like 2.625) tile edges land between device
+     pixels and show as a faint grid; half a pixel of overlap hides the seams. */
+  @media (min-resolution:1.5dppx){
+    .leaflet-tile-container img.leaflet-tile{ width:256.5px !important; height:256.5px !important; }
+  }
   /* Attribution is an obligation, so it stays — but small, muted and out of the
      way. The tile filter doesn't touch it: it lives in the control pane, not the
      tile pane. */
@@ -5591,7 +5596,12 @@ function focusBuilding(i, room, note){
 // halls whose building is well known, and everything else by name, address
 // or kind of place, forgiving accents, case and a typo.
 const CAMPUS_RULES = {
-  KTH: { codeLetters: true, halls: {} },
+  // Kollegiesalen is the assembly hall in the main building, which OSM may
+  // name either way or only give its address (Brinellvägen 8).
+  KTH: { codeLetters: true, halls: {
+    'Kollegiesalen': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i,
+    'Huvudbyggnaden': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i,
+    'Main building': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i } },
   SU: {
     codeLetters: false,
     // Södra huset is houses A–F; room codes there start with the house letter.
@@ -5692,7 +5702,7 @@ function campusSearch(q){
   const fq = fold(raw);
   for (const [hall, re] of Object.entries(rules.halls || {})) {
     if (fold(hall) === fq || (fq.length >= 4 && fold(hall).startsWith(fq))) {
-      B.forEach((b, i) => { if (re.test(bareName(b.name))) add({ kind: 'building', i, label: bldgLabel(b), room: hall, score: 80 }); });
+      B.forEach((b, i) => { if ([bareName(b.name), b.alt, b.addr].some(x => x && re.test(x))) add({ kind: 'building', i, label: bldgLabel(b), room: hall, score: 80 }); });
     }
   }
   // 4. Buildings by name, ref or street address; places by name or by kind.
