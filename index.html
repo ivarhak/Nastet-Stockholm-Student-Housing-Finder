@@ -3530,6 +3530,16 @@ function listingsInArea(name){
 let leafletMap;
 function initMap(){
   leafletMap = L.map('map', { zoomControl:true }).setView(centre(), 12);
+  // Tab reaches every marker, including ones outside the visible map; bring
+  // the focused one into view instead of leaving focus somewhere unseen.
+  leafletMap.getContainer().addEventListener('focusin', e => {
+    const icon = e.target.closest && e.target.closest('.leaflet-marker-icon');
+    if (!icon) return;
+    const m = leafletMap.getContainer().getBoundingClientRect(), r = icon.getBoundingClientRect(), pad = 40;
+    const dx = r.left < m.left + pad ? r.left - m.left - pad : r.right > m.right - pad ? r.right - m.right + pad : 0;
+    const dy = r.top < m.top + pad ? r.top - m.top - pad : r.bottom > m.bottom - pad ? r.bottom - m.bottom + pad : 0;
+    if (dx || dy) leafletMap.panBy([dx, dy], { animate: !matchMedia('(prefers-reduced-motion: reduce)').matches });
+  });
   // Canvas for the grocery dots ONLY, as an explicit per-layer renderer rather
   // than the map-wide `preferCanvas` flag. Global canvas would also move the
   // polylines off SVG, and the dashed area→campus line is coloured by CSS class

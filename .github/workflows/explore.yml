@@ -1,8 +1,10 @@
 name: Explore the live site
 
-# Manual only. Opens nästet.se in a real browser, clicks through it like a
-# visitor, and pushes screenshots plus a report of anything that looks broken
-# to the `explore` branch (replaced each run). See scripts/explore.mjs.
+# Manual only. Opens nästet.se in a real browser and clicks through it like
+# a visitor (scripts/explore.mjs), then pokes every control it can find with
+# odd inputs and a visual audit after each step (scripts/sweep.mjs). Pushes
+# screenshots plus report.md and sweep.md to the `explore` branch (replaced
+# each run).
 on:
   workflow_dispatch:
 
@@ -16,7 +18,7 @@ concurrency:
 jobs:
   explore:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,6 +30,9 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Explore
         run: node scripts/explore.mjs explore-out
+      - name: Sweep (every control, odd inputs, visual audit)
+        if: always()
+        run: node scripts/sweep.mjs explore-out
       - name: Publish the report to the explore branch
         if: always()
         run: |

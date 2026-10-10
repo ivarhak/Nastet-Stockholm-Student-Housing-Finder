@@ -94,7 +94,7 @@ async function step(label, fn) {
   try { await fn(); } catch (e) { find('high', label, 'Flow broke', e.stack?.split('\n').slice(0, 3).join(' ') || e.message); }
 }
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROME || undefined });
 
 // ── Data checks on what's published ───────────────────────────────────────
 await step('data', async () => {
