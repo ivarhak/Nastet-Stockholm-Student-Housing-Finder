@@ -160,7 +160,7 @@ async function audit(page, label) {
 
 const rows = page => page.locator('#listings .listing-row').count();
 const markers = page => page.locator('.leaflet-marker-icon').count();
-const resetMap = page => page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+const resetMap = page => page.evaluate(() => { leafletMap.setView(centre(), 12, { animate: false }); });
 const visible = async (page, sel) => (await page.locator(sel).count()) > 0 && page.locator(sel).first().isVisible();
 
 async function load(page, url) {
@@ -389,10 +389,10 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
 
   await step('map extremes', async () => {
     for (const z of [18, 9, 5, 14]) {
-      await page.evaluate(z => leafletMap.setZoom(z, { animate: false }), z); await settle(page, 700);
+      await page.evaluate(z => { leafletMap.setZoom(z, { animate: false }); }, z); await settle(page, 700);
       note(`zoom ${z}: ${await markers(page)} markers`);
     }
-    await page.evaluate(() => leafletMap.panBy([3000, 3000], { animate: false })); await settle(page, 600);
+    await page.evaluate(() => { leafletMap.panBy([3000, 3000], { animate: false }); }); await settle(page, 600);
     await audit(page, 'map panned away'); await shot(page, 'map-panned-away');
     await resetMap(page);
   });
@@ -510,12 +510,13 @@ for (const city of ['goteborg', 'lund']) {
   watch(page, city);
   await step(city, async () => {
     await load(page, `${SITE}/#${city}`);
+    note(`${city} on load: ${await rows(page)} rows, campus ${await page.locator('#schoolSelect').inputValue()}, commute cap "${await page.locator('#maxCommuteLabel').innerText().catch(() => '?')}", panel "${(await page.locator('#listingCount').innerText().catch(() => '')).replace(/\s+/g, ' ').slice(0, 120)}"`);
     await audit(page, `${city} start`);
     const schools = await page.locator('#schoolSelect option').evaluateAll(o => o.map(x => x.value));
     note(`${city} campuses: ${schools.join(', ')}; campus finder ${await visible(page, '#campusBtn') ? 'shown' : 'hidden'}`);
     for (const s of schools.slice(0, 4)) {
       await page.selectOption('#schoolSelect', s); await settle(page, 900);
-      note(`${city} ${s}: ${await rows(page)} rows`);
+      note(`${city} ${s}: ${await rows(page)} rows, commute cap "${await page.locator('#maxCommuteLabel').innerText().catch(() => '?')}", panel "${(await page.locator('#listingCount').innerText().catch(() => '')).replace(/\s+/g, ' ').slice(0, 120)}"`);
       await audit(page, `${city} ${s}`);
     }
     await page.click('#tabMarket'); await settle(page); await audit(page, `${city} market`);
@@ -534,10 +535,11 @@ for (const city of ['goteborg', 'lund']) {
   await step('listings JSON fails', async () => {
     await page.route(/listings-.*\.json|\/api\/listings/, r => r.abort());
     await page.goto(`${SITE}/#stockholm`, { waitUntil: 'load', timeout: 60000 }); await settle(page, 4000);
-    const txt = (await page.locator('#sidebar').innerText()).replace(/\s+/g, ' ').slice(0, 300);
-    note(`with listings JSON blocked, sidebar says: "${txt}"`);
+    const txt = (await page.locator('body').innerText()).replace(/\s+/g, ' ').slice(0, 600);
+    note(`with listings JSON blocked, the page says: "${txt.slice(0, 300)}"; ${await rows(page)} rows`);
+    if (await rows(page)) find('high', 'failure modes', 'Listings shown although none could be loaded', txt.slice(0, 200));
     await shot(page, 'no-data');
-    if (!/could ?n.t|failed|error|try again|offline|kunde inte|fel/i.test(txt)) find('medium', 'failure modes', 'No error message when the listings can’t load', txt);
+    if (!/could ?n.?t|failed|error|try again|offline|kunde inte|fel/i.test(txt)) find('medium', 'failure modes', 'No error message when the listings can’t load', txt);
     await page.unroute(/listings-.*\.json|\/api\/listings/);
   });
   await step('cities.json fails', async () => {

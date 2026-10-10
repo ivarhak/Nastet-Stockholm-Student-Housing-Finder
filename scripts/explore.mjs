@@ -155,7 +155,7 @@ for (const theme of ['dark', 'light']) {
     note(`area roundels at start: ${await page.locator('.area-roundel').count()}`);
     const picks = (await visibleMarkers(page, '.area-roundel', true)).map(x => x.label.split(' —')[0]).slice(0, 4);
     for (const name of picks) {
-      await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+      await page.evaluate(() => { leafletMap.setView(centre(), 12, { animate: false }); });
       await settle(page, 700);
       const cur = await visibleMarkers(page, '.area-roundel', true);
       const hit = cur.find(x => x.label.startsWith(name + ' —'));
@@ -178,7 +178,7 @@ for (const theme of ['dark', 'light']) {
   await step('hover cards', async () => {
     // Back to the city view: after selecting an area the map stays zoomed in,
     // and most markers are off-screen.
-    await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+    await page.evaluate(() => { leafletMap.setView(centre(), 12, { animate: false }); });
     await settle(page, 800);
     const targets = ['.area-roundel', '.bf-pin'];
     for (const sel of targets) {
@@ -348,7 +348,7 @@ for (const [city, lang] of [['goteborg', 'en'], ['lund', 'en'], ['stockholm', 's
     await axe(page, L);
     const rv = await visibleMarkers(page, '.area-roundel', true);
     if (rv.length) { await page.touchscreen.tap(rv[0].x, rv[0].y); await settle(page, 1300); await shot(page, 'phone-area'); }
-    await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+    await page.evaluate(() => { leafletMap.setView(centre(), 12, { animate: false }); });
     await settle(page, 700);
     const pv = await visibleMarkers(page, '.bf-pin');
     if (pv.length) { await page.touchscreen.tap(pv[0].x, pv[0].y); await settle(page, 600); await shot(page, 'phone-pin');

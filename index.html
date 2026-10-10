@@ -1179,6 +1179,14 @@
   }
   .city-option .city-name{ font-family:var(--figure); font-stretch:118%; font-weight:800; font-size:21px; }
   .city-option .city-meta{ font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; margin-top:5px; }
+  /* Narrow phones: the meta line ("126 listings · SSSB + Bostadsförmedlingen")
+     ran off a 320px screen beside the name; it gets its own line there. */
+  @media (max-width:480px){
+    #cityPicker{ padding:12px; }
+    .city-card{ padding:22px 18px 18px; }
+    .city-option{ flex-wrap:wrap; row-gap:0; }
+    .city-option .city-meta{ order:3; flex-basis:100%; }
+  }
   .wip-tag{ border-radius:0; background:transparent; border:1px solid var(--ochre); color:var(--accent-ink); }
 
   /* Map furniture */
@@ -1516,7 +1524,7 @@
   /* At 45 min the area covers most of the view, so the fill has to show on
      its own, not only the edge. */
   .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.2; stroke:#3d7a26; stroke-width:2.5; stroke-dasharray:6 4; }
-  .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; }
+  .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; line-height:1.5; }
   #campusPanel{
     position:absolute; z-index:1100; top:12px; right:12px; width:300px; max-width:calc(100% - 24px);
     max-height:calc(100% - 24px); overflow:auto; background:var(--panel); border:1px solid var(--border);
@@ -2127,6 +2135,8 @@ function esc(v){
 }
 
 const I18N = { sv: {
+  profile_noqueue: 'Hyresvärdarna här publicerar inga kötider per bostad, så det finns inga ködagar att följa — din budget och dina inflyttningsdatum filtrerar ändå listan.',
+  load_failed: 'Kunde inte hämta bostäderna — kolla anslutningen och ladda om sidan.',
   city_q: 'Vilken stad?',
   city_help: 'Välj var du pluggar. Du kan byta när som helst i toppmenyn.',
   change_city: 'Byt stad',
@@ -2930,9 +2940,17 @@ async function loadData(triggerRefresh){
       currentData = await res.json();
       dataSource = 'static';
     } catch (e2) {
-      currentData = DEMO_DATA;
-      dataSource = 'demo';
-      showBanner('Showing example data — start the local server (python monitor.py) and open http://localhost:5055 for live listings.');
+      if (HAS_API) {
+        currentData = DEMO_DATA;
+        dataSource = 'demo';
+        showBanner('Showing example data — start the local server (python monitor.py) and open http://localhost:5055 for live listings.');
+      } else {
+        // On the public site, made-up listings would pass for real ones. Say
+        // what happened and show nothing (or keep the city already on screen).
+        if (!currentData || currentData.demo) currentData = { ...DEMO_DATA, demo: false, generated_at: null, areas: {}, listings: [] };
+        dataSource = 'static';
+        showBanner(t('load_failed', 'Couldn’t load the listings — check your connection and reload the page.'));
+      }
     }
   }
   lastGeneratedAt = currentData.generated_at;
@@ -3269,6 +3287,21 @@ function openCityPicker(){
   const first = box.querySelector('button');
   if (first) first.focus();
 }
+
+// Escape or a click outside the card closes the picker — but only once a city
+// is showing behind it; on a first visit it's the way in.
+function closeCityPicker(){
+  if (!currentData) return;
+  document.getElementById('cityPicker').hidden = true;
+  const btn = document.getElementById('cityBtn');
+  if (btn && !btn.hidden) btn.focus();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('cityPicker').hidden) closeCityPicker();
+});
+document.getElementById('cityPicker').addEventListener('click', e => {
+  if (e.target.id === 'cityPicker') closeCityPicker();
+});
 
 function selectCity(id){
   document.getElementById('cityPicker').hidden = true;
@@ -4814,9 +4847,13 @@ function renderProfile(){
   if (!el) return;
   const now = profileDaysNow();
   const bfDays = profile.bf_since ? Math.max(0, daysBetween(profile.bf_since, todayISO())) : null;
-  const summary = [
-    now != null ? `SSSB <b>${num(now)}</b> ${t('queue_days_f', 'queue days')}` : null,
-    bfDays != null ? `${t('bf_short', 'Bostadsförmedlingen')} <b>${num(bfDays)}</b> ${t('days_word', 'days')}` : null,
+  // The queue fields belong to Stockholm's landlords; elsewhere they'd ask for
+  // a queue the city doesn't have. What's saved stays saved for the way back.
+  const prov = new Set(((cityIndex.cities[currentCity] || {}).providers) || []);
+  const hasS = prov.has('SSSB'), hasB = prov.has('Bostadsförmedlingen');
+  const summary = !(hasS || hasB) ? '' : [
+    now != null && hasS ? `SSSB <b>${num(now)}</b> ${t('queue_days_f', 'queue days')}` : null,
+    bfDays != null && hasB ? `${t('bf_short', 'Bostadsförmedlingen')} <b>${num(bfDays)}</b> ${t('days_word', 'days')}` : null,
   ].filter(Boolean).join(' · ');
   const uncapped = profile.sssb_days == null ? null
     : profile.sssb_days + Math.max(0, daysBetween(profile.sssb_days_on || todayISO(), todayISO()));
@@ -4824,18 +4861,19 @@ function renderProfile(){
     ? `<p class="kv warn">${t('cap_note', 'Capped at 90 days until you join a student union — SSSB stops counting there.')}</p>` : '';
   el.innerHTML = `
     <h3>${t('profile_h', 'Your queues')}</h3>
-    <p class="covers">${summary || t('profile_empty', 'Add your queue days and every listing shows whether you would lead it today.')}</p>
+    <p class="covers">${summary || (hasS ? t('profile_empty', 'Add your queue days and every listing shows whether you would lead it today.')
+      : t('profile_noqueue', 'Landlords here publish no queue figures per listing, so there are no queue days to track — your budget and move-in dates still filter the list.'))}</p>
     ${capNote}
     ${healthHtml()}
     <div class="profile-grid">
-      <label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
+      ${hasS ? `<label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
         <input type="number" id="pfDays" min="0" max="20000" step="1" inputmode="numeric" value="${now ?? ''}"></label>
       <label class="watch-field"><span>${t('pf_reg', 'SSSB registration date')}</span>
         <input type="date" id="pfReg" value="${profile.sssb_reg || ''}"></label>
       <label class="watch-field pf-check"><input type="checkbox" id="pfUnion" ${profile.union === false ? '' : 'checked'}>
-        <span>${t('pf_union', 'Member of a student union')}</span></label>
-      <label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
-        <input type="date" id="pfBf" value="${profile.bf_since || ''}"></label>
+        <span>${t('pf_union', 'Member of a student union')}</span></label>` : ''}
+      ${hasB ? `<label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
+        <input type="date" id="pfBf" value="${profile.bf_since || ''}"></label>` : ''}
       <label class="watch-field"><span>${t('pf_budget', 'Monthly housing budget (kr)')}</span>
         <input type="number" id="pfBudget" min="0" max="50000" step="100" inputmode="numeric" value="${profile.budget ?? ''}"></label>
       <label class="watch-field"><span>${t('pf_from', 'Move in from')}</span>
@@ -4849,7 +4887,7 @@ function renderProfile(){
     </div>
     <div id="profileShareOut" hidden></div>
     <p class="kv">${t('pf_privacy', 'Saved only in this browser. Nothing here is sent anywhere.')}</p>`;
-  const bind = (id, fn) => document.getElementById(id).addEventListener('change', e => { fn(e.target); renderProfile(); renderSidebar(); });
+  const bind = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('change', e => { fn(e.target); renderProfile(); renderSidebar(); }); };
   const intOrNull = v => v === '' ? undefined : Math.round(Number(v));
   bind('pfDays', i => saveProfile({ sssb_days: intOrNull(i.value), sssb_days_on: todayISO() }));
   bind('pfReg', i => saveProfile({ sssb_reg: i.value || undefined }));
@@ -5795,6 +5833,9 @@ function renderSidebar(){
   document.getElementById('queues').style.display = currentTab === 'queues' ? 'block' : 'none';
   document.getElementById('market').style.display = currentTab === 'market' ? 'block' : 'none';
   syncDiffChip();
+  // An area clicked while another city was still loading names an area the
+  // new city doesn't have.
+  if (selectedArea && !(currentData && currentData.areas[selectedArea])) selectedArea = null;
   if (currentTab === 'market') renderMarket();
   if (currentTab !== 'listings') return;
 
