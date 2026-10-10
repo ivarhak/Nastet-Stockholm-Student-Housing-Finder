@@ -33,20 +33,26 @@ if cache.exists():
 else:
     print("OSM: no campus cache")
 
-# MazeMap: public search used by its web client. Find the campus ids first.
-for q in ["KTH", "Stockholms universitet", "Södra huset"]:
-    show(f"mazemap campus '{q}'", "https://api.mazemap.com/search/equery/",
-         params={"q": q, "rows": 5, "start": 0, "withpois": "true", "withbuilding": "true",
-                 "withtype": "true", "withcampus": "true"})
-show("mazemap campus list", "https://api.mazemap.com/api/campus/", params={"srid": 4326})
-for q in ["D2", "Q31", "E1"]:
-    show(f"mazemap room '{q}'", "https://api.mazemap.com/search/equery/",
-         params={"q": q, "rows": 5, "start": 0, "withpois": "true", "withbuilding": "true",
-                 "withtype": "true", "withcampus": "true", "campusid": 1})
-
-# KTH's own places API — paths seen in KTH's public pages; any that answer win.
-for path in ["https://api.kth.se/api/places/v3/room/name/D2",
-             "https://api.kth.se/api/places/v3/buildings",
-             "https://www.kth.se/api/places/v3/room/name/D2",
-             "https://www.kth.se/places/room/name/D2"]:
-    show("kth " + path.split("/api/")[-1] if "/api/" in path else "kth page", path)
+# KTH's main building (Kollegiesalen) is missing from the campus data: what
+# does OSM hold around it, and with which tags?
+sys.path.insert(0, ".")
+from monitor import OVERPASS_URLS  # noqa: E402
+q = """[out:json][timeout:60];
+(way["building"](around:180,59.3472,18.0727); relation["building"](around:180,59.3472,18.0727););
+out tags center;"""
+for url in OVERPASS_URLS:
+    try:
+        r = requests.post(url, data={"data": q}, headers=UA, timeout=90)
+        els = r.json().get("elements", [])
+        print(f"MAIN via {url}: {len(els)} buildings")
+        for el in els:
+            t = el.get("tags", {})
+            keep = {k: v for k, v in t.items() if k.startswith(("name", "ref", "addr", "building", "alt_name", "loc_name", "amenity", "operator", "short_name"))}
+            print(f"MAIN {el['type']}/{el['id']} {el.get('center')} {keep}")
+        break
+    except Exception as e:  # noqa: BLE001
+        print(f"MAIN via {url}: {type(e).__name__}: {e}")
+if cache.exists():
+    rec = json.loads(cache.read_text()).get("KTH", {})
+    for o in rec.get("outline", []):
+        print(f"OUTLINE KTH: {len(o)} pts, lat {min(p[0] for p in o):.4f}-{max(p[0] for p in o):.4f}, lon {min(p[1] for p in o):.4f}-{max(p[1] for p in o):.4f}")
