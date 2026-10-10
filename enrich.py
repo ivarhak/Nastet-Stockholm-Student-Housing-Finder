@@ -465,6 +465,29 @@ CAMPUSES = {
 }
 CAMPUS_CACHE = DATA / "campus_cache.json"
 CAMPUS_MAX_AGE_DAYS = 30
+CAMPUS_VERSION = 2   # 2: clipped to the university's own outline
+# The query box is a rectangle and catches the neighbourhood too — churches,
+# schools, every entrance in Östermalm. OSM maps each campus as an
+# amenity=university area; these pick out the right one by name, and only
+# what lies inside it is kept.
+CAMPUS_NAMES = {
+    "KTH": re.compile(r"\bKTH\b|Kungliga Tekniska", re.I),
+    "SU": re.compile(r"Stockholms universitet|Stockholm University|Frescati", re.I),
+}
+
+
+def _inside(pt, poly) -> bool:
+    """Ray casting; pt and poly vertices are [lat, lon]."""
+    y, x = pt
+    inside = False
+    j = len(poly) - 1
+    for i in range(len(poly)):
+        yi, xi = poly[i]
+        yj, xj = poly[j]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / ((yj - yi) or 1e-12) + xi:
+            inside = not inside
+        j = i
+    return inside
 
 
 def _ring(geom):
@@ -477,10 +500,31 @@ def _center(pts):
     return [round(sum(p[0] for p in pts) / len(pts), 6), round(sum(p[1] for p in pts) / len(pts), 6)] if pts else None
 
 
-def campus_from_elements(elements: list) -> dict:
-    buildings, rooms, pois = [], [], []
+def campus_outlines(elements: list, name_re) -> list:
+    """The campus's own amenity=university outline(s), full resolution."""
+    out = []
     for e in elements:
         tags = e.get("tags") or {}
+        if tags.get("amenity") != "university" or not name_re.search(
+                " ".join(filter(None, [tags.get("name"), tags.get("alt_name"), tags.get("official_name"), tags.get("short_name")]))):
+            continue
+        if e["type"] == "way" and e.get("geometry"):
+            out.append([[p["lat"], p["lon"]] for p in e["geometry"]])
+        elif e["type"] == "relation":
+            for m in e.get("members", []):
+                if m.get("role") == "outer" and m.get("geometry"):
+                    out.append([[p["lat"], p["lon"]] for p in m["geometry"]])
+    return out
+
+
+def campus_from_elements(elements: list, name_re=None) -> dict:
+    buildings, rooms, pois = [], [], []
+    outlines = campus_outlines(elements, name_re) if name_re else []
+    on_campus = (lambda pt: any(_inside(pt, o) for o in outlines)) if outlines else (lambda pt: True)
+    for e in elements:
+        tags = e.get("tags") or {}
+        if tags.get("amenity") == "university":
+            continue
         if e["type"] == "way" and e.get("geometry"):
             pts = _ring(e["geometry"])
         elif e["type"] == "relation":
@@ -489,7 +533,7 @@ def campus_from_elements(elements: list) -> dict:
         else:
             pts = []
         at = [round(e["lat"], 6), round(e["lon"], 6)] if "lat" in e else _center(pts)
-        if not at:
+        if not at or not on_campus(at):
             continue
         if tags.get("building") and pts:
             name, ref = tags.get("name"), tags.get("ref") or tags.get("building:ref")
@@ -507,7 +551,8 @@ def campus_from_elements(elements: list) -> dict:
             if kind == "bicycle_parking" and not tags.get("name"):
                 continue
             pois.append({"kind": kind, "name": tags.get("name") or tags.get("ref"), "at": at})
-    return {"buildings": buildings, "rooms": rooms, "pois": pois}
+    return {"buildings": buildings, "rooms": rooms, "pois": pois,
+            "outline": [[[round(y, 5), round(x, 5)] for y, x in o] for o in outlines]}
 
 
 def enrich_campus(site: Path, payloads: dict) -> None:
@@ -517,7 +562,8 @@ def enrich_campus(site: Path, payloads: dict) -> None:
         if city not in payloads:
             continue
         rec = cache.get(sid)
-        if not rec or rec.get("at", "") < (now() - timedelta(days=CAMPUS_MAX_AGE_DAYS)).isoformat():
+        if not rec or rec.get("v") != CAMPUS_VERSION \
+                or rec.get("at", "") < (now() - timedelta(days=CAMPUS_MAX_AGE_DAYS)).isoformat():
             bbox = f"{s},{w},{n},{e}"
             # Only what a search can use: buildings with a name or ref (all
             # buildings with geometry made every mirror time out), rooms with a
@@ -530,6 +576,8 @@ def enrich_campus(site: Path, payloads: dict) -> None:
   nwr["indoor"="room"]["ref"];
   node["entrance"];
   node["amenity"~"^(library|cafe|restaurant|fast_food|toilets)$"];
+  way["amenity"="university"];
+  relation["amenity"="university"];
 );
 out geom qt;"""
             attempts = [u for u in OVERPASS_URLS] * 2
@@ -540,8 +588,10 @@ out geom qt;"""
                     r = requests.post(url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=90)
                     if not r.ok:
                         raise RuntimeError(f"HTTP {r.status_code}: {r.text[:200]!r}")
-                    data = campus_from_elements(r.json().get("elements", []))
-                    rec = {"at": now().isoformat(timespec="seconds"), **data}
+                    data = campus_from_elements(r.json().get("elements", []), CAMPUS_NAMES.get(sid))
+                    rec = {"at": now().isoformat(timespec="seconds"), "v": CAMPUS_VERSION, **data}
+                    print(f"    campus outline: {len(data['outline'])} polygon(s)"
+                          f"{'' if data['outline'] else ' — none found, keeping the whole box'}")
                     cache[sid] = rec
                     refs = sorted({b["ref"] for b in data["buildings"] if b.get("ref")})[:40]
                     names = sorted({b["name"] for b in data["buildings"] if b.get("name")})[:25]
@@ -553,8 +603,11 @@ out geom qt;"""
                 except Exception as ex:  # noqa: BLE001
                     print(f"  campus {sid}: {url} → {type(ex).__name__}: {ex}")
         if rec and rec.get("buildings"):
-            out = {k: rec[k] for k in ("buildings", "rooms", "pois")}
-            out["bbox"] = [[s, w], [n, e]]
+            out = {k: rec.get(k, []) for k in ("buildings", "rooms", "pois", "outline")}
+            # Frame the campus itself when there's an outline, not the query box.
+            pts = [p for o in out["outline"] for p in o] or [p for b in out["buildings"] for p in b["poly"]]
+            out["bbox"] = ([[min(p[0] for p in pts), min(p[1] for p in pts)],
+                            [max(p[0] for p in pts), max(p[1] for p in pts)]] if pts else [[s, w], [n, e]])
             (site / f"campus-{sid}.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")),
                                                      encoding="utf-8")
             payloads[city].setdefault("campus_maps", {})[sid] = f"campus-{sid}.json"

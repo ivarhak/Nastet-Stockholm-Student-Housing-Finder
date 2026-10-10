@@ -488,7 +488,8 @@
     color:var(--dim);
     padding:1px 6px;
     border-radius:2px 0 0 0;
-    opacity:0.85;
+    /* Solid, not translucent: at 0.85 the light map showed through and the
+       text fell to 3.9:1 in the light theme. */
   }
   .leaflet-container .leaflet-control-attribution a{color:var(--teal);text-decoration:none;}
 
@@ -705,8 +706,15 @@
   .listing-dot{
     border-radius:50%;
     border:2px solid var(--pin-ring);
-    box-sizing:content-box;
+    /* border-box, so the drawn dot is exactly the icon box Leaflet centres on
+       the building. content-box made it 4px wider than that box: the dot sat
+       2px off its point, and the focus ring around the box didn't line up
+       with the dot's own ring. */
+    box-sizing:border-box;
   }
+  /* A clicked or tabbed-to marker: one ring, concentric with the dot. */
+  .leaflet-marker-icon:focus{ outline:none; }
+  .leaflet-marker-icon:focus-visible > div{ outline:2px solid var(--accent-ink); outline-offset:2px; }
   /* A building holding more than one listing carries the count, like the area
      roundel it came out of. */
   .listing-dot.many{
@@ -1521,9 +1529,10 @@
   .cm-hint{ font-size:11.5px; line-height:1.5; color:var(--dim); padding:6px 0; border:none !important; }
   #campusNote{ margin-top:8px; padding:8px 9px; border:1px solid var(--accent-ink); font-size:12px; line-height:1.5; color:var(--ink); }
   .cm-foot{ margin:10px 0 0; font:10px/1.5 var(--mono); color:var(--faint); }
+  .leaflet-overlay-pane path.campus-outline{ fill:var(--slate); fill-opacity:0.05; stroke:var(--slate); stroke-width:1.5; stroke-dasharray:6 4; }
   .leaflet-overlay-pane path.campus-bldg{ fill:var(--slate); fill-opacity:0.18; stroke:var(--slate); stroke-width:1; }
   .leaflet-overlay-pane path.campus-bldg.active{ fill:var(--ochre); fill-opacity:0.45; stroke:var(--ochre); stroke-width:2.5; }
-  .leaflet-tooltip.campus-tip{ background:transparent; border:none; box-shadow:none; font:700 11px/1 var(--mono); color:#1a2a33; text-shadow:0 0 3px #fff, 0 0 3px #fff; }
+  .leaflet-tooltip.campus-tip{ background:rgba(255,255,255,0.88); border:none; box-shadow:none; padding:2px 4px; font:700 11px/1 var(--mono); color:#1a2a33; }
   .leaflet-tooltip.campus-tip::before{ display:none; }
   .campus-poi{ width:9px; height:9px; border-radius:50%; border:1.5px solid var(--pin-ring); background:var(--leaf); }
   .campus-poi.poi-entrance{ background:var(--ochre); border-radius:1px; }
@@ -3710,6 +3719,10 @@ const AREA_SPLIT_ZOOM = 14;
 function areaSplits(name){
   const a = currentData.areas[name];
   if (!a || !a.coords) return false;
+  // A selected area always opens into its buildings, however close together
+  // they are — clicking Jerum should show Jerum's listings, not the same
+  // roundel again. The spread rule below is only for splitting on zoom.
+  if (selectedArea === name) return listingsInArea(name).some(l => l.coords);
   if ((a.spread_m || 0) < AREA_SPLIT_MIN_M) return false;
   // Needs at least two placed listings, or there's nothing to spread apart.
   if (!(a.located_listings > 1)) return false;
@@ -3765,7 +3778,8 @@ function renderMap(){
         });
         buildings.forEach(({ at, rows }, address) => {
           const many = rows.length > 1;
-          const size = many ? 20 : 11;
+          // Border included (box-sizing:border-box): 15 = the old 11 + 2×2 ring.
+          const size = many ? 24 : 15;
           const icon = L.divIcon({
             className: '',
             html: `<div class="listing-dot${many ? ' many' : ''}" style="width:${size}px;height:${size}px;`
@@ -3874,11 +3888,17 @@ function selectArea(name){
     // When the area dissolves, frame its actual buildings rather than dropping
     // to a fixed zoom: at 13 a kilometre-wide area packs two dozen overlapping
     // dots into ~150px, which defeats the point of splitting it up.
+    // Never zooms out: selecting an area you're already looking at closely
+    // used to fly back to zoom 13.
     const spots = listingsInArea(name).map(l => l.coords).filter(Boolean);
+    const now = leafletMap.getZoom();
     if (areaSplits(name) && spots.length > 1) {
-      leafletMap.flyToBounds(spots, { padding: [70, 70], maxZoom: 16, duration: 0.6 });
+      const fit = leafletMap.getBoundsZoom(L.latLngBounds(spots).pad(0.15));
+      leafletMap.flyToBounds(spots, { padding: [70, 70], maxZoom: Math.max(Math.min(fit, 17), now), duration: 0.6 });
+    } else if (spots.length === 1) {
+      leafletMap.flyTo(spots[0], Math.max(now, 16), { duration: 0.6 });
     } else {
-      leafletMap.flyTo(area.coords, 13, { duration:0.6 });
+      leafletMap.flyTo(area.coords, Math.max(now, 13), { duration:0.6 });
     }
   }
   // Same reason as clearSelection(): this can dissolve the area's roundel. It
@@ -4126,7 +4146,9 @@ function rowHtml(l, newIds, index = 0, featured = false){
   // shows in the area's gauges, where it's labelled as transit.
   const commute = cm && typeof cm.bike_min === 'number' ? bikeLabel(cm) : '';
   const areaRow = isAreaProvider(l.provider);
-  const title = softBreak(areaRow ? l.area : (l.address || l.area));
+  // Inside an open area every row would say the area's name; the address is
+  // what tells them apart there.
+  const title = softBreak(areaRow && !(selectedArea && l.address) ? l.area : (l.address || l.area));
   // BF ads lead with their area (their title is the street address); SSSB rows
   // lead with the area as the title, so they don't repeat it. Both then show the
   // apartment type where the source states one.
@@ -5428,6 +5450,7 @@ async function syncIsochrones(){
 // building D, "Q31" in building Q), and rooms OSM has mapped indoors match
 // exactly. It finds the building, not the room inside it — the signs take
 // over from the door.
+let campusZoomHooked = false;
 let campusMode = false, campusData = null, campusFor = null, campusLayer = null, campusActive = null;
 function campusFile(){
   const maps = currentData && currentData.campus_maps;
@@ -5449,6 +5472,12 @@ async function openCampus(){
   if (!campusData) return;
   campusMode = true;
   document.body.classList.add('campus-mode');
+  // Entrances appear and disappear with zoom (see drawCampus); registered on
+  // first use because the map doesn't exist yet when this file is parsed.
+  if (!campusZoomHooked) {
+    campusZoomHooked = true;
+    leafletMap.on('zoomend', () => { if (campusMode && campusData) drawCampus(); });
+  }
   drawCampus();
   const panel = document.getElementById('campusPanel');
   panel.hidden = false;
@@ -5481,16 +5510,30 @@ function bldgLabel(b){
   // Other refs here are property numbers ("43:1"), not something people say.
   return n || b.addr || null;
 }
+// Entrances are hundreds of dots; they only mean something up close, or
+// around the building you've just looked up.
+const ENTRANCE_ZOOM = 17;
+function nearActive(at){
+  if (campusActive == null) return false;
+  const b = campusData.buildings[campusActive];
+  const lats = b.poly.map(p => p[0]), lons = b.poly.map(p => p[1]);
+  const pad = 0.0003;   // ~30 m
+  return at[0] >= Math.min(...lats) - pad && at[0] <= Math.max(...lats) + pad
+      && at[1] >= Math.min(...lons) - pad * 2 && at[1] <= Math.max(...lons) + pad * 2;
+}
 function drawCampus(){
   if (campusLayer) leafletMap.removeLayer(campusLayer);
   campusLayer = L.layerGroup().addTo(leafletMap);
+  (campusData.outline || []).forEach(o => L.polygon(o, { className: 'campus-outline', interactive: false }).addTo(campusLayer));
   campusData.buildings.forEach((b, i) => {
     const poly = L.polygon(b.poly, { className: 'campus-bldg' + (campusActive === i ? ' active' : '') }).addTo(campusLayer);
     poly.bindTooltip(esc(bldgLabel(b)), { direction: 'center', className: 'campus-tip', permanent: !!b.ref && b.ref.length <= 3, opacity: 0.95 });
     poly.on('click', () => focusBuilding(i));
   });
   const icon = k => L.divIcon({ className: '', html: `<div class="campus-poi poi-${k}"></div>`, iconSize: [9, 9] });
+  const close = leafletMap.getZoom() >= ENTRANCE_ZOOM;
   campusData.pois.forEach(p => {
+    if (p.kind === 'entrance' && !close && !nearActive(p.at)) return;
     const m = L.marker(p.at, { icon: icon(p.kind), interactive: true }).addTo(campusLayer);
     const label = { entrance: t('cm_entrance', 'Entrance'), library: t('cm_library', 'Library'), cafe: t('cm_cafe', 'Café'),
                     restaurant: t('cm_restaurant', 'Restaurant'), fast_food: t('cm_restaurant', 'Restaurant'),

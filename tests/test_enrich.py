@@ -32,6 +32,19 @@ class EnrichTest(unittest.TestCase):
         self.assertEqual(docs[0][1], "//minasidor.sssb.se/spin/?id=207375&idHash=ASkuk3mI9-o")
         self.assertEqual(len(docs), 2)
 
+    def test_campus_clipped_to_university_outline(self):
+        sq = lambda a, b: [{"lat": a, "lon": a}, {"lat": a, "lon": b}, {"lat": b, "lon": b}, {"lat": b, "lon": a}, {"lat": a, "lon": a}]
+        els = [{"type": "way", "tags": {"amenity": "university", "name": "Kungliga Tekniska högskolan"}, "geometry": sq(0, 1)},
+               {"type": "way", "tags": {"amenity": "university", "name": "Kungliga Musikhögskolan"}, "geometry": sq(2, 3)},
+               {"type": "way", "tags": {"building": "yes", "name": "KTH: D"}, "geometry": sq(.4, .5)},
+               {"type": "way", "tags": {"building": "church", "name": "Engelbrektskyrkan"}, "geometry": sq(2.2, 2.3)},
+               {"type": "node", "lat": .2, "lon": .2, "tags": {"entrance": "main"}},
+               {"type": "node", "lat": 5, "lon": 5, "tags": {"entrance": "yes"}}]
+        d = enrich.campus_from_elements(els, enrich.CAMPUS_NAMES["KTH"])
+        self.assertEqual([b["name"] for b in d["buildings"]], ["KTH: D"])
+        self.assertEqual(len(d["pois"]), 1)
+        self.assertEqual(len(d["outline"]), 1)
+
     def test_db_from_attrs(self):
         self.assertEqual(enrich.db_from_attrs({"OBJECTID": 7, "dB_intervall": "55-60 dBA"}), 55.0)
         self.assertEqual(enrich.db_from_attrs({"LEQ24": 62}), 62.0)
