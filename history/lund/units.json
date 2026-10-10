@@ -1,8 +1,20 @@
 {
+ "AF Bostäder:Kämnärsvägen 104 D:10.2:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-11753"
+  }
+ ],
  "AF Bostäder:Kämnärsvägen 1:23.0:1": [
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-13577"
+  }
+ ],
+ "AF Bostäder:Kämnärsvägen 20 B:33.0:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-13924"
   }
  ],
  "AF Bostäder:Kämnärsvägen 41 F:64.5:3": [
@@ -83,6 +95,12 @@
    "id": "af-14322"
   }
  ],
+ "AF Bostäder:Kämnärsvägen 61:60.0:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-14300"
+  }
+ ],
  "AF Bostäder:Kämnärsvägen 63:22.0:5": [
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
@@ -101,6 +119,8 @@
    "id": "af-14352"
   },
   {
+   "closed_at": "2026-10-10T01:19:33.654888+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-14356"
   }
@@ -161,6 +181,8 @@
  ],
  "AF Bostäder:Kämnärsvägen 65:24.0:4": [
   {
+   "closed_at": "2026-10-10T01:19:33.654888+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-14445"
   }
@@ -193,6 +215,12 @@
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-14442"
+  }
+ ],
+ "AF Bostäder:Kämnärsvägen 66:22.0:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-12879"
   }
  ],
  "AF Bostäder:Kämnärsvägen 67:26.0:6": [
@@ -231,14 +259,40 @@
    "id": "af-14448"
   }
  ],
+ "AF Bostäder:Kämnärsvägen 84 E:72.0:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-13298"
+  }
+ ],
  "AF Bostäder:Kämnärsvägen 86:25.0:2": [
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-13358"
   }
  ],
+ "AF Bostäder:Magistratsvägen 55 B:20.2:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-5989"
+  }
+ ],
+ "AF Bostäder:Magistratsvägen 55 C:20.2:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-6095"
+  }
+ ],
+ "AF Bostäder:Magistratsvägen 55 D:20.8:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-6529"
+  }
+ ],
  "AF Bostäder:Magistratsvägen 55 L:19.8:3": [
   {
+   "closed_at": "2026-10-10T01:19:33.654888+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-4983"
   }
@@ -249,10 +303,34 @@
    "id": "af-3230"
   }
  ],
+ "AF Bostäder:Magistratsvägen 55 X:19.5:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-5212"
+  }
+ ],
  "AF Bostäder:Magistratsvägen 57 N:25.0:2": [
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-1876"
+  }
+ ],
+ "AF Bostäder:Råbyvägen 17:26.5:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-12190"
+  }
+ ],
+ "AF Bostäder:Spolegatan 13:46.3:6": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-3478"
+  }
+ ],
+ "AF Bostäder:Södra Esplanaden 30 A:17.4:3": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-6684"
   }
  ],
  "AF Bostäder:Södra Esplanaden 30 B:18.5:4": [
@@ -295,10 +373,28 @@
    "id": "af-5954"
   }
  ],
+ "AF Bostäder:Ulrikedalsvägen 28 B:17.3:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-5343"
+  }
+ ],
+ "AF Bostäder:Ulrikedalsvägen 30 A:17.2:2": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-5384"
+  }
+ ],
  "AF Bostäder:Utbrytningsgränden 1 B:22.0:2": [
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-8562"
+  }
+ ],
+ "AF Bostäder:Utbrytningsgränden 15 A:22.0:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-8566"
   }
  ],
  "AF Bostäder:Ällingavägen 1 J:19.2:3": [
@@ -317,6 +413,12 @@
   {
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-3721"
+  }
+ ],
+ "AF Bostäder:Ällingavägen 5 B:25.5:1": [
+  {
+   "first_seen": "2026-10-10T01:19:33.654888+00:00",
+   "id": "af-3725"
   }
  ],
  "AF Bostäder:Ällingavägen 5 B:25.5:2": [
