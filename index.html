@@ -1425,6 +1425,7 @@
     border:1px solid var(--rule); border-radius:2px; padding:5px 6px; width:100%;
   }
   .compare-foot{ margin:0; padding:10px 16px 14px; font-size:11px; line-height:1.5; color:var(--dim); }
+  .compare-foot a{ color:var(--accent-ink); }
   #market{ padding:14px 16px; }
   .mk-card h3{ margin:0 0 6px; font-size:15px; }
   .gated p, .mk-p{ margin:0 0 6px; font-size:12px; line-height:1.5; color:var(--dim); }
@@ -1502,7 +1503,9 @@
   .row-acts .plan-btn{ color:var(--accent-ink); }
   .plan-box img{ display:block; max-width:100%; height:auto; margin:0 auto; background:#fff; }
   .fact.nz-noisy, .fact.nz-very_noisy{ color:var(--accent-ink); border-color:var(--accent-ink); }
-  .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.10; stroke:var(--leaf); stroke-width:1.5; stroke-dasharray:5 5; }
+  /* At 45 min the area covers most of the view, so the fill has to show on
+     its own, not only the edge. */
+  .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.2; stroke:#3d7a26; stroke-width:2.5; stroke-dasharray:6 4; }
   .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; }
   #campusPanel{
     position:absolute; z-index:1100; top:12px; right:12px; width:300px; max-width:calc(100% - 24px);
@@ -2869,13 +2872,19 @@ function cityFromHash(){
 // a Pages *project* site is served from /<repo>/ — an absolute path would
 // resolve against the domain root and 404.
 const staticDataUrl = city => `./listings-${city}.json`;
+// The public site is static files: there is no /api there, and asking for it
+// on every load cost two 404s (and console errors) before the fallback. Only
+// the known static hosts skip it — monitor.py's server, wherever it runs
+// (localhost, or a laptop's LAN address opened from a phone), still gets asked.
+const HAS_API = !/(^|\.)(xn--nstet-gra\.se|nästet\.se|github\.io)$/i.test(location.hostname)
+  && location.protocol !== 'file:';
 const apiListingsUrl = city => `/api/listings?city=${encodeURIComponent(city)}`;
 
 // The index is tiny (a name, a provider list and a count per city) and is what
 // the picker renders. Failing to load it is not fatal: with one city there is
 // nothing to pick, so the fallback is simply that city.
 async function loadCityIndex(){
-  for (const url of ['/api/cities', './cities.json']) {
+  for (const url of HAS_API ? ['/api/cities', './cities.json'] : ['./cities.json']) {
     try {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) continue;
@@ -2895,6 +2904,7 @@ async function loadData(triggerRefresh){
   }
   const city = currentCity || cityIndex.default;
   try {
+    if (!HAS_API) throw new Error('static host');
     const url = triggerRefresh
       ? `/api/refresh?city=${encodeURIComponent(city)}` : apiListingsUrl(city);
     const res = await fetch(url, { method: triggerRefresh ? 'POST' : 'GET' });
@@ -5223,13 +5233,14 @@ function pickCard(){
                   now: t('p3_now', 'leading now, may be overtaken'), long: t('p3_long', 'long shot') };
   const items = res.picks.map(({ l, status, expect }) => `<li>
       <button type="button" class="link-btn p3-open" onclick="selectListing('${esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"))}')">${esc(l.address || l.area)}</button>
-      <span class="p3-sub">${esc(l.area)} · ${num(l.queue_days)} → ~${num(Math.round(expect))} ${t('days_word', 'days')}</span>
+      <span class="p3-sub">${esc([l.area, l.type, l.size_sqm ? l.size_sqm + ' m²' : null, l.rent_sek ? num(l.rent_sek) + ' kr' : null].filter(Boolean).join(' · '))}</span>
+      <span class="p3-sub">${num(l.queue_days)} → ~${num(Math.round(expect))} ${t('days_word', 'days')}</span>
       <span class="fact you ${status === 'strong' || status === 'good' ? 'lead' : ''}">${label[status]}</span></li>`).join('');
   const basis = res.up.real
     ? `${t('p3_real', 'Based on recorded closings: the leader’s figure typically ends')} ${Math.round((res.up.median - 1) * 100)}% ${t('p3_higher', 'higher than it stands a day before.')}`
     : `${t('p3_rough', 'Using a rule of thumb — leader +15% by the deadline — until enough closings are recorded.')}`;
   return `${head}<ol class="p3">${items}</ol>
-    <p class="gate-cap">${basis}</p>
+    <p class="mk-p">${basis}</p>
     ${res.up.real ? '' : gatedNote('pick3')}
     <details class="p3-rules"><summary>${t('p3_rules_h', 'How SSSB applications work')}</summary>
       <p>${t('p3_rules', 'You can hold three applications at a time. If you end up first in line for more than one, SSSB offers you one of them — you don’t choose which — so only apply for places you would actually take. Turning down offers repeatedly can cost you your queue days, and without student union membership your days stop at 90. Rules change: check sssb.se before you rely on this.')}</p>

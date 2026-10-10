@@ -46,6 +46,21 @@ function watch(page, label) {
 
 async function settle(page, ms = 600) { await page.waitForTimeout(ms); }
 
+// Markers fully inside the map's visible area, optionally only ones with
+// listings ("— N available"), so a test never pokes something off-screen or
+// an empty "×" area that has no card by design.
+async function visibleMarkers(page, sel, withListings = false) {
+  return page.evaluate(([sel, withListings]) => {
+    const m = document.getElementById('map').getBoundingClientRect();
+    return [...document.querySelectorAll(sel)].map((e, i) => {
+      const r = e.getBoundingClientRect();
+      const label = e.closest('.leaflet-marker-icon')?.getAttribute('aria-label') || '';
+      return { i, label, ok: r.left > m.left + 20 && r.right < m.right - 20 && r.top > m.top + 20 && r.bottom < m.bottom - 20
+               && (!withListings || (/available/.test(label) && !/none/.test(label))) };
+    }).filter(x => x.ok);
+  }, [sel, withListings]);
+}
+
 async function overflow(page, label) {
   const o = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
   if (o.sw > o.cw + 1) find('medium', label, 'Horizontal overflow', `scrollWidth ${o.sw} > clientWidth ${o.cw}`);
@@ -125,13 +140,16 @@ for (const theme of ['dark', 'light']) {
   if (theme === 'light') { await ctx.close(); continue; }
 
   await step('areas: click each roundel', async () => {
-    const n = await page.locator('.area-roundel').count();
-    note(`area roundels at start: ${n}`);
-    for (let i = 0; i < Math.min(n, 4); i++) {
-      const rs = page.locator('.area-roundel');
-      if (await rs.count() <= i) break;
-      const label = await rs.nth(i).evaluate(e => e.closest('.leaflet-marker-icon')?.getAttribute('aria-label'));
-      await rs.nth(i).click({ force: true });
+    note(`area roundels at start: ${await page.locator('.area-roundel').count()}`);
+    const picks = (await visibleMarkers(page, '.area-roundel', true)).map(x => x.label.split(' —')[0]).slice(0, 4);
+    for (const name of picks) {
+      await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+      await settle(page, 700);
+      const cur = await visibleMarkers(page, '.area-roundel', true);
+      const hit = cur.find(x => x.label.startsWith(name + ' —'));
+      if (!hit) { note(`area ${name} not visible at city zoom`); continue; }
+      const label = hit.label;
+      await page.locator('.area-roundel').nth(hit.i).click();
       await settle(page, 1300);
       const title = await page.locator('#panelTitle').innerText().catch(() => '');
       const dots = await page.locator('.listing-dot').count();
@@ -139,7 +157,7 @@ for (const theme of ['dark', 'light']) {
       note(`clicked "${label}" → panel "${title.split('\n')[0]}", ${dots} building dots, ${rows} rows, zoom ${await page.evaluate(() => leafletMap.getZoom())}`);
       if (/available/.test(label || '') && !/none/.test(label) && rows === 0) find('high', 'areas', `area with listings shows no rows`, label);
       if (/available/.test(label || '') && !/none/.test(label) && dots === 0) find('medium', 'areas', `area didn't open into building dots`, label);
-      if (i === 0) await shot(page, 'area-selected');
+      if (name === picks[0]) await shot(page, 'area-selected');
       await page.locator('.clear-sel').click().catch(() => {});
       await settle(page, 900);
     }
@@ -152,12 +170,13 @@ for (const theme of ['dark', 'light']) {
     await settle(page, 800);
     const targets = ['.area-roundel', '.bf-pin'];
     for (const sel of targets) {
-      const el = page.locator(sel).first();
-      if (!(await el.count())) { note(`no ${sel} to hover`); continue; }
-      await el.hover({ force: true });
+      const vis = await visibleMarkers(page, sel, sel === '.area-roundel');
+      if (!vis.length) { note(`no visible ${sel} to hover`); continue; }
+      const el = page.locator(sel).nth(vis[0].i);
+      await el.hover();
       await settle(page, 500);
-      const vis = await page.locator('#hoverCard').isVisible();
-      if (!vis) find('medium', 'hover', `no hover card on ${sel}`);
+      const shown = await page.locator('#hoverCard').isVisible();
+      if (!shown) find('medium', 'hover', `no hover card on ${sel}`);
       else if (sel === '.bf-pin') await shot(page, 'hover-card');
       await page.mouse.move(5, 5); await settle(page, 300);
     }
@@ -306,13 +325,16 @@ for (const [city, lang] of [['goteborg', 'en'], ['lund', 'en'], ['stockholm', 's
   await step(L, async () => {
     await page.goto(`${SITE}/#stockholm`, { waitUntil: 'networkidle', timeout: 60000 });
     await settle(page, 1500);
-    await shot(page, 'phone', { fullPage: true });
+    await shot(page, 'phone');
     await overflow(page, L);
     await axe(page, L);
     const r = page.locator('.area-roundel').first();
     if (await r.count()) { await r.tap({ force: true }); await settle(page, 1300); await shot(page, 'phone-area'); }
-    const pin = page.locator('.bf-pin').first();
-    if (await pin.count()) { await pin.tap({ force: true }); await settle(page, 600); await shot(page, 'phone-pin');
+    await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
+    await settle(page, 700);
+    const pv = await visibleMarkers(page, '.bf-pin');
+    const pin = pv.length ? page.locator('.bf-pin').nth(pv[0].i) : page.locator('.no-such');
+    if (pv.length) { await pin.tap(); await settle(page, 600); await shot(page, 'phone-pin');
       if (!(await page.locator('#hoverCard').isVisible())) find('low', 'phone', 'tapping a pin shows no card'); }
     await page.click('#tabQueues'); await settle(page); await shot(page, 'phone-queues', { fullPage: true });
     await overflow(page, 'phone queues');

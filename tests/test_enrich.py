@@ -81,6 +81,9 @@ class EnrichTest(unittest.TestCase):
         img = Image.open(io.BytesIO(png))
         self.assertEqual(img.width, enrich.PLAN_WIDTH)
         self.assertLess(len(png), 60_000)
+        # The drawing (a 495x350 box on an A4 page) is cropped out of the page,
+        # so the result is wider than it is tall, not A4-shaped.
+        self.assertLess(img.height, img.width)
 
 
 if __name__ == "__main__":

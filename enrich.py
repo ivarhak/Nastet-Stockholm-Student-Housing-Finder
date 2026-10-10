@@ -64,6 +64,7 @@ FLOORPLAN_DIR = DATA / "floorplans"
 FLOORPLAN_INDEX = FLOORPLAN_DIR / "index.json"
 PLAN_WIDTH = 640
 PLAN_RETRY_DAYS = 7          # a room whose page had no plan isn't asked again for a week
+PLAN_RENDER = 2              # bump to re-render every cached plan (2: margins trimmed)
 PLAN_PARSER = 4              # bump when find_plan_links changes, to re-check old misses
 MAX_NEW_PLANS_PER_RUN = 60   # covers a full SSSB list (~40) in one run; cached after that
 
@@ -143,6 +144,22 @@ def widget_plan_links(session, page_url: str, debug: bool) -> list[str]:
     return []
 
 
+def trim_margins(img, pad_ratio=0.03):
+    """Crop the white page around the drawing (SSSB's PDFs are A4 with the
+    plan in the middle third), keeping a small margin."""
+    gray = img.convert("L").point(lambda v: 255 if v < 235 else 0)
+    box = gray.getbbox()
+    if not box:
+        return img
+    pad = round(max(img.size) * pad_ratio)
+    l, t, r, b = box
+    box = (max(0, l - pad), max(0, t - pad), min(img.width, r + pad), min(img.height, b + pad))
+    # Not worth it if it would barely change anything.
+    if (box[2] - box[0]) * (box[3] - box[1]) > 0.9 * img.width * img.height:
+        return img
+    return img.crop(box)
+
+
 def render_plan(blob: bytes, content_type: str) -> bytes | None:
     """PNG bytes, PLAN_WIDTH wide, from a PDF (page 1) or an image."""
     from PIL import Image
@@ -152,14 +169,16 @@ def render_plan(blob: bytes, content_type: str) -> bytes | None:
         if not doc.page_count:
             return None
         page = doc[0]
-        zoom = PLAN_WIDTH / max(1, page.rect.width)
+        # Rendered at twice the final width, so cropping the page margins
+        # away still leaves enough pixels for a sharp result.
+        zoom = 2 * PLAN_WIDTH / max(1, page.rect.width)
         pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
         img = Image.open(io.BytesIO(pix.tobytes("png")))
     else:
         img = Image.open(io.BytesIO(blob))
-        img = img.convert("RGB")
-        if img.width > PLAN_WIDTH:
-            img = img.resize((PLAN_WIDTH, round(img.height * PLAN_WIDTH / img.width)), Image.LANCZOS)
+    img = trim_margins(img.convert("RGB"))
+    if img.width > PLAN_WIDTH:
+        img = img.resize((PLAN_WIDTH, round(img.height * PLAN_WIDTH / img.width)), Image.LANCZOS)
     # Plans are line drawings: a 64-colour palette keeps them sharp and small.
     out = io.BytesIO()
     img.convert("RGB").quantize(colors=64).save(out, "PNG", optimize=True)
@@ -181,10 +200,11 @@ def enrich_floorplans(site: Path, payloads: dict) -> None:
             stale_miss = (rec and not rec.get("file")
                           and (rec.get("parser") != PLAN_PARSER
                                or rec.get("checked", "") < (now() - timedelta(days=PLAN_RETRY_DAYS)).isoformat()))
-            if (rec is None or stale_miss) and fetched < MAX_NEW_PLANS_PER_RUN:
+            stale_render = rec and rec.get("file") and rec.get("render") != PLAN_RENDER
+            if (rec is None or stale_miss or stale_render) and fetched < MAX_NEW_PLANS_PER_RUN:
                 fetched += 1
                 rec = {"checked": now().isoformat(timespec="seconds"), "file": None, "src": None,
-                       "parser": PLAN_PARSER}
+                       "parser": PLAN_PARSER, "render": PLAN_RENDER}
                 try:
                     page = session.get(l["url"], timeout=20)
                     page.raise_for_status()
