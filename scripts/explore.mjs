@@ -256,6 +256,13 @@ for (const theme of ['dark', 'light']) {
     if (!(await page.locator('#campusBtn').isVisible())) { find('medium', 'campus', 'no campus map button for KTH'); return; }
     await page.click('#campusBtn'); await settle(page, 1500);
     await shot(page, 'campus-kth');
+    // What the deployed page and the OSM data hold for KTH's main building,
+    // so a miss on "Kollegiesalen" can be told apart: old page, or no data.
+    note(`KTH main building in campus data: ${JSON.stringify(await page.evaluate(() => ({
+      pageKnowsHall: typeof CAMPUS_RULES !== 'undefined' && !!CAMPUS_RULES.KTH.halls.Kollegiesalen,
+      buildings: campusData.buildings.length,
+      matches: campusData.buildings.filter(b => /huvud|main|brinell|valhalla/i.test([b.name, b.alt, b.addr].join(' ')))
+        .map(b => [b.name, b.alt, b.addr].filter(Boolean).join(' / ')).slice(0, 8) })))}`);
     for (const q of ['D2', 'Q1', 'M1', 'E2', 'V1', 'bibliotek', 'Nymble', 'café', 'Kollegiesalen', 'R207']) {
       await page.fill('#campusQ', q); await settle(page, 700);
       const res = (await page.locator('#campusResults').innerText()).replace(/\s+/g, ' ').slice(0, 160);
