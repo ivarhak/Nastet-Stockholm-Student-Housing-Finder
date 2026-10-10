@@ -1,0 +1,41 @@
+name: Explore the live site
+
+# Manual only. Opens nästet.se in a real browser, clicks through it like a
+# visitor, and pushes screenshots plus a report of anything that looks broken
+# to the `explore` branch (replaced each run). See scripts/explore.mjs.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: explore
+  cancel-in-progress: true
+
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install a browser
+        run: |
+          npm install --no-save --no-package-lock playwright@1.63.0 axe-core@4.14.0
+          npx playwright install --with-deps chromium
+      - name: Explore
+        run: node scripts/explore.mjs explore-out
+      - name: Publish the report to the explore branch
+        if: always()
+        run: |
+          cd explore-out
+          git init -q -b explore
+          git add -A
+          git -c user.name="nastet-bot" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "explore: run ${{ github.run_id }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/explore
+          echo "report pushed to the explore branch"

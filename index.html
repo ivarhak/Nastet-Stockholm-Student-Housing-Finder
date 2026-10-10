@@ -3794,7 +3794,7 @@ function renderMap(){
                             .filter(Boolean).join(' · ');
           const shown = rows.slice(0, 4).map(line);
           if (rows.length > shown.length) shown.push(`+${rows.length - shown.length} more`);
-          marker.bindTooltip(`<b>${address}</b><br>${shown.join('<br>')}`, { direction:'top' });
+          bindTip(marker, `<b>${address}</b><br>${shown.join('<br>')}`, { direction:'top' }, true);
           // Only unambiguous when the building holds one listing; otherwise the
           // sidebar is already showing them all and a click would have to pick.
           // Selects rather than opening the site directly — same reasoning as
@@ -3829,7 +3829,7 @@ function renderMap(){
       const diffNote = difficultyMode && historyData && historyData.areas[name] && historyData.areas[name].n >= 3
         ? ` · ${t('df_tip', 'typically')} ${num(historyData.areas[name].median)} ${t('days_word', 'days')}` : '';
       if (count > 0) {
-        marker.bindTooltip(`${name} · ${count} available${diffNote}`, { direction:'top' });
+        bindTip(marker, `${name} · ${count} available${diffNote}`, { direction:'top' }, true);
       } else {
         marker.bindTooltip(`${name} · ${filtersActive() ? 'none match your filters' : 'none available'}`,
                            { direction:'top', opacity:0.7 });
@@ -3846,7 +3846,7 @@ function renderMap(){
     const icon = L.divIcon({ className:'', html:'<div class="bf-pin"></div>', iconSize:[13,13] });
     const marker = L.marker(l.coords, { icon }).addTo(leafletMap);
     nameMarker(marker, `${l.address || l.area}${l.rent_sek ? ' — ' + num(l.rent_sek) + ' kr' : ''}`);
-    marker.bindTooltip(`${l.address || l.area} · ${l.rent_sek ? l.rent_sek + ' kr' : ''} (${l.landlord || (providerInfo[l.provider] || {}).abbr || l.provider})`, { direction:'top' });
+    bindTip(marker, `${l.address || l.area} · ${l.rent_sek ? l.rent_sek + ' kr' : ''} (${l.landlord || (providerInfo[l.provider] || {}).abbr || l.provider})`, { direction:'top' }, true);
     // Selects the listing instead of leaving the page immediately — a pin
     // gives no preview otherwise, unlike an SSSB area roundel which always
     // opens into the sidebar list first. The card shown is the same row every
@@ -5390,10 +5390,18 @@ function hideHoverCard(delay = 120){
   clearTimeout(hoverHideTimer);
   hoverHideTimer = setTimeout(() => { const c = document.getElementById('hoverCard'); if (c) c.hidden = true; }, delay);
 }
+// A plain tooltip, unless this marker gets the hover card instead. Never bind
+// and then unbind: Leaflet's bindTooltip also adds a focus listener that
+// unbindTooltip leaves behind, and clicking the marker then throws ("Cannot set
+// properties of null (setting '_source')").
+function bindTip(marker, html, opts, cardInstead){
+  if (cardInstead && canHover) return;
+  marker.bindTooltip(html, opts);
+}
+
 function attachHoverCard(marker, rows, heading){
   if (canHover) {
-    // The card says more than the tooltip did, so the tooltip goes.
-    marker.unbindTooltip();
+    // The tooltip was never bound for these (see bindTip).
     marker.on('mouseover', () => { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => showHoverCard(marker, rows, heading), 150); });
     marker.on('mouseout', () => hideHoverCard());
     // A click opens the area or listing in the sidebar; the card has done its job.
@@ -5572,9 +5580,11 @@ const CAMPUS_RULES = {
     codeLetters: false,
     // Södra huset is houses A–F; room codes there start with the house letter.
     house: { letters: 'ABCDEF', building: /^södra huset$/i, label: 'Södra huset' },
-    halls: { 'de geersalen': /geovetenskapens hus/i, 'ahlmannsalen': /geovetenskapens hus/i,
-             'nordenskiöldsalen': /geovetenskapens hus/i, 'aula magna': /aula magna/i,
-             'ub': /frescatibiblioteket/i, 'universitetsbiblioteket': /frescatibiblioteket/i },
+    // Hall (as written) → its building. A hall that *is* the building, like
+    // Aula Magna, is found by name below and needs no entry here.
+    halls: { 'De Geersalen': /geovetenskapens hus/i, 'Ahlmannsalen': /geovetenskapens hus/i,
+             'Nordenskiöldsalen': /geovetenskapens hus/i,
+             'UB': /frescatibiblioteket/i, 'Universitetsbiblioteket': /frescatibiblioteket/i },
   },
 };
 // What people type → the kind of place, in both languages.
@@ -5666,7 +5676,7 @@ function campusSearch(q){
   const fq = fold(raw);
   for (const [hall, re] of Object.entries(rules.halls || {})) {
     if (fold(hall) === fq || (fq.length >= 4 && fold(hall).startsWith(fq))) {
-      B.forEach((b, i) => { if (re.test(bareName(b.name))) add({ kind: 'building', i, label: bldgLabel(b), room: hall.replace(/^./, c => c.toUpperCase()), score: 80 }); });
+      B.forEach((b, i) => { if (re.test(bareName(b.name))) add({ kind: 'building', i, label: bldgLabel(b), room: hall, score: 80 }); });
     }
   }
   // 4. Buildings by name, ref or street address; places by name or by kind.
