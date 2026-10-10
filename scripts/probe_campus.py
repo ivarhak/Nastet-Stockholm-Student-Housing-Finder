@@ -26,7 +26,7 @@ if cache.exists():
     data = json.loads(cache.read_text())
     for sid, rec in data.items():
         b = rec.get("buildings", [])
-        print(f"OSM {sid}: {len(b)} buildings, {len(rec.get('rooms', []))} rooms, {len(rec.get('pois', []))} pois")
+        print(f"OSM {sid}: v{rec.get('v')} outline={len(rec.get('outline', []))} · {len(b)} buildings, {len(rec.get('rooms', []))} rooms, {len(rec.get('pois', []))} pois")
         print(f"OSM {sid} refs: {sorted({x['ref'] for x in b if x.get('ref')})}")
         print(f"OSM {sid} names: {sorted({x['name'] for x in b if x.get('name')})}")
         print(f"OSM {sid} rooms: {[r['ref'] for r in rec.get('rooms', [])][:40]}")

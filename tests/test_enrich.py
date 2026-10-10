@@ -45,6 +45,18 @@ class EnrichTest(unittest.TestCase):
         self.assertEqual(len(d["pois"]), 1)
         self.assertEqual(len(d["outline"]), 1)
 
+    def test_campus_without_outline_uses_its_own_buildings(self):
+        sq = lambda a, b: [{"lat": a, "lon": a}, {"lat": a, "lon": b}, {"lat": b, "lon": b}, {"lat": b, "lon": a}, {"lat": a, "lon": a}]
+        els = [{"type": "way", "tags": {"building": "yes", "name": "KTH: D"}, "geometry": sq(59.3470, 59.3472)},
+               {"type": "way", "tags": {"building": "yes", "name": "KTH: Q"}, "geometry": sq(59.3480, 59.3482)},
+               {"type": "way", "tags": {"building": "yes", "name": "M-huset"}, "geometry": sq(59.3475, 59.3476)},
+               {"type": "way", "tags": {"building": "church", "name": "Engelbrektskyrkan"}, "geometry": sq(59.3420, 59.3421)}]
+        d = enrich.campus_from_elements(els, enrich.CAMPUS_NAMES["KTH"])
+        names = [b["name"] for b in d["buildings"]]
+        self.assertIn("M-huset", names)            # between KTH's own buildings
+        self.assertNotIn("Engelbrektskyrkan", names)
+        self.assertEqual(len(d["outline"]), 1)
+
     def test_db_from_attrs(self):
         self.assertEqual(enrich.db_from_attrs({"OBJECTID": 7, "dB_intervall": "55-60 dBA"}), 55.0)
         self.assertEqual(enrich.db_from_attrs({"LEQ24": 62}), 62.0)

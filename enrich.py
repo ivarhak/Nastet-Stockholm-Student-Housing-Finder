@@ -465,7 +465,7 @@ CAMPUSES = {
 }
 CAMPUS_CACHE = DATA / "campus_cache.json"
 CAMPUS_MAX_AGE_DAYS = 30
-CAMPUS_VERSION = 2   # 2: clipped to the university's own outline
+CAMPUS_VERSION = 3   # 2: clipped to the university's own outline; 3: + fallback hull
 # The query box is a rectangle and catches the neighbourhood too — churches,
 # schools, every entrance in Östermalm. OSM maps each campus as an
 # amenity=university area; these pick out the right one by name, and only
@@ -505,8 +505,13 @@ def campus_outlines(elements: list, name_re) -> list:
     out = []
     for e in elements:
         tags = e.get("tags") or {}
-        if tags.get("amenity") != "university" or not name_re.search(
-                " ".join(filter(None, [tags.get("name"), tags.get("alt_name"), tags.get("official_name"), tags.get("short_name")]))):
+        # Campuses are tagged several ways; any of them, as long as the name or
+        # operator is this university's.
+        is_campus = (tags.get("amenity") in ("university", "college")
+                     or tags.get("landuse") == "education")
+        label = " ".join(filter(None, [tags.get(k) for k in
+                                       ("name", "alt_name", "official_name", "short_name", "operator")]))
+        if not is_campus or not name_re.search(label):
             continue
         if e["type"] == "way" and e.get("geometry"):
             out.append([[p["lat"], p["lon"]] for p in e["geometry"]])
@@ -517,13 +522,57 @@ def campus_outlines(elements: list, name_re) -> list:
     return out
 
 
+def _hull(pts):
+    """Convex hull (monotone chain) of [lat, lon] points."""
+    pts = sorted(set(map(tuple, pts)))
+    if len(pts) < 3:
+        return [list(p) for p in pts]
+    cross = lambda o, a, b: (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lower, upper = [], []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+    for p in reversed(pts):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+    return [list(p) for p in lower[:-1] + upper[:-1]]
+
+
+def _grow(poly, metres=60):
+    """Push each vertex outward from the centre by roughly `metres`."""
+    cy = sum(p[0] for p in poly) / len(poly)
+    cx = sum(p[1] for p in poly) / len(poly)
+    out = []
+    for y, x in poly:
+        dy, dx = (y - cy) * 111_000, (x - cx) * 111_000 * 0.5   # ~cos(59.35°)
+        d = (dy * dy + dx * dx) ** 0.5 or 1
+        k = (d + metres) / d
+        out.append([cy + (y - cy) * k, cx + (x - cx) * k])
+    return out
+
+
+def anchor_outline(elements: list, name_re) -> list:
+    """When OSM has no campus outline: the university's own named buildings
+    ("KTH: D", "KTH Entré", …), wrapped and padded ~60 m."""
+    pts = []
+    for e in elements:
+        tags = e.get("tags") or {}
+        if tags.get("building") and e.get("geometry") and name_re.search(tags.get("name") or ""):
+            pts += [[p["lat"], p["lon"]] for p in e["geometry"]]
+    return [_grow(_hull(pts))] if len(pts) >= 6 else []
+
+
 def campus_from_elements(elements: list, name_re=None) -> dict:
     buildings, rooms, pois = [], [], []
     outlines = campus_outlines(elements, name_re) if name_re else []
+    if name_re and not outlines:
+        outlines = anchor_outline(elements, name_re)
     on_campus = (lambda pt: any(_inside(pt, o) for o in outlines)) if outlines else (lambda pt: True)
     for e in elements:
         tags = e.get("tags") or {}
-        if tags.get("amenity") == "university":
+        if tags.get("amenity") in ("university", "college") or tags.get("landuse") == "education":
             continue
         if e["type"] == "way" and e.get("geometry"):
             pts = _ring(e["geometry"])
@@ -576,8 +625,10 @@ def enrich_campus(site: Path, payloads: dict) -> None:
   nwr["indoor"="room"]["ref"];
   node["entrance"];
   node["amenity"~"^(library|cafe|restaurant|fast_food|toilets)$"];
-  way["amenity"="university"];
-  relation["amenity"="university"];
+  way["amenity"~"^(university|college)$"];
+  relation["amenity"~"^(university|college)$"];
+  way["landuse"="education"];
+  relation["landuse"="education"];
 );
 out geom qt;"""
             attempts = [u for u in OVERPASS_URLS] * 2
