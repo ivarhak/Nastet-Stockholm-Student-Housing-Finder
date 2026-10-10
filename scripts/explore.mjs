@@ -261,8 +261,8 @@ for (const theme of ['dark', 'light']) {
     note(`KTH main building in campus data: ${JSON.stringify(await page.evaluate(() => ({
       pageKnowsHall: typeof CAMPUS_RULES !== 'undefined' && !!CAMPUS_RULES.KTH.halls.Kollegiesalen,
       buildings: campusData.buildings.length,
-      matches: campusData.buildings.filter(b => /huvud|main|brinell|valhalla/i.test([b.name, b.alt, b.addr].join(' ')))
-        .map(b => [b.name, b.alt, b.addr].filter(Boolean).join(' / ')).slice(0, 8) })))}`);
+      matches: campusData.buildings.filter(b => /huvud|main|brinell|valhalla|43:4/i.test([b.name, b.alt, b.addr, b.ref].join(' ')))
+        .map(b => [b.name, b.alt, b.addr, b.ref].filter(Boolean).join(' / ')).slice(0, 8) })))}`);
     for (const q of ['D2', 'Q1', 'M1', 'E2', 'V1', 'bibliotek', 'Nymble', 'café', 'Kollegiesalen', 'R207']) {
       await page.fill('#campusQ', q); await settle(page, 700);
       const res = (await page.locator('#campusResults').innerText()).replace(/\s+/g, ' ').slice(0, 160);

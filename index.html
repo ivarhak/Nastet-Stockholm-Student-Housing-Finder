@@ -5595,13 +5595,12 @@ function focusBuilding(i, room, note){
 // letters at KTH, the house letter A–F in Södra huset at SU — plus a few lecture
 // halls whose building is well known, and everything else by name, address
 // or kind of place, forgiving accents, case and a typo.
+const MAIN_BLDG = /huvudbyggnad|main building|brinellv[äa]gen 8\b|^43:4A$/i;
 const CAMPUS_RULES = {
-  // Kollegiesalen is the assembly hall in the main building, which OSM may
-  // name either way or only give its address (Brinellvägen 8).
+  // Kollegiesalen is the assembly hall in the main building. OSM maps that
+  // as "KTH: A", property 43:4A, with no name or address that says so.
   KTH: { codeLetters: true, halls: {
-    'Kollegiesalen': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i,
-    'Huvudbyggnaden': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i,
-    'Main building': /huvudbyggnad|main building|brinellv[äa]gen 8\b/i } },
+    'Kollegiesalen': MAIN_BLDG, 'Huvudbyggnaden': MAIN_BLDG, 'Main building': MAIN_BLDG } },
   SU: {
     codeLetters: false,
     // Södra huset is houses A–F; room codes there start with the house letter.
@@ -5702,7 +5701,7 @@ function campusSearch(q){
   const fq = fold(raw);
   for (const [hall, re] of Object.entries(rules.halls || {})) {
     if (fold(hall) === fq || (fq.length >= 4 && fold(hall).startsWith(fq))) {
-      B.forEach((b, i) => { if ([bareName(b.name), b.alt, b.addr].some(x => x && re.test(x))) add({ kind: 'building', i, label: bldgLabel(b), room: hall, score: 80 }); });
+      B.forEach((b, i) => { if ([bareName(b.name), b.alt, b.addr, b.ref].some(x => x && re.test(x))) add({ kind: 'building', i, label: bldgLabel(b), room: hall, score: 80 }); });
     }
   }
   // 4. Buildings by name, ref or street address; places by name or by kind.
