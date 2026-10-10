@@ -49,16 +49,28 @@ async function settle(page, ms = 600) { await page.waitForTimeout(ms); }
 // Markers fully inside the map's visible area, optionally only ones with
 // listings ("— N available"), so a test never pokes something off-screen or
 // an empty "×" area that has no card by design.
+// A marker counts only if its centre is the marker itself: on a dense map one
+// marker can sit under another, and pointing there would hit the wrong one.
+// The test then moves the mouse (or a finger) to that centre, as a person
+// would, instead of waiting on Playwright's "is it covered?" check.
 async function visibleMarkers(page, sel, withListings = false) {
   return page.evaluate(([sel, withListings]) => {
     const m = document.getElementById('map').getBoundingClientRect();
     return [...document.querySelectorAll(sel)].map((e, i) => {
       const r = e.getBoundingClientRect();
-      const label = e.closest('.leaflet-marker-icon')?.getAttribute('aria-label') || '';
-      return { i, label, ok: r.left > m.left + 20 && r.right < m.right - 20 && r.top > m.top + 20 && r.bottom < m.bottom - 20
-               && (!withListings || (/available/.test(label) && !/none/.test(label))) };
+      const icon = e.closest('.leaflet-marker-icon');
+      const label = icon?.getAttribute('aria-label') || '';
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      const top = document.elementFromPoint(x, y);
+      return { i, label, x, y, covered: !(top && icon && icon.contains(top)),
+               ok: r.left > m.left + 20 && r.right < m.right - 20 && r.top > m.top + 20 && r.bottom < m.bottom - 20
+                   && (!withListings || (/available/.test(label) && !/none/.test(label))) };
     }).filter(x => x.ok);
-  }, [sel, withListings]);
+  }, [sel, withListings]).then(all => {
+    const covered = all.filter(x => x.covered).length;
+    if (covered) note(`${sel}: ${covered} of ${all.length} on-screen markers are covered by another marker`);
+    return all.filter(x => !x.covered);
+  });
 }
 
 async function overflow(page, label) {
@@ -149,7 +161,7 @@ for (const theme of ['dark', 'light']) {
       const hit = cur.find(x => x.label.startsWith(name + ' —'));
       if (!hit) { note(`area ${name} not visible at city zoom`); continue; }
       const label = hit.label;
-      await page.locator('.area-roundel').nth(hit.i).click();
+      await page.mouse.click(hit.x, hit.y);
       await settle(page, 1300);
       const title = await page.locator('#panelTitle').innerText().catch(() => '');
       const dots = await page.locator('.listing-dot').count();
@@ -172,8 +184,7 @@ for (const theme of ['dark', 'light']) {
     for (const sel of targets) {
       const vis = await visibleMarkers(page, sel, sel === '.area-roundel');
       if (!vis.length) { note(`no visible ${sel} to hover`); continue; }
-      const el = page.locator(sel).nth(vis[0].i);
-      await el.hover();
+      await page.mouse.move(vis[0].x, vis[0].y, { steps: 4 });
       await settle(page, 500);
       const shown = await page.locator('#hoverCard').isVisible();
       if (!shown) find('medium', 'hover', `no hover card on ${sel}`);
@@ -328,13 +339,12 @@ for (const [city, lang] of [['goteborg', 'en'], ['lund', 'en'], ['stockholm', 's
     await shot(page, 'phone');
     await overflow(page, L);
     await axe(page, L);
-    const r = page.locator('.area-roundel').first();
-    if (await r.count()) { await r.tap({ force: true }); await settle(page, 1300); await shot(page, 'phone-area'); }
+    const rv = await visibleMarkers(page, '.area-roundel', true);
+    if (rv.length) { await page.touchscreen.tap(rv[0].x, rv[0].y); await settle(page, 1300); await shot(page, 'phone-area'); }
     await page.evaluate(() => leafletMap.setView(centre(), 12, { animate: false }));
     await settle(page, 700);
     const pv = await visibleMarkers(page, '.bf-pin');
-    const pin = pv.length ? page.locator('.bf-pin').nth(pv[0].i) : page.locator('.no-such');
-    if (pv.length) { await pin.tap(); await settle(page, 600); await shot(page, 'phone-pin');
+    if (pv.length) { await page.touchscreen.tap(pv[0].x, pv[0].y); await settle(page, 600); await shot(page, 'phone-pin');
       if (!(await page.locator('#hoverCard').isVisible())) find('low', 'phone', 'tapping a pin shows no card'); }
     await page.click('#tabQueues'); await settle(page); await shot(page, 'phone-queues', { fullPage: true });
     await overflow(page, 'phone queues');

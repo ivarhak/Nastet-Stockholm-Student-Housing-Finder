@@ -1031,12 +1031,17 @@
   .listing-row:hover{ background:color-mix(in srgb, var(--card) 60%, var(--panel)); box-shadow:inset 2px 0 0 var(--ochre); }
   .listing-row.rail-0, .listing-row.rail-1, .listing-row.rail-2, .listing-row.rail-3{ border-left:none; }
   .listing-row .row-top{ align-items:flex-start; }
-  .row-head{ display:flex; gap:9px; min-width:0; }
+  /* The title column may shrink to its longest word and no further; past
+     that the rent figure drops under it instead of the name breaking
+     mid-word ("Kungshamr / a 11"). */
+  .listing-row .row-top{ flex-wrap:wrap; }
+  .row-head{ display:flex; gap:9px; flex:1 1 0; min-width:min-content; max-width:100%; }
+  .listing-row .rent{ margin-left:auto; }
   .row-index{ font-family:var(--mono); font-size:9.5px; color:var(--faint); padding-top:3px; }
   .listing-row .area-name{
     font-family:var(--figure); font-stretch:106%; font-weight:700; font-size:14px;
     display:flex; align-items:baseline; gap:7px;
-    min-width:0; overflow-wrap:anywhere;
+    min-width:0; overflow-wrap:break-word;
   }
   .listing-row .area-name::before{
     content:''; width:6px; height:6px; flex:0 0 6px; background:var(--dim);
