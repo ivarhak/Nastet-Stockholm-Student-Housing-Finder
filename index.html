@@ -1565,8 +1565,34 @@
   .campus-poi.poi-entrance{ background:var(--ochre); border-radius:1px; }
   .campus-poi.poi-library{ background:var(--plum); }
   body.campus-mode .area-roundel, body.campus-mode .listing-dot, body.campus-mode .bf-pin{ opacity:0.25; }
-  .profile-grid{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 4px; }
-  .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; align-self:flex-end; padding-bottom:7px; }
+  /* The profile card: what it's for, what it's doing right now, then the
+     fields grouped by queue, each with a line on what it changes. */
+  .pf-lead{ font-family:var(--display); font-size:12.5px; line-height:1.55; color:var(--ink); margin:4px 0 10px; }
+  .pf-results{
+    list-style:none; margin:0 0 14px; padding:10px 12px; display:flex; flex-direction:column; gap:6px;
+    background:var(--bg); border:1px solid var(--rule); border-left:2px solid var(--ochre);
+    font-family:var(--display); font-size:12px; line-height:1.5; color:var(--ink);
+  }
+  .pf-results b{ font-family:var(--figure); font-weight:800; }
+  .pf-results .pf-todo{ color:var(--dim); }
+  .pf-results .pf-warn{ color:var(--accent-ink); }
+  .profile-card .pf-results .link-btn{
+    font:600 11px/1.5 var(--mono); color:var(--accent-ink); background:none; border:none; padding:0;
+    text-decoration:underline; text-transform:none; letter-spacing:0; cursor:pointer; white-space:nowrap;
+  }
+  .profile-grid{ display:flex; flex-direction:column; gap:14px; margin:0 0 6px; }
+  .pf-group{ border:none; border-top:1px solid var(--rule); margin:0; padding:10px 0 0; min-width:0;
+             display:flex; flex-wrap:wrap; gap:12px; }
+  .pf-group legend{ font:700 9.5px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-ink); padding:0 8px 0 0; }
+  .pf-hint{ font:10.5px/1.45 var(--display); color:var(--dim); letter-spacing:0; text-transform:none; }
+  .pf-group > .pf-hint{ flex-basis:100%; margin-top:-8px; }
+  .pf-group .watch-field{ flex-basis:100%; }   /* one per row: side by side, labels of different lengths left the inputs misaligned */
+  .profile-card .watch-actions{ flex-wrap:wrap; }
+  .profile-card .watch-actions button{ flex:1 1 auto; white-space:nowrap; }
+  .profile-card .qh{ margin-top:14px; }
+  .profile-card > .kv:last-child{ margin-top:10px; }
+  .qh .qh-sub{ margin:0 0 8px; font:10.5px/1.45 var(--display); color:var(--dim); }
+  .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; flex-basis:100% !important; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
   .profile-card .kv.warn{ color:var(--accent-ink); }
   #profileShareOut{ margin-top:10px; }
@@ -2141,6 +2167,33 @@ function esc(v){
 }
 
 const I18N = { sv: {
+  qh_sub: 'Det som kan kosta dig din plats, utifrån uppgifterna ovan. Lägg in datumen i kalendern så får du en påminnelse två veckor innan.',
+  pf_lead: 'Berätta var du står i varje kö. Då visar varje bostad om du skulle få den i dag, och du får påminnelser innan du tappar din plats.',
+  pf_days_h: 'Står på Mina sidor på sssb.se. Fyll i den en gång — sedan räknar den upp av sig själv här, en dag per dag.',
+  pf_reg_h: 'När du ställde dig i kön. Används för att räkna ut när 90-dagarsgränsen slår till.',
+  pf_union_h: 'Utan medlemskap slutar SSSB räkna dina dagar vid 90.',
+  pf_bf_h: 'Kön kostar en årsavgift; missar du den tappar du din plats. Det här styr påminnelsen.',
+  pf_g_want: 'Vad du letar efter',
+  pf_budget_h: 'Bostäder över den märks ”över budget” — med el och hemförsäkring när Allt inräknat är på.',
+  pf_from_h: 'Bostäder med tidigare inflytt märks — du skulle betala hyra innan du flyttar in.',
+  pf_to_h: 'Bostäder med senare inflytt döljs — samma som filtret ”Inflytt senast”.',
+  pr_days_unset: 'Fyll i dina SSSB-ködagar så ser du här hur många bostäder du skulle få i dag.',
+  pr_lead_a: 'Du skulle ligga först på',
+  pr_lead_b: 'av de',
+  pr_lead_c: 'SSSB-bostäderna i dag — märkta ”Du skulle ligga först i dag”.',
+  pr_show: 'Visa bara dem',
+  pr_none_a: 'Du skulle inte ligga först på någon av de',
+  pr_none_b: 'SSSB-bostäderna i dag. Kortaste kön är',
+  pr_none_c: 'fler än du har.',
+  pr_over_a: 'av',
+  pr_over_b: 'bostäder kostar mer än din budget på',
+  pr_allin: '(totalt)',
+  pr_early: 'börjar innan du kan flytta in — märkta i listan.',
+  pr_late: 'börjar efter ditt senaste datum och är dolda.',
+  pr_warn_1: 'En kö behöver ses över — se Köhälsa nedan.',
+  pr_warn_n: 'köer behöver ses över — se Köhälsa nedan.',
+  early_tag: 'börjar innan du kan flytta in',
+  early_title: 'Inflytt före ditt tidigaste datum (anges under Köer)',
   profile_noqueue: 'Hyresvärdarna här publicerar inga kötider per bostad, så det finns inga ködagar att följa — din budget och dina inflyttningsdatum filtrerar ändå listan.',
   load_failed: 'Kunde inte hämta bostäderna — kolla anslutningen och ladda om sidan.',
   city_q: 'Vilken stad?',
@@ -2392,8 +2445,8 @@ const I18N = { sv: {
   pf_union: 'Medlem i en studentkår',
   pf_bf: 'I Bostadsförmedlingens kö sedan',
   pf_budget: 'Boendebudget per månad (kr)',
-  pf_from: 'Inflytt tidigast',
-  pf_to: 'Inflytt senast',
+  pf_from: 'Tidigast du kan flytta in',
+  pf_to: 'Senast du kan flytta in',
   pf_share: 'Använd på en annan enhet',
   pf_forget: 'Glöm den här enheten',
   pf_privacy: 'Sparas bara i den här webbläsaren. Inget skickas någonstans.',
@@ -4841,7 +4894,8 @@ function healthHtml(){
   if (!items.length) return '';
   const dot = { ok: '●', warn: '▲', unset: '○', check: '?' };
   const label = { ok: t('qh_s_ok', 'OK'), warn: t('qh_s_warn', 'Needs attention'), unset: t('qh_s_unset', 'Not set'), check: t('qh_s_check', 'Check') };
-  return `<div class="qh"><h4>${t('qh_h', 'Queue health')}</h4><ul>${items.map((it, i) => `<li class="qh-${it.state}">
+  return `<div class="qh"><h4>${t('qh_h', 'Queue health')}</h4>
+    <p class="pf-hint qh-sub">${t('qh_sub', 'What could cost you your place, worked out from the details above. Add the dates to your calendar to get a reminder two weeks before.')}</p><ul>${items.map((it, i) => `<li class="qh-${it.state}">
       <span class="qh-dot" aria-label="${label[it.state]}" role="img">${dot[it.state]}</span>
       <div><b>${esc(it.q)}</b> <span>${it.text}</span>
       <span class="qh-acts">${it.ics ? `<button type="button" class="link-btn" onclick="downloadIcs(${i})">${t('qh_ics', 'Add to calendar')}</button> · ` : ''}<a href="${QUEUE_LINKS[it.q] || '#'}" target="_blank" rel="noopener">${t('qh_rules', 'Their rules ↗')}</a></span></div></li>`).join('')}</ul></div>`;
@@ -4871,46 +4925,97 @@ function downloadIcs(i){
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
+// What the details above actually do, counted live on this city's listings —
+// so the card shows its effect instead of asking for numbers on faith.
+function profileResultsHtml(hasS){
+  if (!currentData) return '';
+  const L = currentData.listings;
+  const out = [];
+  const go = (fn, label) => `<button type="button" class="link-btn" onclick="${fn}">${label}</button>`;
+  if (hasS) {
+    const mine = profileDaysNow();
+    const q = L.filter(l => typeof l.queue_days === 'number');
+    if (mine == null) out.push(`<li class="pf-todo">${t('pr_days_unset', 'Add your SSSB queue days and you’ll see here how many listings you’d get today.')}</li>`);
+    else if (q.length) {
+      const lead = q.filter(l => mine >= l.queue_days).length;
+      const least = Math.min(...q.map(l => l.queue_days));
+      out.push(lead
+        ? `<li>${t('pr_lead_a', 'You’d lead')} <b>${lead}</b> ${t('pr_lead_b', 'of the')} ${q.length} ${t('pr_lead_c', 'SSSB listings today — tagged “You’d lead today”.')} ${go('showMyLeads()', t('pr_show', 'Show only those'))}</li>`
+        : `<li>${t('pr_none_a', 'You’d lead none of the')} ${q.length} ${t('pr_none_b', 'SSSB listings today. The shortest queue is')} <b>${num(least)}</b> ${t('days_word', 'days')} — ${num(least - mine)} ${t('pr_none_c', 'more than you have.')}</li>`);
+    }
+  }
+  if (profile.budget) {
+    const withRent = L.filter(l => l.rent_sek != null);
+    const over = withRent.filter(l => rentShown(l) > profile.budget).length;
+    out.push(`<li><b>${over}</b> ${t('pr_over_a', 'of')} ${withRent.length} ${t('pr_over_b', 'listings cost more than your budget of')} ${num(profile.budget)} kr${allInMode ? ' ' + t('pr_allin', '(all-in)') : ''}.</li>`);
+  }
+  if (profile.move_from) {
+    const early = L.filter(l => l.move_in && String(l.move_in).slice(0, 10) < profile.move_from).length;
+    out.push(`<li><b>${early}</b> ${t('pr_early', 'start before you can move in — tagged on the row.')}</li>`);
+  }
+  if (profile.move_to) {
+    const late = L.filter(l => l.move_in && String(l.move_in).slice(0, 10) > profile.move_to).length;
+    out.push(`<li><b>${late}</b> ${t('pr_late', 'start after your latest date and are hidden.')}</li>`);
+  }
+  const warn = queueHealth().filter(it => it.state === 'warn').length;
+  if (warn) out.push(`<li class="pf-warn">▲ ${warn === 1 ? t('pr_warn_1', 'One queue needs attention — see Queue health below.') : `${warn} ${t('pr_warn_n', 'queues need attention — see Queue health below.')}`}</li>`);
+  return out.length ? `<ul class="pf-results">${out.join('')}</ul>` : '';
+}
+// "Show only those": the queue-days cap set to your own days leaves exactly
+// the SSSB listings you'd lead (plus listings with no queue figure at all).
+function showMyLeads(){
+  const mine = profileDaysNow();
+  if (mine == null) return;
+  maxQueueSlider.setExact(mine);
+  switchTab('listings');
+}
+
 // ── The profile card, top of the Queues tab ──
 function renderProfile(){
   const el = document.getElementById('profileCard');
   if (!el) return;
   const now = profileDaysNow();
-  const bfDays = profile.bf_since ? Math.max(0, daysBetween(profile.bf_since, todayISO())) : null;
   // The queue fields belong to Stockholm's landlords; elsewhere they'd ask for
   // a queue the city doesn't have. What's saved stays saved for the way back.
   const prov = new Set(((cityIndex.cities[currentCity] || {}).providers) || []);
   const hasS = prov.has('SSSB'), hasB = prov.has('Bostadsförmedlingen');
-  const summary = !(hasS || hasB) ? '' : [
-    now != null && hasS ? `SSSB <b>${num(now)}</b> ${t('queue_days_f', 'queue days')}` : null,
-    bfDays != null && hasB ? `${t('bf_short', 'Bostadsförmedlingen')} <b>${num(bfDays)}</b> ${t('days_word', 'days')}` : null,
-  ].filter(Boolean).join(' · ');
-  const uncapped = profile.sssb_days == null ? null
-    : profile.sssb_days + Math.max(0, daysBetween(profile.sssb_days_on || todayISO(), todayISO()));
-  const capNote = profile.union === false && uncapped != null && uncapped > now
-    ? `<p class="kv warn">${t('cap_note', 'Capped at 90 days until you join a student union — SSSB stops counting there.')}</p>` : '';
+  const hint = (txt) => `<small class="pf-hint">${txt}</small>`;
   el.innerHTML = `
     <h3>${t('profile_h', 'Your queues')}</h3>
-    <p class="covers">${summary || (hasS ? t('profile_empty', 'Add your queue days and every listing shows whether you would lead it today.')
-      : t('profile_noqueue', 'Landlords here publish no queue figures per listing, so there are no queue days to track — your budget and move-in dates still filter the list.'))}</p>
-    ${capNote}
-    ${healthHtml()}
+    <p class="pf-lead">${hasS || hasB
+      ? t('pf_lead', 'Tell Nästet where you stand in each queue. Every listing then says whether you’d get it today, and you get reminders before you lose your place.')
+      : t('profile_noqueue', 'Landlords here publish no queue figures per listing, so there are no queue days to track — your budget and move-in dates still mark and filter the list.')}</p>
+    ${profileResultsHtml(hasS)}
     <div class="profile-grid">
-      ${hasS ? `<label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
-        <input type="number" id="pfDays" min="0" max="20000" step="1" inputmode="numeric" value="${now ?? ''}"></label>
-      <label class="watch-field"><span>${t('pf_reg', 'SSSB registration date')}</span>
-        <input type="date" id="pfReg" value="${profile.sssb_reg || ''}"></label>
-      <label class="watch-field pf-check"><input type="checkbox" id="pfUnion" ${profile.union === false ? '' : 'checked'}>
-        <span>${t('pf_union', 'Member of a student union')}</span></label>` : ''}
-      ${hasB ? `<label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
-        <input type="date" id="pfBf" value="${profile.bf_since || ''}"></label>` : ''}
-      <label class="watch-field"><span>${t('pf_budget', 'Monthly housing budget (kr)')}</span>
-        <input type="number" id="pfBudget" min="0" max="50000" step="100" inputmode="numeric" value="${profile.budget ?? ''}"></label>
-      <label class="watch-field"><span>${t('pf_from', 'Move in from')}</span>
-        <input type="date" id="pfFrom" value="${profile.move_from || ''}"></label>
-      <label class="watch-field"><span>${t('pf_to', 'Move in by')}</span>
-        <input type="date" id="pfTo" value="${profile.move_to || ''}"></label>
+      ${hasS ? `<fieldset class="pf-group"><legend>SSSB</legend>
+        <label class="watch-field"><span>${t('pf_days', 'SSSB queue days today')}</span>
+          <input type="number" id="pfDays" min="0" max="20000" step="1" inputmode="numeric" value="${now ?? ''}">
+          ${hint(t('pf_days_h', 'Shown on Mina sidor at sssb.se. Enter it once — it counts up by itself here, a day per day.'))}</label>
+        <label class="watch-field"><span>${t('pf_reg', 'SSSB registration date')}</span>
+          <input type="date" id="pfReg" value="${profile.sssb_reg || ''}">
+          ${hint(t('pf_reg_h', 'When you joined the queue. Used to work out when the 90-day cap would hit.'))}</label>
+        <label class="watch-field pf-check"><input type="checkbox" id="pfUnion" ${profile.union === false ? '' : 'checked'}>
+          <span>${t('pf_union', 'Member of a student union')}</span></label>
+        ${hint(t('pf_union_h', 'Without a membership SSSB stops counting your days at 90.'))}
+      </fieldset>` : ''}
+      ${hasB ? `<fieldset class="pf-group"><legend>Bostadsförmedlingen</legend>
+        <label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
+          <input type="date" id="pfBf" value="${profile.bf_since || ''}">
+          ${hint(t('pf_bf_h', 'The queue costs a yearly fee; miss it and you lose your place. This sets the reminder.'))}</label>
+      </fieldset>` : ''}
+      <fieldset class="pf-group"><legend>${t('pf_g_want', 'What you’re looking for')}</legend>
+        <label class="watch-field"><span>${t('pf_budget', 'Monthly housing budget (kr)')}</span>
+          <input type="number" id="pfBudget" min="0" max="50000" step="100" inputmode="numeric" value="${profile.budget ?? ''}">
+          ${hint(t('pf_budget_h', 'Listings above it are tagged “over budget” — counting electricity and insurance when All-in cost is on.'))}</label>
+        <label class="watch-field"><span>${t('pf_from', 'Earliest you can move in')}</span>
+          <input type="date" id="pfFrom" value="${profile.move_from || ''}">
+          ${hint(t('pf_from_h', 'Listings that start earlier are tagged — you’d pay rent before you arrive.'))}</label>
+        <label class="watch-field"><span>${t('pf_to', 'Latest you can move in')}</span>
+          <input type="date" id="pfTo" value="${profile.move_to || ''}">
+          ${hint(t('pf_to_h', 'Listings that start later are hidden — the same as the “Move in by” filter.'))}</label>
+      </fieldset>
     </div>
+    ${healthHtml()}
     <div class="watch-actions">
       <button type="button" onclick="shareProfile()">${t('pf_share', 'Use on another device')}</button>
       <button type="button" class="ghost" onclick="forgetDevice()">${t('pf_forget', 'Forget this device')}</button>
@@ -5078,6 +5183,7 @@ function rowPersonal(l){
   const val = valueBadge(l);
   if (val) facts.push(`<span class="fact you value" title="${esc(val.title)}">${t('good_value', 'good value')}</span>`);
   if (profile.budget && l.rent_sek != null && rentShown(l) > profile.budget) facts.push(`<span class="fact you">${t('over_budget', 'over budget')}</span>`);
+  if (profile.move_from && l.move_in && String(l.move_in).slice(0, 10) < profile.move_from) facts.push(`<span class="fact you" title="${esc(t('early_title', 'Starts before the earliest date you can move in (set under Queues to join)'))}">${t('early_tag', 'starts before you can move in')}</span>`);
   if (sinceVisit && sinceVisit.city === currentCity && sinceVisit.fresh.has(l.id)) facts.push(`<span class="fact you">${t('since_last', 'new since last visit')}</span>`);
   const m = markOf(l.id);
   const id = esc(l.id.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
@@ -6135,6 +6241,7 @@ function bindLimitSlider(inputId, labelId, opts){
     // Used by the advanced panel's Reset, which has to drop the typed override
     // as well as the slider position or the filter would silently survive it.
     reset(){ exact = null; input.value = input.getAttribute('value'); apply(); },
+    setExact(v){ exact = v; input.value = String(v); apply(); refreshAdvBadge(); render(); },
   };
 }
 
