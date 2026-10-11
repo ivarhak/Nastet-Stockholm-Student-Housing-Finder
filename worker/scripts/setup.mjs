@@ -98,7 +98,19 @@ async function main() {
   }
 
   step(3, 'Deploy');
-  const dep = run(['deploy']);
+  let dep = run(['deploy']);
+  // A new Cloudflare account has no workers.dev subdomain yet, and wrangler
+  // can't ask for one while this script reads its output: pick it in the
+  // dashboard, then deploy again.
+  for (let tries = 0; !dep.ok && /workers\.dev subdomain/i.test(dep.out) && tries < 3; tries++) {
+    const onboard = (dep.out.match(/https:\/\/dash\.cloudflare\.com\/[^\s]+\/workers\/onboarding/) || [])[0]
+      || 'https://dash.cloudflare.com/?to=/:account/workers/onboarding';
+    say('Your Cloudflare account needs a workers.dev subdomain first (once per account).');
+    say(`Opening ${onboard} — pick a name (your username is fine), confirm it.`);
+    openUrl(onboard);
+    await pause('Picked it');
+    dep = run(['deploy']);
+  }
   if (!dep.ok) throw new Error(`Deploy failed:\n${dep.out}`);
   const url = (dep.out.match(/https:\/\/[^\s]+\.workers\.dev/) || [])[0] || 'https://nastet.<your-subdomain>.workers.dev';
   say(`Deployed at ${url} — secrets can only be added to a Worker that exists, so this comes first.`);
