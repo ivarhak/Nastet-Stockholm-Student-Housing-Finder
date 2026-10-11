@@ -40,7 +40,9 @@ const say = s => console.log(`   ${s}`);
 function run(args, { input, capture = true } = {}) {
   const cmd = [...WRANGLER, ...args];
   if (DRY) { say(`[dry run] ${cmd.join(' ')}${input ? ' (with input)' : ''}`); return { ok: true, out: '' }; }
-  const r = spawnSync(cmd[0], cmd.slice(1), {
+  // On Windows npx is a .cmd and needs a shell; given as one string (the parts
+  // are all fixed words), which is also what Node wants with shell: true.
+  const r = spawnSync(WIN ? cmd.join(' ') : cmd[0], WIN ? [] : cmd.slice(1), {
     cwd: ROOT, shell: WIN, encoding: 'utf8', input,
     stdio: capture ? [input != null ? 'pipe' : 'inherit', 'pipe', 'pipe'] : 'inherit',
   });
@@ -54,17 +56,22 @@ function openUrl(url) {
   try { spawn(c, a, { stdio: 'ignore', detached: true }).unref(); } catch (e) { /* the URL is printed anyway */ }
 }
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-const ask = q => new Promise(res => rl.question(`   ${q} `, a => res(a.trim())));
-// Typed but not shown — for the bot token, which is only needed once here.
-function askHidden(q) {
+// A fresh prompt per question, closed straight after: a long-lived one loses
+// its input once a wrangler step has had the terminal (that ended the first
+// real run at the Application ID question).
+function prompt(q, hidden = false) {
   return new Promise(res => {
-    const out = rl.output;
-    const write = rl._writeToOutput;
-    rl._writeToOutput = s => { if (s.includes(q)) out.write(s); };
-    rl.question(`   ${q} `, a => { rl._writeToOutput = write; out.write('\n'); res(a.trim()); });
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+    if (hidden) {
+      const write = rl._writeToOutput.bind(rl);
+      rl._writeToOutput = s => { if (s.includes(q)) write(s); };
+    }
+    rl.question(`   ${q} `, a => { rl.close(); if (hidden) process.stdout.write('\n'); res(a.trim()); });
   });
 }
+const ask = q => prompt(q);
+// Typed but not shown — for the bot token, which is only needed once here.
+const askHidden = q => prompt(q, true);
 const pause = q => ask(`${q} — press Enter when done.`);
 
 async function main() {
@@ -169,7 +176,6 @@ async function main() {
   say('Then DM the bot:  /watch set days:100   and   /watch now');
   say('Send the Install Link to Claude to have the site\'s "Prefer Discord?" box point at it.');
   say(`Watch the Worker live with: ${WRANGLER.join(' ')} tail`);
-  rl.close();
 }
 
-main().catch(e => { console.error(`\n✗ ${e.message}`); rl.close(); process.exit(1); });
+main().catch(e => { console.error(`\n✗ ${e.message}`); process.exit(1); });
