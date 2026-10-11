@@ -14,6 +14,7 @@
 import { plan, remember, stockholmToday, dueSlot } from './match.js';
 import { sendDm, CITIES } from './discord.js';
 import { summarize, listingLine, md } from './summary.js';
+import { cards } from './cards.js';
 
 const IDLE_DAYS = 182;          // a watch nobody has touched in six months is deleted
 const MAX_LINES = 6;
@@ -156,7 +157,7 @@ export async function runNotify(env, now = new Date(), fetchImpl = fetch) {
         await env.SUBS.put(name, JSON.stringify(next));
         continue;
       }
-      const res = await sendDm(env, sub, name.slice(4), { content: sum.content, allowed_mentions: { parse: [] } }, fetchImpl);
+      const res = await sendDm(env, sub, name.slice(4), { embeds: cards(env, sub, data, now, 'summary'), allowed_mentions: { parse: [] } }, fetchImpl);
       if (res.ok) {
         out.summaries++;
         await env.SUBS.put(name, JSON.stringify({ ...next, dm: res.channel || sub.dm }));

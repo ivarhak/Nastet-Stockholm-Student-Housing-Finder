@@ -9,7 +9,8 @@
 // deletes it too (see notify.js).
 
 import { stockholmToday, runningDays, latestSlot, FREQS, DEFAULT_HOUR, NO_UNION_CAP } from './match.js';
-import { CITIES, describeFilters, preview, summarize } from './summary.js';
+import { CITIES, describeFilters, preview } from './summary.js';
+import { cards } from './cards.js';
 
 export { CITIES };
 const API = 'https://discord.com/api/v10';
@@ -152,14 +153,16 @@ export function applySet(existing, o, data, today) {
 // listings answers "thinking…" at once and edits the reply when it's done.
 function deferred(interaction, env, ctx, work) {
   const finish = (async () => {
-    let content;
+    let out;
     try {
-      content = await work();
+      out = await work();
     } catch (e) {
-      content = `Something went wrong: ${e && e.message}`;
+      out = `Something went wrong: ${e && e.message}`;
     }
+    // A string is a plain reply; an object can carry embeds (see cards.js).
+    const msg = typeof out === 'string' ? { content: out.slice(0, 1990) } : { content: out.content || '', embeds: out.embeds || [] };
     await discordFetch(env, `/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`,
-      { method: 'PATCH', body: JSON.stringify({ content: String(content).slice(0, 1990), allowed_mentions: { parse: [] } }) });
+      { method: 'PATCH', body: JSON.stringify({ ...msg, allowed_mentions: { parse: [] } }) });
   })();
   if (ctx && ctx.waitUntil) ctx.waitUntil(finish);
   return json({ type: 5, data: { flags: EPHEMERAL } });
@@ -201,8 +204,9 @@ export async function handleInteraction(request, env, ctx) {
     return deferred(interaction, env, ctx, async () => {
       const data = await cityData(env, existing.city);
       if (!data) return 'Could not read the listings right now — try again in a minute.';
-      // A preview: it doesn't move the "new since" marker of the next summary.
-      return summarize(env, existing, data).content;
+      // Every listing that fits, as cards. A look, not a summary: it doesn't
+      // move the "new since" marker of the next scheduled one.
+      return { embeds: cards(env, existing, data, new Date(), 'all') };
     });
   }
   if (o.name === 'set') {
@@ -264,7 +268,7 @@ export const COMMANDS = [{
       { type: 5, name: 'all_new', description: 'Instant mode: also DM every new deadline listing within your limits' },
     ] },
     { type: 1, name: 'show', description: 'Show your watch and what fits it right now' },
-    { type: 1, name: 'now', description: 'Show a summary right now' },
+    { type: 1, name: 'now', description: 'Every listing that fits your filters right now' },
     { type: 1, name: 'stop', description: 'Stop and delete your watch' },
   ],
 }];

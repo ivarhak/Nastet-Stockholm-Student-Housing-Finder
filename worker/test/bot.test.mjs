@@ -4,6 +4,7 @@ import { verifySignature, handleInteraction, applySet } from '../src/discord.js'
 import { plan, remember, matches, runningDays, commuteMin, fits, latestSlot, dueSlot } from '../src/match.js';
 import { summarize } from '../src/summary.js';
 import { syncCommands } from '../src/commands.js';
+import { cards } from '../src/cards.js';
 import { runNotify, hmacHex, handleNotify, compose } from '../src/notify.js';
 
 const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
@@ -54,8 +55,9 @@ function harness(pub, SUBS, listings) {
     return new Response(JSON.stringify({ id: 'dm123' }), { status: 200 });
   };
   const env = { DISCORD_PUBLIC_KEY: pub, DISCORD_BOT_TOKEN: 't', SUBS, SITE_URL: 'https://s' };
-  const lastEdit = () => { const e = calls.filter(c => c[0].includes('/messages/@original')).pop(); return e && JSON.parse(e[1].body).content; };
-  return { calls, pending, ctx, f, env, lastEdit };
+  const lastBody = () => { const e = calls.filter(c => c[0].includes('/messages/@original')).pop(); return e && JSON.parse(e[1].body); };
+  const lastEdit = () => { const b = lastBody(); return b && b.content; };
+  return { calls, pending, ctx, f, env, lastEdit, lastBody };
 }
 const DATA = {
   generated_at: 'g', default_school: 'KTH',
@@ -111,7 +113,11 @@ test('/watch set: deferred, merges, validates, previews; show/now/stop', async (
     r = await run('show');
     assert.match(h.lastEdit(), /300 queue days/);
     r = await run('now');
-    assert.match(h.lastEdit(), /Nästet · Stockholm/);
+    const emb = h.lastBody().embeds;
+    assert.match(emb[0].title, /Nästet · Stockholm/);
+    assert.match(emb[0].description, /2\*\* of 4 open listings fit/);
+    assert.ok(emb.some(e => /You'd get these today/.test(e.title) && e.fields.some(f => /Studentbacken 1/.test(f.name))));
+    assert.ok(emb.some(e => /Need more queue days/.test(e.title) && e.fields.some(f => /100 short/.test(f.value))));
     r = await (await handleInteraction(await signed(k, cmd('stop')), h.env, h.ctx)).json();
     assert.match(r.data.content, /deleted/);
     assert.equal(SUBS.m.has('sub:42'), false);
@@ -190,7 +196,9 @@ test('runNotify: a due summary is sent once, a quiet one is skipped', async () =
   const env = { SUBS, SITE_URL: 'https://s', DISCORD_BOT_TOKEN: 't' };
   let r = await runNotify(env, now, f);
   assert.equal(r.summaries, 1); assert.equal(r.quiet, 1);
-  assert.match(posts.find(p => p[0].includes('/channels/c7/'))[1].content, /1 new listing\*\*/);
+  const dm = posts.find(p => p[0].includes('/channels/c7/'))[1];
+  assert.match(dm.embeds[0].description, /\*\*1 new\*\* since Sun 11 Oct, 08:00/);
+  assert.ok(dm.embeds.some(e => /New and fitting/.test(e.title) && /Studentbacken 1/.test(e.fields[0].name)));
   assert.equal(posts.some(p => p[0].includes('/channels/c8/')), false);
   assert.equal(JSON.parse(SUBS.m.get('sub:7')).last_slot, '2026-10-12T08');
   r = await runNotify(env, now, f);
@@ -296,4 +304,24 @@ test('commands register themselves once per change', async () => {
   assert.equal(r.unchanged, true);
   assert.equal(calls.length, 2);
   assert.equal((await syncCommands({}, f)).skipped, 'not configured');
+});
+
+test('cards: every fitting listing, grouped, inside Discord limits', () => {
+  const sub = { city: 'stockholm', days: 100, from: '2026-10-11', freq: 'daily', hour: 19 };
+  const e = cards({ SITE_URL: 'https://s' }, sub, DATA, new Date('2026-10-11T10:00:00Z'), 'all');
+  assert.deepEqual(e.map(x => x.title.replace(/ \(\d+\)$/, '')),
+    ['Nästet · Stockholm · Sun 11 Oct', "✅ You'd get these today", '🗓️ Apply before the deadline', '⏳ Need more queue days']);
+  assert.match(e[1].fields[0].value, /\[Open ↗\]\(https:\/\/s\/\?listing=/);
+  assert.match(e[e.length - 1].footer.text, /Every day at 19:00/);
+  const many = { ...DATA, listings: Array.from({ length: 300 }, (_, i) => ({ id: 'x' + i, provider: 'SSSB', area: 'Jerum',
+    address: 'Väldigt lång gatuadress ' + 'x'.repeat(80) + i, queue_days: i, rent_sek: 5000, size_sqm: 20, move_in: '2026-11-01' })) };
+  const big = cards({ SITE_URL: 'https://s' }, sub, many, new Date('2026-10-11T10:00:00Z'), 'all');
+  const size = big.reduce((n, x) => n + (x.title || '').length + (x.description || '').length + (x.footer ? x.footer.text.length : 0)
+    + (x.fields || []).reduce((m, f) => m + f.name.length + f.value.length, 0), 0);
+  assert.ok(big.length <= 10 && size <= 6000, `${big.length} embeds, ${size} chars`);
+  assert.ok(big.every(x => !x.fields || x.fields.length <= 25));
+  assert.ok(big.some(x => /more — \[see them on the site\]/.test(x.description || '')));
+  // Capped without a union.
+  const capped = cards({ SITE_URL: 'https://s' }, { ...sub, days: 90, union: false }, DATA, new Date('2026-10-30T10:00:00Z'), 'all');
+  assert.match(capped[0].description, /\*\*90\*\* \(capped at 90 — no student union\)/);
 });
