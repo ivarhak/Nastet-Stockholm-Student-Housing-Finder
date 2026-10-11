@@ -99,17 +99,15 @@ async function main() {
 
   step(3, 'Deploy');
   let dep = run(['deploy']);
-  // A new Cloudflare account has no workers.dev subdomain yet, and wrangler
-  // can't ask for one while this script reads its output: pick it in the
-  // dashboard, then deploy again.
-  for (let tries = 0; !dep.ok && /workers\.dev subdomain/i.test(dep.out) && tries < 3; tries++) {
-    const onboard = (dep.out.match(/https:\/\/dash\.cloudflare\.com\/[^\s]+\/workers\/onboarding/) || [])[0]
-      || 'https://dash.cloudflare.com/?to=/:account/workers/onboarding';
+  // A new Cloudflare account has no workers.dev subdomain yet. wrangler asks
+  // for one, but can't while this script reads its output — so on that error
+  // it runs once more with the terminal handed over, and you answer it there.
+  // (The dashboard link it prints for this has gone stale.)
+  if (!dep.ok && /workers\.dev subdomain/i.test(dep.out)) {
     say('Your Cloudflare account needs a workers.dev subdomain first (once per account).');
-    say(`Opening ${onboard} — pick a name (your username is fine), confirm it.`);
-    openUrl(onboard);
-    await pause('Picked it');
-    dep = run(['deploy']);
+    say('wrangler will ask "register a workers.dev subdomain now?" — answer y and type a name (your username is fine).');
+    run(['deploy'], { capture: false });
+    dep = run(['deploy']);             // again, quietly, to read the address it deployed to
   }
   if (!dep.ok) throw new Error(`Deploy failed:\n${dep.out}`);
   const url = (dep.out.match(/https:\/\/[^\s]+\.workers\.dev/) || [])[0] || 'https://nastet.<your-subdomain>.workers.dev';
