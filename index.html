@@ -1524,6 +1524,12 @@
   /* At 45 min the area covers most of the view, so the fill has to show on
      its own, not only the edge. */
   .leaflet-overlay-pane path.iso-area{ fill:var(--leaf); fill-opacity:0.2; stroke:#3d7a26; stroke-width:2.5; stroke-dasharray:6 4; }
+  /* Thumb-sized hit areas for the small header links on touch screens, without
+     moving anything: the padding is taken back by an equal negative margin. */
+  @media (pointer:coarse){
+    #siteLink, #kofiLink{ padding:6px; margin:-6px; }   /* 12px gap between them: the areas meet, not overlap */
+    #legalLink{ padding-block:6px; margin-block:-6px; }
+  }
   .campus-btn{ margin-top:6px; background:none; border:none; padding:0; text-decoration:underline; color:var(--accent-ink) !important; line-height:1.5; }
   #campusPanel{
     position:absolute; z-index:1100; top:12px; right:12px; width:300px; max-width:calc(100% - 24px);

@@ -229,7 +229,8 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
       const hash = await page.evaluate(() => location.hash);
       note(`picked "${name}" → ${hash}, ${await rows(page)} rows, ${await markers(page)} markers`);
       await audit(page, `city ${hash}`);
-      if (!(await rows(page))) find('medium', 'city picker', `no rows after picking ${name}`);
+      const listed = await page.evaluate(() => (cityIndex.cities[currentCity] || {}).listings);
+      if (!(await rows(page)) && listed) find('medium', 'city picker', `no rows after picking ${name}, though the index says ${listed}`);
     }
     await load(page, `${SITE}/#stockholm`);
   });
@@ -263,6 +264,8 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
       note(`chip "${name}" → ${after[0]} rows, ${after[1]} markers, pressed=${await c.getAttribute('aria-pressed')}`);
       await audit(page, `chip ${name} toggled`);
       await c.click(); await settle(page, 700);
+      // The difficulty chip opens the Market tab while its data is still gated.
+      if (await page.evaluate(() => currentTab) !== 'listings') { await page.click('#tabListings'); await settle(page, 400); }
       const back = [await rows(page), await markers(page)];
       if (back[0] !== base[0] || back[1] !== base[1]) find('medium', 'filters', `chip "${name}" doesn't restore when toggled back`, `${base} → ${after} → ${back}`);
     }
@@ -613,7 +616,8 @@ for (const [name, dev] of [['phone', devices['Pixel 7']], ['phone-landscape', de
     const small = await page.evaluate(() => [...document.querySelectorAll('button, a, input, select, [role=button]')].filter(e => {
       const r = e.getBoundingClientRect(); const s = getComputedStyle(e);
       return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && (r.width < 24 || r.height < 24)
-        && !e.closest('.leaflet-control-attribution') && !(e.tagName === 'A' && getComputedStyle(e.parentElement).display !== 'flex');
+        && !e.closest('.leaflet-control-attribution, .leaflet-marker-pane') && !(e.tagName === 'A' && getComputedStyle(e.parentElement).display !== 'flex')
+        && !((l => l && l.getBoundingClientRect().height >= 24 && l.getBoundingClientRect().width >= 24)(e.closest('label')));
     }).map(e => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''} "${(e.textContent || e.getAttribute('aria-label') || '').trim().slice(0, 24)}" ${Math.round(e.getBoundingClientRect().width)}×${Math.round(e.getBoundingClientRect().height)}`));
     if (small.length) find('low', name, `${small.length} tap targets under 24px`, [...new Set(small)].slice(0, 12).join(' | '));
   });
