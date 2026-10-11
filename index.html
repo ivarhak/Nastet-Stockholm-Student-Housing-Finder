@@ -3500,7 +3500,7 @@ function renderMeta(){
   // true by construction; a promised interval was not — the schedule asked for
   // hourly and GitHub delivered every six hours, so the old "Updates hourly"
   // line was a claim the page had no way to keep.
-  updated.textContent = t('updated', 'updated ') + relAgo(d.generated_at);
+  updated.textContent = d.generated_at ? t('updated', 'updated ') + relAgo(d.generated_at) : '—';
   // Worth flagging when a scrape has actually been missed, because "updated
   // <a date>" reads as current at a glance and stale listings look exactly like
   // real ones.
@@ -3519,11 +3519,11 @@ function renderMeta(){
   // before crying wolf, and it can't shrink below that if the interval does.
   const every = Number(d.update_every_hours) || 2;
   const ageMin = (Date.now() - new Date(d.generated_at).getTime()) / 60000;
-  const stale = !d.demo && ageMin > Math.max(180, every * 60 * 2.5);
+  const stale = !d.demo && !!d.generated_at && ageMin > Math.max(180, every * 60 * 2.5);
   updated.style.color = stale ? 'var(--accent-ink)' : '';
   updated.title = stale
     ? `These listings are ${Math.round(ageMin / 60)}h old — no scrape has completed since. Hit "Refresh listings".`
-    : stamp(d.generated_at);
+    : (d.generated_at ? stamp(d.generated_at) : '');
   const bySrc = {};
   d.listings.forEach(l => bySrc[l.provider] = (bySrc[l.provider]||0)+1);
   document.getElementById('listingCount').textContent =
@@ -3571,7 +3571,7 @@ function initMap(){
     const m = leafletMap.getContainer().getBoundingClientRect(), r = icon.getBoundingClientRect(), pad = 40;
     const dx = r.left < m.left + pad ? r.left - m.left - pad : r.right > m.right - pad ? r.right - m.right + pad : 0;
     const dy = r.top < m.top + pad ? r.top - m.top - pad : r.bottom > m.bottom - pad ? r.bottom - m.bottom + pad : 0;
-    if (dx || dy) leafletMap.panBy([dx, dy], { animate: !matchMedia('(prefers-reduced-motion: reduce)').matches });
+    if (dx || dy) leafletMap.panBy([dx, dy], { animate: false });
   });
   // Canvas for the grocery dots ONLY, as an explicit per-layer renderer rather
   // than the map-wide `preferCanvas` flag. Global canvas would also move the
@@ -4051,6 +4051,16 @@ function selectionFromUrl(){
   if (area && Object.prototype.hasOwnProperty.call(currentData.areas || {}, area)) selectArea(area);
 }
 
+// Back/forward onto an earlier entry of this page: show what that address
+// says, rather than leaving the panel on whatever was picked since.
+window.addEventListener('popstate', () => {
+  if (!currentData || !selectionUrlReady) return;
+  const p = new URLSearchParams(location.search);
+  if (p.get('listing') === selectedListingId && p.get('area') === (selectedListingId ? null : selectedArea)) return;
+  if (p.get('listing') || p.get('area')) selectionFromUrl();
+  else clearSelection();
+});
+
 async function copySelectionLink(btn){
   const url = location.href;
   const done = t('link_copied', '✓ Copied');
@@ -4313,7 +4323,11 @@ function matchesSearch(l, q){
     .filter(v => v != null)
     .join(' ')
     .toLowerCase();
-  return haystack.includes(q);
+  if (haystack.includes(q)) return true;
+  // Typed without accents ("lappkarrsberget"), match the accented names too.
+  // A query that has its own å/ä/ö keeps meaning exactly that letter.
+  const bare = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return bare === q && haystack.normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(q);
 }
 
 function renderBrowseList(){

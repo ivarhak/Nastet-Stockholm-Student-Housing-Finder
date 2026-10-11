@@ -175,7 +175,7 @@ async function keyboard(page, label, presses = 70) {
   const invisible = new Set(), hidden = new Set(); let stuck = 0, last = '';
   for (let i = 0; i < presses; i++) {
     await page.keyboard.press('Tab');
-    await page.waitForTimeout(120);       // panning to a focused marker is animated
+    await page.waitForTimeout(80);
     const f = await page.evaluate(() => {
       const el = document.activeElement;
       if (!el || el === document.body) return null;
@@ -295,7 +295,7 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
     if (await visible(page, '#moveBy')) {
       for (const v of ['2020-01-01', '2030-12-31']) {
         await page.fill('#moveBy', v); await page.locator('#moveBy').dispatchEvent('change'); await settle(page, 400);
-        note(`move-in by ${v}: ${await rows(page)} rows`);
+        note(`move-in by ${v}: ${await rows(page)} rows (filter value ${await page.evaluate(() => typeof moveByDate !== 'undefined' ? moveByDate : '?')})`);
         await audit(page, `move-in by ${v}`);
       }
       await page.fill('#moveBy', ''); await page.locator('#moveBy').dispatchEvent('change'); await settle(page, 400);
@@ -534,6 +534,7 @@ for (const city of ['goteborg', 'lund']) {
   page.on('pageerror', e => find('high', 'failure modes', 'Uncaught page error', `${e.message} (during: ${curStep})`));
   await step('listings JSON fails', async () => {
     await page.route(/listings-.*\.json|\/api\/listings/, r => r.abort());
+    await page.goto('about:blank');
     await page.goto(`${SITE}/#stockholm`, { waitUntil: 'load', timeout: 60000 }); await settle(page, 4000);
     const txt = (await page.locator('body').innerText()).replace(/\s+/g, ' ').slice(0, 600);
     note(`with listings JSON blocked, the page says: "${txt.slice(0, 300)}"; ${await rows(page)} rows`);
@@ -544,6 +545,7 @@ for (const city of ['goteborg', 'lund']) {
   });
   await step('cities.json fails', async () => {
     await page.route(/cities\.json|\/api\/cities/, r => r.abort());
+    await page.goto('about:blank');
     await page.goto(`${SITE}/#stockholm`, { waitUntil: 'load', timeout: 60000 }); await settle(page, 3000);
     note(`with cities.json blocked: ${await rows(page)} rows`);
     await shot(page, 'no-cities');
@@ -552,6 +554,8 @@ for (const city of ['goteborg', 'lund']) {
   for (const [what, url] of [['unknown city', '/#paris'], ['bogus listing', '/?listing=does-not-exist#stockholm'],
                              ['bogus lang', '/?lang=xx#stockholm'], ['empty hash', '/#'], ['listing of another city', '/?listing=x#lund']]) {
     await step(`url: ${what}`, async () => {
+      // From a blank page: a hash-only change of the same page is no reload.
+      await page.goto('about:blank');
       await page.goto(SITE + url, { waitUntil: 'networkidle', timeout: 60000 }); await settle(page, 1500);
       const n = await rows(page);
       note(`${what} (${url}): ${n} rows, hash now ${await page.evaluate(() => location.hash)}, title "${(await page.locator('#panelTitle').innerText().catch(() => '')).split('\n')[0]}"`);
