@@ -1449,7 +1449,7 @@
   .gated p, .mk-p{ margin:0 0 6px; font-size:12px; line-height:1.5; color:var(--dim); }
   .gate-bar{ height:4px; background:var(--rule); margin:4px 0; }
   .gate-bar i{ display:block; height:100%; background:var(--accent-ink); }
-  .gate-cap{ font:10px/1.5 var(--mono); color:var(--faint); margin:6px 0 0; }
+  .gate-cap, .queue-card .gate-cap{ font:10px/1.5 var(--mono); color:var(--faint); margin:6px 0 0; }
   .mk-foot{ margin:4px 2px 12px; }
   .verdict{ font-family:var(--figure, inherit); font-weight:800; font-size:22px; margin:2px 0 2px; }
   .verdict.better{ color:var(--leaf); }
@@ -1591,6 +1591,8 @@
   .profile-card .watch-actions button{ flex:1 1 auto; white-space:nowrap; }
   .profile-card .qh{ margin-top:14px; }
   .profile-card > .kv:last-child{ margin-top:10px; }
+  .queue-card .mk-about{ margin:2px 0 10px; font:12px/1.5 var(--display); color:var(--dim); }
+  .queue-card .gated .gate-what{ font:11px/1.5 var(--display); color:var(--dim); margin:4px 0 8px; }
   .qh .qh-sub{ margin:0 0 8px; font:10.5px/1.45 var(--display); color:var(--dim); }
   .pf-check{ flex-direction:row !important; align-items:center; gap:7px !important; flex-basis:100% !important; }
   .pf-check input{ width:auto !important; accent-color:var(--ochre); }
@@ -2107,7 +2109,7 @@
           <div id="watchStatus" hidden></div>
           <div id="watchPermNote" hidden></div>
           <div id="discordBox" hidden>
-            <p data-i18n="dc_p"><b>Prefer Discord?</b> Our bot can DM you instead — no tab to keep open. Add it, then paste this command anywhere you can talk to it:</p>
+            <p data-i18n="dc_p"><b>Prefer Discord?</b> Our bot sends you a daily summary instead — what's new, what fits your filters and what you'd get with your queue days. No tab to keep open. Add it, then paste this command anywhere you can talk to it (change <code>frequency</code> to <code>twice_daily</code>, <code>weekly</code> or <code>instant</code> if you like):</p>
             <code id="discordCmd"></code>
             <div class="watch-actions">
               <button type="button" id="discordCopy" data-i18n="dc_copy">Copy command</button>
@@ -2167,6 +2169,11 @@ function esc(v){
 }
 
 const I18N = { sv: {
+  mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
+  p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
+  pw_about: 'Hur många fler dagar du troligen behöver köa för en bostad i varje område, utifrån hur många ködagar bostäder där nyligen gick för.',
+  df_about: 'Färgar varje område på kartan efter hur svåra bostäderna där är att få — hur många ködagar de brukar gå för.',
+  rl_about: 'Bostäder som legat ute förut och kommit tillbaka — ofta ett tecken på att det första erbjudandet föll bort.',
   qh_sub: 'Det som kan kosta dig din plats, utifrån uppgifterna ovan. Lägg in datumen i kalendern så får du en påminnelse två veckor innan.',
   pf_lead: 'Berätta var du står i varje kö. Då visar varje bostad om du skulle få den i dag, och du får påminnelser innan du tappar din plats.',
   pf_days_h: 'Står på Mina sidor på sssb.se. Fyll i den en gång — sedan räknar den upp av sig själv här, en dag per dag.',
@@ -2343,7 +2350,7 @@ const I18N = { sv: {
   cm_room: 'Sal', cm_level: 'plan',
   cm_house: 'hus', cm_maybe: 'Menade du',
   cm_ph_su: 'Sal eller byggnad — t.ex. D7, De Geersalen, kafé',
-  dc_p: '<b>Hellre Discord?</b> Vår bot kan skicka DM i stället — ingen flik behöver vara öppen. Lägg till den och klistra sedan in det här kommandot där du kan prata med den:',
+  dc_p: '<b>Hellre Discord?</b> Vår bot skickar en daglig sammanfattning i stället — vad som är nytt, vad som passar dina filter och vad du skulle få med dina ködagar. Ingen flik behöver vara öppen. Lägg till den och klistra sedan in kommandot där du kan prata med den (byt <code>frequency</code> till <code>twice_daily</code>, <code>weekly</code> eller <code>instant</code> om du vill):',
   dc_copy: 'Kopiera kommandot',
   dc_add: 'Lägg till boten ↗',
   nz_quiet: 'tyst', nz_moderate: 'måttligt buller', nz_noisy: 'bullrigt', nz_very: 'mycket bullrigt',
@@ -2391,7 +2398,7 @@ const I18N = { sv: {
   p3_rough: 'Använder en tumregel — ledande +15 % vid sista dagen — tills tillräckligt många avslut registrerats.',
   p3_rules_h: 'Så fungerar SSSB:s ansökningar',
   p3_rules: 'Du kan ha tre ansökningar samtidigt. Står du först i kön till flera erbjuder SSSB dig en av dem — du väljer inte vilken — så sök bara sådant du verkligen skulle ta. Att tacka nej upprepade gånger kan kosta dina ködagar, och utan kårmedlemskap stannar dagarna på 90. Reglerna ändras: kontrollera på sssb.se innan du förlitar dig på det här.',
-  pw_h: 'Hur länge tills du troligen får en',
+  pw_h: 'Din väntetid, område för område',
   pw_need: 'Fyll i dina SSSB-ködagar under Köer att gå med i för att se det här.',
   pw_now: 'inom räckhåll nu', pw_in: 'om ungefär', pw_months: 'månader',
   pw_basis: 'Vad registrerade avslut gick för (median), mot din löpande räkning. Varje dag du väntar lägger till en dag — gapet krymper en mot en.',
@@ -4571,7 +4578,11 @@ function discordCommand(){
   if (days !== '') bits.push(`days:${Math.round(Number(days))}`);
   if (rent !== '' && Number(rent) > 0) bits.push(`max_rent:${Math.round(Number(rent))}`);
   if (areas.length) bits.push(`areas:${areas.join(', ')}`);
-  if (days === '') bits.push('all_new:True');
+  // The map's own campus and commute limit come along, so the bot filters the
+  // way the page does; a daily summary is the default the bot starts with.
+  bits.push(`campus:${selectedSchool}`);
+  if (maxCommuteMin != null && maxCommuteMin < 90) bits.push(`max_commute:${maxCommuteMin}`);
+  bits.push('frequency:daily');
   return bits.join(' ');
 }
 function renderDiscord(){
@@ -5346,13 +5357,29 @@ function whenLine(l){
 // putting a confident number on three data points.
 const GATE_UNITS = { days: ['days of data', 'dagars data'], closings: ['closings recorded', 'avslut registrerade'],
                      'comparable listings': ['comparable listings', 'jämförbara bostäder'] };
+// What is being counted, in a sentence — a bare "0 / 30 closings recorded"
+// doesn't say what a closing is or why it matters.
+const GATE_WHAT = {
+  days: ['Nästet keeps a snapshot of the listings every day; this needs a few weeks of them.',
+         'Nästet sparar en ögonblicksbild av bostäderna varje dag; det här behöver några veckors.'],
+  closings: ['Each time an SSSB listing closes, Nästet records how many queue days it finally went for.',
+             'Varje gång en SSSB-bostad stänger sparar Nästet hur många ködagar den till slut gick för.'],
+  'comparable listings': ['Listings of the same kind and size to compare rents against.',
+                          'Bostäder av samma slag och storlek att jämföra hyran med.'],
+};
+// One line under each Market card's heading: what it will tell you, shown
+// whether or not it has enough data yet.
+function cardAbout(key, en){
+  return `<p class="mk-about">${t(key, en)}</p>`;
+}
 function gatedNote(name){
   const g = gate(name);
   const lead = t('gated', 'Will be enabled when more data has been collected');
   if (!g) return `<p class="gated">${lead}. ${t('gated_start', 'Recording started recently — check back in a few weeks.')}</p>`;
   const pct = Math.min(100, Math.round(g.have / Math.max(1, g.need) * 100));
   const unit = (GATE_UNITS[g.unit] || [g.unit, g.unit])[lang === 'sv' ? 1 : 0];
-  return `<div class="gated"><p>${lead}.</p>
+  const what = GATE_WHAT[g.unit] ? `<p class="gate-what">${GATE_WHAT[g.unit][lang === 'sv' ? 1 : 0]}</p>` : '';
+  return `<div class="gated"><p>${lead}.</p>${what}
     <div class="gate-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${g.need}" aria-valuenow="${Math.min(g.have, g.need)}"
       aria-label="${esc(unit)}"><i style="width:${pct}%"></i></div>
     <p class="gate-cap">${num(g.have)} / ${num(g.need)} ${unit}</p></div>`;
@@ -5369,7 +5396,7 @@ function sparkline(series){
 }
 
 function marketCard(){
-  const head = `<h3>${t('mk_h', 'How the market looks')}</h3>`;
+  const head = `<h3>${t('mk_h', 'How the market looks')}</h3>${cardAbout('mk_about', 'Whether there are more or fewer places than usual right now, what they cost, and how many queue days they take.')}`;
   const g = gate('market');
   const m = historyData && historyData.market;
   if (!g || !g.ready || !m) return head + gatedNote('market');
@@ -5419,7 +5446,7 @@ function pickThree(){
 }
 
 function pickCard(){
-  const head = `<h3>${t('p3_h', 'Pick your 3')}</h3>`;
+  const head = `<h3>${t('p3_h', 'Pick your 3')}</h3>${cardAbout('p3_about', 'SSSB lets you apply for three places at a time. This suggests the three you have the best shot at.')}`;
   const res = pickThree();
   if (!res) return head + `<p class="mk-p">${t('p3_need', 'Add your SSSB queue days under Queues to join and this suggests which three to apply for.')}</p>`;
   if (!res.picks.length) return head + `<p class="mk-p">${t('p3_none', 'No SSSB listings pass your filters right now.')}</p>`;
@@ -5443,7 +5470,7 @@ function pickCard(){
 
 // ── Projected wait ──
 function waitCard(){
-  const head = `<h3>${t('pw_h', 'How long until you’re likely to get one')}</h3>`;
+  const head = `<h3>${t('pw_h', 'Your wait, area by area')}</h3>${cardAbout('pw_about', 'How many more days you’d likely need to queue for a place in each area, from the queue days recent places there went for.')}`;
   const g = gate('projected_wait');
   if (!g || !g.ready) return head + gatedNote('projected_wait');
   const mine = profileDaysNow();
@@ -5470,7 +5497,7 @@ function waitCard(){
 
 function relistCard(){
   const n = historyData && historyData.relisted ? Object.keys(historyData.relisted).length : 0;
-  const head = `<h3>${t('rl_h', 'Back on the market')}</h3>`;
+  const head = `<h3>${t('rl_h', 'Back on the market')}</h3>${cardAbout('rl_about', 'Listings that were up before and came back — often a sign the first offer fell through.')}`;
   const g = gate('relisting');
   const body = n
     ? `<p class="mk-p">${n} ${t('rl_n', 'of today’s listings were listed before — marked on their rows.')}</p>`
@@ -5479,7 +5506,7 @@ function relistCard(){
 }
 
 function diffCard(){
-  const head = `<h3>${t('df_h', 'Difficulty map')}</h3>`;
+  const head = `<h3>${t('df_h', 'Difficulty map')}</h3>${cardAbout('df_about', 'Colours each area on the map by how hard its places are to get — the queue days they typically went for.')}`;
   if (!diffReady()) return head + gatedNote('difficulty');
   return head + `<p class="mk-p">${t('df_on', 'Switch on Difficulty above the map to colour each area by the queue days its places typically went for.')}</p>
     <div class="df-key"><span class="sw easy"></span>${t('df_easy', 'easier')} <span class="sw mid"></span>${t('df_mid', 'middle')} <span class="sw hard"></span>${t('df_hard', 'harder')} <span class="sw none"></span>${t('df_none', 'too few closings')}</div>`;

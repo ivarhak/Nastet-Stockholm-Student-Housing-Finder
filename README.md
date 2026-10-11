@@ -253,48 +253,96 @@ One-time setup, about ten minutes:
 
 Tests run with `npm test` in `worker/` and need nothing but Node.
 
-### Discord alerts (optional)
+### Discord bot: summaries and alerts (optional)
 
-The same Worker runs a Discord bot: `/watch set` saves a watch, and the bot
-DMs you when a listing you could get turns up, when one you were told about
-now needs more queue days than you have, and the day before a deadline. It
-needs no gateway connection — Discord calls the Worker, and the Worker calls
-Discord's REST API.
+The same Worker runs a Discord bot. You tell it your city, queue days and
+filters once; it then DMs you a **summary** on your schedule — daily (the
+default), twice a day or weekly — or, if you'd rather, **one DM per listing**
+the moment it turns up. It needs no gateway connection: Discord calls the
+Worker, and the Worker calls Discord's REST API.
 
-1. **Create the app.** [Discord developer portal](https://discord.com/developers/applications)
-   → *New Application*. From *General Information* copy the **Application ID**
-   and **Public Key**; from *Bot* → *Reset Token* copy the **bot token**. Under
-   *Installation*, tick both **Guild Install** and **User Install** (scopes
-   `applications.commands`, plus `bot` for guilds) and copy the **Install Link**.
-2. **Give the Worker its secrets:**
+A daily summary looks like this:
+
+```
+Nästet · Stockholm · Mon 12 Oct
+7 new listings since Sun 11 Oct, 08:00 (3 SSSB · 4 Bostadsförmedlingen)
+→ 3 fit your filters (≤ 30 min by bike to KTH · ≤ 6 000 kr)
+→ 1 you'd get today with your 312 queue days, plus 2 decided by deadline, open to apply
+
+New and fitting
+• Studentbacken 23 (Jerum) · 4 861 kr · 17 m² · 7 min by bike · ✅ you'd lead (61 queue days) — link
+• Odengatan 1 (Vasastan) · 6 900 kr · 9 min by bike · apply by 2026-10-14 — link
+
+Closing within two days (1)
+• …
+
+Right now: 126 open in Stockholm · 18 fit your filters · you'd lead 9 of the 30 with queue days
+```
+
+Days with nothing new and nothing closing are skipped unless you ask for a
+message every time (`always:True`).
+
+**Commands** (once a watch exists every option is optional — only what you
+give is changed):
+
+| Command | What it does |
+|---|---|
+| `/watch set days:312 campus:KTH max_commute:30 max_rent:6000` | Start a watch, or change any part of it |
+| `/watch set frequency:twice_daily hour:7` | Summaries at 07:00 and 19:00, Stockholm time. Also `daily`, `weekly` (Mondays) and `instant` |
+| `/watch set areas:Jerum, Lappkärrsberget` | Only these areas; `areas:any` clears it, as `max_rent:0` and `max_commute:0` clear those |
+| `/watch show` | Your settings, and how many listings fit them right now |
+| `/watch now` | A summary straight away |
+| `/watch stop` | Stop, and delete everything stored about you |
+
+#### Setting it up
+
+Everything here is free (Cloudflare's free plan, a Discord application). Do
+the Worker setup above first; then, about fifteen minutes:
+
+1. **Create the Discord application.** [Discord developer portal](https://discord.com/developers/applications)
+   → *New Application* (call it Nästet). From *General Information* copy the
+   **Application ID** and **Public Key**. Under *Bot* → *Reset Token*, copy
+   the **bot token** — it's shown once; keep it out of every file in this repo.
+2. **Choose how people add it.** *Installation* → tick **User Install**
+   (people add it to their own account and talk to it in DMs — no server
+   needed) and, if you want it in a server too, **Guild Install** with scopes
+   `applications.commands` and `bot`. Copy the **Install Link**.
+3. **Give the Worker its secrets** (from `worker/`):
    ```bash
    wrangler secret put DISCORD_PUBLIC_KEY
    wrangler secret put DISCORD_BOT_TOKEN
-   wrangler secret put NOTIFY_SECRET        # any long random string, e.g. `openssl rand -hex 32`
+   wrangler secret put NOTIFY_SECRET        # any long random string: openssl rand -hex 32
    wrangler deploy
    ```
-3. **Point Discord at it:** *General Information* → *Interactions Endpoint URL*
-   = `https://nastet.<your-subdomain>.workers.dev/interactions`. Discord sends
-   a signed test request; saving only succeeds if the Worker answers it.
-4. **Register the command:**
+4. **Point Discord at it:** *General Information* → *Interactions Endpoint URL*
+   = `https://nastet.<your-subdomain>.workers.dev/interactions` → *Save*.
+   Discord sends a signed test request and only saves if the Worker answers
+   it, so a successful save means the keys are right.
+5. **Register the commands** (again whenever `COMMANDS` in `discord.js`
+   changes; global commands can take a few minutes to show up):
    ```bash
    DISCORD_APP_ID=… DISCORD_BOT_TOKEN=… npm run register-commands
    ```
-5. **Let the publish workflow ping it** (so DMs go out minutes after new data
-   rather than at the next hourly cron): add repository secrets
+6. **Try it:** open the Install Link, add the app, DM it
+   `/watch set days:100` and then `/watch now`. `wrangler tail` shows each
+   hour's `notify: {…"summaries":1…}`.
+7. **Let the publish workflow ping it** (instant DMs then go out minutes
+   after new data instead of at the next hourly run): add repository secrets
    `NOTIFY_URL` = `https://nastet.<your-subdomain>.workers.dev/notify` and
-   `NOTIFY_SECRET` = the same string as in step 2.
-6. **Show it on the site:** set `DISCORD_INVITE` in `index.html` to the Install
-   Link. The watch panel then offers "Prefer Discord?" with the command
-   already filled in from the form.
-7. **Per-city digest channels (optional):** create a channel webhook and
+   `NOTIFY_SECRET` = the same string as in step 3.
+8. **Show it on the site:** set `DISCORD_INVITE` in `index.html` to the
+   Install Link. The watch panel then offers "Prefer Discord?" with a
+   ready-made `/watch set` command — city, queue days, rent, areas, campus and
+   commute filled in from the page.
+9. **Per-city channels (optional):** create a channel webhook and
    `wrangler secret put DIGEST_WEBHOOK_STOCKHOLM` (or `_GOTEBORG`, `_LUND`);
-   each publish with new listings posts a summary there.
+   each publish with new listings posts a list there.
 
 What's stored, in the `SUBS` KV namespace under the user's Discord id: city,
-queue days and the date they were given, max rent, areas, whether to send
-every new listing, the DM channel id and the listing ids already sent. Nothing
-else. `/watch stop` deletes it; so does six months without a command.
+queue days and the date they were given, max rent, areas, campus and longest
+commute, how often and at what hour to write, the DM channel id, and the
+listing ids already sent or already counted in a summary. Nothing else.
+`/watch stop` deletes it; so does six months without a command.
 
 
 
