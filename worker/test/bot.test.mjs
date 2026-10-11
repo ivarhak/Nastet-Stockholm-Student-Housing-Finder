@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { verifySignature, handleInteraction, applySet } from '../src/discord.js';
 import { plan, remember, matches, runningDays, commuteMin, fits, latestSlot, dueSlot } from '../src/match.js';
 import { summarize } from '../src/summary.js';
+import { syncCommands } from '../src/commands.js';
 import { runNotify, hmacHex, handleNotify, compose } from '../src/notify.js';
 
 const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
@@ -270,4 +271,29 @@ test('compose escapes markdown and stays under the limit', () => {
   assert.ok(s.length <= 1990);
   assert.match(s, /\\\*\\\*bold/);
   assert.match(s, /and 24 more/);
+});
+
+test('student union: without one the count stops at 90', () => {
+  assert.equal(runningDays({ days: 80, from: '2026-10-01', union: false }, '2026-10-30'), 90);
+  assert.equal(runningDays({ days: 90, from: '2026-10-01', union: false }, '2026-12-01'), 90);
+  assert.equal(runningDays({ days: 120, from: '2026-10-01', union: false }, '2026-12-01'), 120);   // already past it: stays
+  assert.equal(runningDays({ days: 90, from: '2026-10-01' }, '2026-10-11'), 100);
+  const { sub } = applySet({ city: 'stockholm', days: 90 }, { student_union: false }, DATA, '2026-10-11');
+  assert.equal(sub.union, false);
+});
+
+test('commands register themselves once per change', async () => {
+  const SUBS = kv();
+  const calls = [];
+  const f = async (url, init = {}) => { calls.push([String(url), init.method || 'GET']);
+    return new Response(JSON.stringify({ id: 'app9' })); };
+  const env = { SUBS, DISCORD_BOT_TOKEN: 't' };
+  let r = await syncCommands(env, f);
+  assert.equal(r.ok, true);
+  assert.deepEqual(calls.map(c => c[1] + ' ' + c[0].replace('https://discord.com/api/v10', '')),
+                   ['GET /oauth2/applications/@me', 'PUT /applications/app9/commands']);
+  r = await syncCommands(env, f);
+  assert.equal(r.unchanged, true);
+  assert.equal(calls.length, 2);
+  assert.equal((await syncCommands({}, f)).skipped, 'not configured');
 });

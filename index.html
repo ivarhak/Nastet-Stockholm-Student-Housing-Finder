@@ -4580,6 +4580,7 @@ function discordCommand(){
   if (areas.length) bits.push(`areas:${areas.join(', ')}`);
   // The map's own campus and commute limit come along, so the bot filters the
   // way the page does; a daily summary is the default the bot starts with.
+  if (profile.union === false) bits.push('student_union:False');
   bits.push(`campus:${selectedSchool}`);
   if (maxCommuteMin != null && maxCommuteMin < 90) bits.push(`max_commute:${maxCommuteMin}`);
   bits.push('frequency:daily');

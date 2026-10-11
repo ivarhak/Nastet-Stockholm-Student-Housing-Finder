@@ -10,6 +10,7 @@ import { dispatchWorkflow } from './github.js';
 import { checkFreshness } from './health.js';
 import { handleInteraction } from './discord.js';
 import { handleNotify, runNotify } from './notify.js';
+import { syncCommands } from './commands.js';
 
 export default {
   async scheduled(event, env, ctx) {
@@ -19,6 +20,9 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method === 'POST' && url.pathname === '/interactions') {
+      // A deploy that changed /watch registers the new version on first use.
+      ctx.waitUntil(syncCommands(env).then(r => { if (!r.unchanged) console.log(`commands: ${JSON.stringify(r)}`); },
+                                           e => console.log(`commands: failed — ${e && e.message}`)));
       return handleInteraction(request, env, ctx);
     }
     if (request.method === 'POST' && url.pathname === '/notify') {
@@ -37,6 +41,11 @@ export async function runCron(env) {
   const health = await checkFreshness(env);
   console.log(`freshness: ${health.ageH === null ? 'unknown' : health.ageH.toFixed(1) + ' h'}`
     + `${health.stale ? ' — STALE' : ''}${health.posted ? ' — posted to admin channel' : ''}`);
+  try {
+    console.log(`commands: ${JSON.stringify(await syncCommands(env))}`);
+  } catch (e) {
+    console.log(`commands: failed — ${e && e.message}`);
+  }
   // Fallback for the workflow's own /notify call; a no-op when nothing changed.
   let notify = null;
   try {

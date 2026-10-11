@@ -8,7 +8,7 @@
 // username, no messages. /watch stop deletes it; six months without a command
 // deletes it too (see notify.js).
 
-import { stockholmToday, runningDays, latestSlot, FREQS, DEFAULT_HOUR } from './match.js';
+import { stockholmToday, runningDays, latestSlot, FREQS, DEFAULT_HOUR, NO_UNION_CAP } from './match.js';
 import { CITIES, describeFilters, preview, summarize } from './summary.js';
 
 export { CITIES };
@@ -74,7 +74,9 @@ const hh = h => String(h).padStart(2, '0');
 export function describe(sub, today, data) {
   const bits = [`**${CITIES[sub.city] || sub.city}**`];
   const d = runningDays(sub, today);
-  bits.push(d != null ? `${d} queue days today (counting a day per day)` : 'no queue days given');
+  bits.push(d == null ? 'no queue days given'
+    : sub.union === false ? `${d} queue days today (no student union, so capped at ${Math.max(sub.days, NO_UNION_CAP)})`
+    : `${d} queue days today (counting a day per day)`);
   bits.push(describeFilters(sub, data));
   const freq = sub.freq || 'instant';
   const at = Number.isInteger(sub.hour) ? sub.hour : DEFAULT_HOUR;
@@ -135,6 +137,7 @@ export function applySet(existing, o, data, today) {
   if (o.hour !== undefined) sub.hour = Number.isInteger(o.hour) && o.hour >= 0 && o.hour <= 23 ? o.hour : DEFAULT_HOUR;
   if (o.always !== undefined) sub.always = !!o.always;
   if (o.all_new !== undefined) sub.all_new = !!o.all_new;
+  if (o.student_union !== undefined) sub.union = !!o.student_union;
   // A new watch gets summaries by default; the original one-DM-per-listing
   // behaviour is still there as frequency: instant.
   if (!base.city) sub.freq = sub.freq || 'daily';
@@ -257,6 +260,7 @@ export const COMMANDS = [{
       { type: 4, name: 'max_rent', description: 'Highest rent in kr per month (0 = no limit)', min_value: 0, max_value: 50000 },
       { type: 3, name: 'areas', description: 'Comma-separated areas, or "any"' },
       { type: 5, name: 'always', description: 'Send summaries even when nothing is new' },
+      { type: 5, name: 'student_union', description: 'Member of a student union (kår)? Without one SSSB stops your days at 90' },
       { type: 5, name: 'all_new', description: 'Instant mode: also DM every new deadline listing within your limits' },
     ] },
     { type: 1, name: 'show', description: 'Show your watch and what fits it right now' },

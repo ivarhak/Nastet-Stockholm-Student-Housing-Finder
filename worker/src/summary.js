@@ -106,6 +106,7 @@ export function summarize(env, sub, data, now = new Date()) {
     if (!allLead.length) {
       const least = queued.reduce((a, b) => (a.queue_days <= b.queue_days ? a : b));
       overall.push(`The shortest queue that fits you is **${nf(least.queue_days)}** days (${md(least.address || least.area)}) — ${nf(least.queue_days - mine)} more than you have.`);
+      if (sub.union === false && mine >= 90) overall.push('Your days are capped at 90 until you join a student union (kår) — then they count on.');
     }
   } else if (mine == null && queued.length) {
     overall.push('Add your queue days (`/watch set days:`) to see which ones you\'d get.');

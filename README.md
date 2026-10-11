@@ -289,6 +289,7 @@ give is changed):
 |---|---|
 | `/watch set days:312 campus:KTH max_commute:30 max_rent:6000` | Start a watch, or change any part of it |
 | `/watch set frequency:twice_daily hour:7` | Summaries at 07:00 and 19:00, Stockholm time. Also `daily`, `weekly` (Mondays) and `instant` |
+| `/watch set student_union:False` | Not in a student union (kår): your days stop at 90, as SSSB counts them |
 | `/watch set areas:Jerum, Lappkärrsberget` | Only these areas; `areas:any` clears it, as `max_rent:0` and `max_commute:0` clear those |
 | `/watch show` | Your settings, and how many listings fit them right now |
 | `/watch now` | A summary straight away |
@@ -327,8 +328,10 @@ the Worker setup above first; then, about fifteen minutes:
    = `https://nastet.<your-subdomain>.workers.dev/interactions` → *Save*.
    Discord sends a signed test request and only saves if the Worker answers
    it, so a successful save means the keys are right.
-5. **Register the commands** (again whenever `COMMANDS` in `discord.js`
-   changes; global commands can take a few minutes to show up):
+5. **Register the commands** once. After that the Worker keeps them up to
+   date by itself: when a deploy changes `COMMANDS`, it re-registers on the
+   next command or hourly run, using the bot token it already has. Global
+   commands can take a few minutes to show up:
    ```bash
    DISCORD_APP_ID=… DISCORD_BOT_TOKEN=… npm run register-commands
    ```

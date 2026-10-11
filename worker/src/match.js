@@ -18,9 +18,14 @@ export function daysBetween(fromISO, toISO) {
   return Math.round((Date.parse(toISO + 'T00:00:00Z') - Date.parse(fromISO + 'T00:00:00Z')) / 86400000);
 }
 
+// Without a student union (kår) membership SSSB stops the count at 90 days —
+// the same rule as the site's "Member of a student union" box. A count already
+// past 90 when given stays where it is.
+export const NO_UNION_CAP = 90;
 export function runningDays(sub, today) {
   if (sub.days == null) return null;
-  return sub.days + Math.max(0, daysBetween(sub.from || today, today));
+  const n = sub.days + Math.max(0, daysBetween(sub.from || today, today));
+  return sub.union === false ? Math.min(n, Math.max(sub.days, NO_UNION_CAP)) : n;
 }
 
 // Bike minutes from a listing to a campus, worked out the way the page does
