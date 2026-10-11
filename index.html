@@ -3563,14 +3563,24 @@ function listingsInArea(name){
 let leafletMap;
 function initMap(){
   leafletMap = L.map('map', { zoomControl:true }).setView(centre(), 12);
-  // Tab reaches every marker, including ones outside the visible map; bring
-  // the focused one into view instead of leaving focus somewhere unseen.
+  // Tab reaches every marker, including ones outside the visible map. Leaflet's
+  // own focus pan is animated and stops with a divIcon half over the edge, so
+  // it's off, and this brings the whole marker in, with a margin, at once.
+  L.Marker.prototype.options.autoPanOnFocus = false;
   leafletMap.getContainer().addEventListener('focusin', e => {
     const icon = e.target.closest && e.target.closest('.leaflet-marker-icon');
     if (!icon) return;
-    const m = leafletMap.getContainer().getBoundingClientRect(), r = icon.getBoundingClientRect(), pad = 40;
-    const dx = r.left < m.left + pad ? r.left - m.left - pad : r.right > m.right - pad ? r.right - m.right + pad : 0;
-    const dy = r.top < m.top + pad ? r.top - m.top - pad : r.bottom > m.bottom - pad ? r.bottom - m.bottom + pad : 0;
+    // From Leaflet's own position for the icon, not its on-screen box: focusing
+    // makes the browser scroll the container to the marker, Leaflet scrolls it
+    // straight back, and a box measured in between lies.
+    const pos = L.DomUtil.getPosition(icon);
+    if (!pos) return;
+    const cs = getComputedStyle(icon), size = leafletMap.getSize(), pad = 40;
+    const p0 = leafletMap.layerPointToContainerPoint(pos);
+    const x0 = p0.x + parseFloat(cs.marginLeft || 0), y0 = p0.y + parseFloat(cs.marginTop || 0);
+    const x1 = x0 + icon.offsetWidth, y1 = y0 + icon.offsetHeight;
+    const dx = x0 < pad ? x0 - pad : x1 > size.x - pad ? x1 - size.x + pad : 0;
+    const dy = y0 < pad ? y0 - pad : y1 > size.y - pad ? y1 - size.y + pad : 0;
     if (dx || dy) leafletMap.panBy([dx, dy], { animate: false });
   });
   // Canvas for the grocery dots ONLY, as an explicit per-layer renderer rather

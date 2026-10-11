@@ -295,7 +295,10 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
     if (await visible(page, '#moveBy')) {
       for (const v of ['2020-01-01', '2030-12-31']) {
         await page.fill('#moveBy', v); await page.locator('#moveBy').dispatchEvent('change'); await settle(page, 400);
-        note(`move-in by ${v}: ${await rows(page)} rows (filter value ${await page.evaluate(() => typeof moveByDate !== 'undefined' ? moveByDate : '?')})`);
+        note(`move-in by ${v}: ${await rows(page)} rows; ${JSON.stringify(await page.evaluate(() => ({
+          filter: moveByDate, withDate: currentData.listings.filter(l => l.move_in).length,
+          sample: currentData.listings.filter(l => l.move_in).slice(0, 3).map(l => l.move_in),
+          passing: currentData.listings.filter(passesFilters).length, tab: currentTab, browse: typeof browseMode !== 'undefined' ? browseMode : '?' })))}`);
         await audit(page, `move-in by ${v}`);
       }
       await page.fill('#moveBy', ''); await page.locator('#moveBy').dispatchEvent('change'); await settle(page, 400);
