@@ -296,6 +296,15 @@ give is changed):
 
 #### Setting it up
 
+**The quick way:** with [Node.js](https://nodejs.org) installed, run
+`npm run setup` in `worker/`. It does both this section and the Worker setup
+above in one go — logs you in to Cloudflare, creates the KV namespace and
+writes its id into `wrangler.toml`, deploys, stores the secrets (typed at
+wrangler's own prompt, never saved to a file), registers the command, and
+opens each page you need to copy something from. It skips whatever is
+already done, so it's safe to run again. The steps below are the same thing
+by hand.
+
 Everything here is free (Cloudflare's free plan, a Discord application). Do
 the Worker setup above first; then, about fifteen minutes:
 
