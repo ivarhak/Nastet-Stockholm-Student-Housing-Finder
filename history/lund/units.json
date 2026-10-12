@@ -33,12 +33,16 @@
  ],
  "AF Bostäder:Kämnärsvägen 41 F:64.5:3": [
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-4130"
   }
  ],
  "AF Bostäder:Kämnärsvägen 42:22.8:3": [
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-12697"
   }
@@ -53,6 +57,8 @@
  ],
  "AF Bostäder:Kämnärsvägen 60:22.0:4": [
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-12835"
   }
@@ -163,6 +169,10 @@
    "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-14356"
+  },
+  {
+   "first_seen": "2026-10-12T22:18:14.036985+00:00",
+   "id": "af-14351"
   }
  ],
  "AF Bostäder:Kämnärsvägen 63:27.0:2": [
@@ -481,6 +491,8 @@
  ],
  "AF Bostäder:Tunavägen 31 E:38.0:3": [
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-13192"
   }
@@ -523,12 +535,22 @@
  ],
  "AF Bostäder:Tunavägen 39 H:18.7:6": [
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-5910"
   },
   {
+   "closed_at": "2026-10-12T22:18:14.036985+00:00",
+   "final_days": null,
    "first_seen": "2026-10-09T20:12:29.506892+00:00",
    "id": "af-5954"
+  }
+ ],
+ "AF Bostäder:Ulrikedalsvägen 26 C:51.0:4": [
+  {
+   "first_seen": "2026-10-12T22:18:14.036985+00:00",
+   "id": "af-1765"
   }
  ],
  "AF Bostäder:Ulrikedalsvägen 28 B:17.3:2": [
