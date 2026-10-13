@@ -129,6 +129,32 @@
   "type": "1 rum och kök",
   "unit": "SGS:Lillatorpsgatan 2 C:32.0:None"
  },
+ "sgs-KDyytfBwRFt69Hj6qktpyVYp": {
+  "address": "Uppstigen 144 Rum 33",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "closed_at": "2026-10-13T14:18:19.949968+00:00",
+  "deadline": null,
+  "final_days": null,
+  "first_seen": "2026-10-11T22:18:49.588637+00:00",
+  "floor": null,
+  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "move_in": "2026-10-31",
+  "obs": [
+   [
+    "2026-10-11T22:18:49.588637+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4727,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:Uppstigen 144 Rum 33:18.5:None"
+ },
  "sgs-KFCrCXwG7bQtpQgDJjKmWTCP": {
   "address": "Kronhusgatan 2 C",
   "area": "Kronhusgatan",

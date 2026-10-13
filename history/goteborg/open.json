@@ -6,7 +6,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-12-31",
   "obs": [
    [
@@ -30,7 +30,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -54,7 +54,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-10-31",
   "obs": [
    [
@@ -78,7 +78,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-10-31",
   "obs": [
    [
@@ -95,30 +95,6 @@
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:Richertsgatan 2c Rum 3301:19.5:None"
  },
- "sgs-KDyytfBwRFt69Hj6qktpyVYp": {
-  "address": "Uppstigen 144 Rum 33",
-  "area": "Olofshöjd",
-  "class": "corridor",
-  "deadline": null,
-  "first_seen": "2026-10-11T22:18:49.588637+00:00",
-  "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
-  "move_in": "2026-10-31",
-  "obs": [
-   [
-    "2026-10-11T22:18:49.588637+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4727,
-  "size": 18.5,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:Uppstigen 144 Rum 33:18.5:None"
- },
  "sgs-VrwfgXthXwqJ6mdGPWJ4Tjmg": {
   "address": "Mejerigatan 2 A Rum 1071",
   "area": "Ostkupan",
@@ -126,7 +102,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -150,7 +126,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -174,7 +150,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -198,7 +174,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-12-31",
   "obs": [
    [
@@ -222,7 +198,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-10-31",
   "obs": [
    [
@@ -246,7 +222,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -270,7 +246,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-10-31",
   "obs": [
    [
@@ -294,7 +270,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -318,7 +294,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
@@ -342,7 +318,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-12-31",
   "obs": [
    [
@@ -366,7 +342,7 @@
   "deadline": null,
   "first_seen": "2026-10-11T22:18:49.588637+00:00",
   "floor": null,
-  "last_seen": "2026-10-13T13:18:20.402141+00:00",
+  "last_seen": "2026-10-13T14:18:19.949968+00:00",
   "move_in": "2026-11-30",
   "obs": [
    [
