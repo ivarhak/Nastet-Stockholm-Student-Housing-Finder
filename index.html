@@ -4494,7 +4494,10 @@ function watchToUrl(w){
 // One day per day, counted in Stockholm — the count ticks over at Swedish
 // midnight rather than the reader's, which is the same midnight SSSB uses.
 function watchDaysNow(w){
-  return w.days + Math.max(0, daysBetween(w.from, todayISO()));
+  const n = w.days + Math.max(0, daysBetween(w.from, todayISO()));
+  // Without a student union SSSB stops counting at 90 — the same cap the
+  // profile applies, or a watch would announce places you can't actually get.
+  return profile.union === false ? Math.min(n, Math.max(w.days, SSSB_NO_UNION_CAP)) : n;
 }
 
 // SSSB only, by choice: the running day-count is the whole test, and

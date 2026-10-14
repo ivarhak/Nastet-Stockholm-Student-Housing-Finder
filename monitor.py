@@ -417,6 +417,12 @@ def _save_address_cache(cache: dict):
     ADDRESS_CACHE_FILE.write_text(json.dumps(cache, indent=1, ensure_ascii=False))
 
 
+def _building_address(address: str) -> str:
+    """"Mejerigatan 2 B Rum 533" -> "Mejerigatan 2 B": the building, not the room."""
+    return re.sub(r"\s+(?:rum|room|lgh|lägenhet)\s*(?:nr\.?\s*)?\d+\w*\s*$", "", address or "",
+                  flags=re.IGNORECASE).strip()
+
+
 def geocode_listing_address(address: str, area: str, cache: dict,
                             hint: str | None = None,
                             addresses: dict | None = None,
@@ -433,7 +439,7 @@ def geocode_listing_address(address: str, area: str, cache: dict,
     # knows the building, and answered nothing for all five such SGS addresses
     # (2026-10-14). Look up — and cache under — the building, which also means
     # the old cached "nothing" for the full string is no longer consulted.
-    address = re.sub(r"\s+(?:rum|room|lgh|lägenhet)\s*(?:nr\.?\s*)?\d+\w*\s*$", "", address, flags=re.IGNORECASE).strip()
+    address = _building_address(address)
     if address in cache:
         return cache[address]
 
@@ -2972,16 +2978,19 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
             wanted.append((l["address"], l.get("area")))
             hints[l["address"]] = l.get("geocode_hint")
     wanted.sort()
-    fresh = [a for a, _ in wanted if a not in addr_cache]
+    fresh = [a for a, _ in wanted if _building_address(a) not in addr_cache]
     if fresh:
         print(f"geocoding {len(fresh)} new building address(es) "
               f"({len(wanted) - len(fresh)} already cached, ~1s each)...")
+    # The function's answer, not addr_cache[address]: it caches under the
+    # building ("… Rum 533" stripped), so the raw address isn't the key.
+    resolved = {}
     for address, area in wanted:
-        geocode_listing_address(address, area, addr_cache, hint=hints.get(address),
-                                addresses=conf.get("area_addresses"),
-                                city_name=conf["name"])
+        resolved[address] = geocode_listing_address(address, area, addr_cache, hint=hints.get(address),
+                                                    addresses=conf.get("area_addresses"),
+                                                    city_name=conf["name"])
     for l in area_rows:
-        l["coords"] = addr_cache.get(l.get("address")) if l.get("address") else None
+        l["coords"] = resolved.get(l.get("address")) if l.get("address") else None
 
     # ── 3. The areas themselves ──────────────────────────────────────────
     if conf.get("areas"):

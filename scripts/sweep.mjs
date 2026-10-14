@@ -624,6 +624,93 @@ for (const [name, dev] of [['phone', devices['Pixel 7']], ['phone-landscape', de
   await ctx.close();
 }
 
+// ── Every element, clicked ────────────────────────────────────────────────
+// Every visible button, toggle, checkbox and expander in each tab, one at a
+// time, re-found after each click because the page re-renders. Skipped: what
+// would act on the world or wipe the test's own state (refresh the data,
+// forget this device, stop a watch), and plain links, which are checked by
+// address instead. After each click: no new page errors, still on the site,
+// Escape to close whatever opened.
+const SKIP = /refresh|uppdatera|forget|glöm|stop|sluta|delete|radera|start watch|starta bevakning/i;
+async function clickEverything(page, label) {
+  const before = findings.length;
+  let clicked = 0;
+  const describe = () => page.evaluate(() => {
+    const vis = e => { const r = e.getBoundingClientRect(); const s = getComputedStyle(e);
+      return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && !e.closest('[hidden]') && !e.disabled; };
+    return [...document.querySelectorAll('button, [role=button], summary, input[type=checkbox], select')]
+      .filter(vis).filter(e => !e.closest('.leaflet-marker-pane'))
+      .map(e => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}|${(e.getAttribute('aria-label') || e.textContent || e.value || '').trim().replace(/\s+/g, ' ').slice(0, 40)}`);
+  });
+  const done = new Set();
+  for (let guard = 0; guard < 400; guard++) {
+    const list = await describe();
+    const i = list.findIndex(d => !done.has(d) && !SKIP.test(d));
+    if (i < 0) break;
+    const d = list[i];
+    done.add(d);
+    try {
+      await page.evaluate(([idx]) => {
+        const vis = e => { const r = e.getBoundingClientRect(); const s = getComputedStyle(e);
+          return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && !e.closest('[hidden]') && !e.disabled; };
+        const all = [...document.querySelectorAll('button, [role=button], summary, input[type=checkbox], select')]
+          .filter(vis).filter(e => !e.closest('.leaflet-marker-pane'));
+        const e = all[idx];
+        if (!e) return;
+        if (e.tagName === 'SELECT') { if (e.options.length > 1) { e.selectedIndex = (e.selectedIndex + 1) % e.options.length; e.dispatchEvent(new Event('change', { bubbles: true })); } }
+        else e.click();
+      }, [i]);
+      clicked++;
+      await page.waitForTimeout(250);
+      if (!page.url().startsWith(SITE)) { find('medium', label, 'A button left the site', `${d} → ${page.url()}`); await page.goBack().catch(() => {}); await settle(page, 800); }
+      await page.keyboard.press('Escape').catch(() => {});
+    } catch (e) {
+      find('low', label, 'Could not click', `${d}: ${e.message.split('\n')[0]}`);
+    }
+  }
+  note(`[${label}] clicked ${clicked} controls, ${findings.length - before} finding(s) during it`);
+  await audit(page, `${label} after clicking everything`);
+}
+
+async function checkLinks(page, label) {
+  const hrefs = await page.evaluate(() => [...new Set([...document.querySelectorAll('a[href^="http"]')].map(a => a.href))]);
+  const bad = [];
+  for (const h of hrefs.slice(0, 80)) {
+    try {
+      const r = await fetch(h, { method: 'GET', redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 (Nastet link check)' } });
+      if (r.status >= 400 && r.status !== 403 && r.status !== 429) bad.push(`${r.status} ${h}`);
+    } catch (e) { bad.push(`${e.message} ${h}`); }
+  }
+  note(`[${label}] checked ${Math.min(hrefs.length, 80)} external links`);
+  if (bad.length) find('medium', label, 'Broken link', bad.slice(0, 10).join(' | '));
+}
+
+for (const [name, opts] of [['desktop', { viewport: { width: 1440, height: 900 } }], ['phone', devices['Pixel 7']]]) {
+  const ctx = await browser.newContext({ ...opts, acceptDownloads: true });
+  await ctx.addInitScript(() => { try {
+    localStorage.setItem('nastet-profile', JSON.stringify({ sssb_days: 150, sssb_days_on: new Date().toISOString().slice(0, 10), bf_since: '2024-06-01', budget: 6000 }));
+  } catch (e) {} });
+  const page = await ctx.newPage();
+  watch(page, `${name} click-all`);
+  await step(`${name}: click everything`, async () => {
+    await load(page, `${SITE}/#stockholm`);
+    await checkLinks(page, `${name} links`);
+    for (const tab of ['#tabListings', '#tabQueues', '#tabMarket']) {
+      await load(page, `${SITE}/#stockholm`);
+      await page.click(tab); await settle(page, 500);
+      await clickEverything(page, `${name} ${tab.slice(4).toLowerCase()}`);
+      await shot(page, `${name}-clicked-${tab.slice(4).toLowerCase()}`);
+    }
+    // The campus finder is its own mode with its own controls.
+    await load(page, `${SITE}/#stockholm`);
+    if (await visible(page, '#campusBtn')) {
+      await page.click('#campusBtn'); await settle(page, 1500);
+      await clickEverything(page, `${name} campus finder`);
+    }
+  });
+  await ctx.close();
+}
+
 await browser.close();
 
 // ── Report ────────────────────────────────────────────────────────────────
