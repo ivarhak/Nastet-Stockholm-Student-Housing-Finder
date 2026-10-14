@@ -1992,7 +1992,7 @@
         <!-- Provider chips are built from the payload by applyProviderChrome();
              the Shops chip is markup because it toggles a map layer, not a
              provider, and belongs to the page rather than to any city. -->
-        <button id="groceryChip" hidden
+        <button id="groceryChip" type="button" hidden
                 title="Hide chain supermarkets" data-i18n-title="hide_shops"><span class="sw"></span><span data-i18n="shops">Shops</span></button>
         <button id="diffChip" class="off" hidden type="button" aria-pressed="false"><span class="sw"></span><span data-i18n="difficulty">Difficulty</span></button>
       </div>
@@ -2178,6 +2178,7 @@ const I18N = { sv: {
   bf_none: 'inga anmälda än',
   bf_similar: 'liknande:',
   bf_years: 'års kötid',
+  yrs_plus: ' år+',
   mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
   p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
   pw_about: 'Hur många fler dagar du troligen behöver köa för en bostad i varje område, utifrån hur många ködagar bostäder där nyligen gick för.',
@@ -3278,7 +3279,9 @@ function applyProviderChrome(){
   [...chips.querySelectorAll('button[data-p]')].forEach(b => b.remove());
   Object.keys(providerInfo).forEach(name => {
     const b = document.createElement('button');
+    b.type = 'button';
     b.dataset.p = name;
+    b.setAttribute('aria-pressed', 'true');
     const sw = document.createElement('span');
     sw.className = 'sw';
     sw.style.background = providerColor(name);
@@ -3291,7 +3294,9 @@ function applyProviderChrome(){
   legend.innerHTML = '';
   areaGroups.forEach(g => {
     const b = document.createElement('button');
+    b.type = 'button';
     b.dataset.g = g;
+    b.setAttribute('aria-pressed', 'true');
     const sw = document.createElement('span');
     sw.className = 'sw';
     sw.style.background = groupColor(g);
@@ -3850,6 +3855,7 @@ function syncGroceryToggle(count){
   // than offer a toggle that does nothing.
   chip.hidden = count === 0;
   chip.classList.toggle('off', !showGroceries);
+  chip.setAttribute('aria-pressed', String(showGroceries));
 }
 
 // ---- splitting an area into its individual buildings ----
@@ -6332,7 +6338,7 @@ const advSliders = [
   bindLimitSlider('maxFloor', 'maxFloorLabel',
     { kind:'max', format: v => '≤' + floorLabel(v), set: v => { maxFloor = v; } }),
   bindLimitSlider('minYears', 'minYearsLabel',
-    { kind:'min', format: v => v + ' år+', set: v => { minYears = v; } }),
+    { kind:'min', format: v => v + t('yrs_plus', ' yrs+'), set: v => { minYears = v; } }),
 ];
 
 function refreshAdvBadge(){
@@ -6409,6 +6415,7 @@ document.getElementById('legend').addEventListener('click', (e) => {
   const g = btn.dataset.g;
   if (activeGroups.has(g)) { activeGroups.delete(g); btn.classList.add('off'); }
   else { activeGroups.add(g); btn.classList.remove('off'); }
+  btn.setAttribute('aria-pressed', String(activeGroups.has(g)));
   render();
 });
 
@@ -6428,12 +6435,14 @@ document.getElementById('providerChips').addEventListener('click', (e) => {
     // map layer, and touches neither the listings nor any count.
     showGroceries = !showGroceries;
     btn.classList.toggle('off', !showGroceries);
+    btn.setAttribute('aria-pressed', String(showGroceries));
     syncGroceryLayer();
     return;
   }
   const p = btn.dataset.p;
   if (activeProviders.has(p)) { activeProviders.delete(p); btn.classList.add('off'); }
   else { activeProviders.add(p); btn.classList.remove('off'); }
+  btn.setAttribute('aria-pressed', String(activeProviders.has(p)));
   // Turning off the provider whose areas are selected leaves a selection
   // pointing at nothing, so drop it.
   if (selectedArea && !activeAreaProviders().length) clearSelection();

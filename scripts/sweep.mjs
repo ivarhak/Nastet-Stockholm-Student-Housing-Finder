@@ -74,6 +74,17 @@ async function audit(page, label) {
     };
     const ownText = el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
     const scrollsX = el => { for (let e = el.parentElement; e && e !== document.body; e = e.parentElement) { const o = getComputedStyle(e).overflowX; if (o === 'auto' || o === 'scroll') return true; } return false; };
+    const clipToScrollers = (el, b) => {
+      let { left, top, right, bottom } = b;
+      for (let e = el.parentElement; e && e !== document.body; e = e.parentElement) {
+        const s = getComputedStyle(e);
+        if (s.overflowX === 'visible' && s.overflowY === 'visible') continue;
+        const c = e.getBoundingClientRect();
+        left = Math.max(left, c.left); top = Math.max(top, c.top);
+        right = Math.min(right, c.right); bottom = Math.min(bottom, c.bottom);
+      }
+      return { left, top, right, bottom, width: right - left, height: bottom - top };
+    };
     const inView = r => r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
     const els = [...document.querySelectorAll('body *')].filter(el =>
       !el.closest(MAP_PANES) && !el.closest('svg') && !['SCRIPT', 'STYLE', 'NOSCRIPT', 'OPTION'].includes(el.tagName));
@@ -115,7 +126,10 @@ async function audit(page, label) {
     for (const el of textEls) {
       for (const n of el.childNodes) if (n.nodeType === 3 && n.textContent.trim()) {
         const rg = document.createRange(); rg.selectNodeContents(n);
-        for (const b of rg.getClientRects()) {
+        for (const raw of rg.getClientRects()) {
+          // A line half-scrolled out of a scroll box is cut at its edge, not
+          // drawn over what's below — compare only the part that's showing.
+          const b = clipToScrollers(el, raw);
           if (b.width < 3 || b.height < 3 || !inView(b)) continue;
           const top = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
           if (top && (top === el || el.contains(top) || top.contains(el))) boxes.push({ el, b });
@@ -135,12 +149,16 @@ async function audit(page, label) {
     }
 
     // Values that leaked through unformatted, and untranslated string keys.
+    // Commands shown for copying (`<code>`) legitimately contain option names.
+    const prose = document.body.cloneNode(true);
+    prose.querySelectorAll('code, pre, script, style').forEach(e => e.remove());
     const body = document.body.innerText;
+    const bodyProse = prose.textContent;
     for (const m of body.matchAll(/(^|[^\p{L}])(undefined|NaN|null|\[object Object\]|Invalid Date|Infinity)(?![\p{L}])/gu))
       out.junk.push(body.slice(Math.max(0, m.index - 40), m.index + 50).replace(/\s+/g, ' '));
     if (typeof I18N !== 'undefined') {
       const keys = new Set(Object.keys(I18N.sv));
-      for (const m of body.matchAll(/\b[a-z]{1,10}_[a-z0-9_]{1,20}\b/g)) if (keys.has(m[0])) out.junk.push(`raw key ${m[0]}`);
+      for (const m of bodyProse.matchAll(/\b[a-z]{1,10}_[a-z0-9_]{1,20}\b/g)) if (keys.has(m[0])) out.junk.push(`raw key ${m[0]}`);
     }
     for (const img of document.images) if (shown(img) && img.complete && img.naturalWidth === 0) out.broken.push(img.currentSrc || img.src);
     for (const k of Object.keys(out)) out[k] = [...new Set(out[k])].slice(0, 12);
@@ -702,11 +720,15 @@ for (const [name, opts] of [['desktop', { viewport: { width: 1440, height: 900 }
       await shot(page, `${name}-clicked-${tab.slice(4).toLowerCase()}`);
     }
     // The campus finder is its own mode with its own controls.
+    // Only some campuses have one, and clicking through the tabs above leaves
+    // another campus chosen — so pick KTH first.
     await load(page, `${SITE}/#stockholm`);
+    await page.selectOption('#schoolSelect', 'KTH').catch(() => {}); await settle(page, 800);
     if (await visible(page, '#campusBtn')) {
       await page.click('#campusBtn'); await settle(page, 1500);
       await clickEverything(page, `${name} campus finder`);
-    }
+      await shot(page, `${name}-clicked-campus`);
+    } else find('medium', name, 'Campus finder not offered for KTH', 'the #campusBtn stayed hidden');
   });
   await ctx.close();
 }
