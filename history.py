@@ -120,12 +120,45 @@ def unit_key(listing: dict) -> str:
     one flat from its neighbours.
     """
     lid = str(listing.get("id") or "")
-    if lid.startswith("sssb-"):
+    # AF Bostäder's productId is the flat itself (af-14376 came back under the
+    # same id after closing). Address + size + floor was not enough there:
+    # Kämnärsvägen 63 has several 27 m² flats per floor, and three different
+    # ones were counted as one flat re-listed over and over (2026-10-14).
+    if lid.startswith(("sssb-", "af-")):
         return lid
     if listing.get("apartment_id"):
         return f"{listing.get('provider')}:apt:{listing['apartment_id']}"
     return (f"{listing.get('provider')}:{listing.get('address')}:"
             f"{listing.get('size_sqm')}:{listing.get('floor')}")
+
+
+# A listing "closed" and back again within this many hours was a scrape that
+# missed it (SGS answered with nothing for a while on 2026-10-10), not a flat
+# that closed and was re-listed. It is reopened as if it never left.
+BLIP_HOURS = 36
+
+
+def _reopen_if_blip(cdir: Path, units: dict, lid: str, now: str):
+    now_dt = _parse_ts(now)
+    for shard in sorted(cdir.glob("closed-*.json"), reverse=True)[:2]:
+        closed = _load(shard, {})
+        rec = closed.get(lid)
+        if not rec:
+            continue
+        at = _parse_ts(rec.get("closed_at"))
+        if not (now_dt and at) or (now_dt - at).total_seconds() > BLIP_HOURS * 3600:
+            return None
+        closed.pop(lid)
+        _save(shard, closed)
+        rec.pop("closed_at", None)
+        rec.pop("final_days", None)
+        rec["last_seen"] = now
+        for occ in units.get(rec.get("unit"), []):
+            if occ.get("id") == lid:
+                occ.pop("closed_at", None)
+                occ.pop("final_days", None)
+        return rec
+    return None
 
 
 def segment_key(area: str | None, cls: str) -> str:
@@ -160,6 +193,10 @@ def update_city(hist_dir: Path, city: str, payload: dict, now: str | None = None
         obs_point = [now, l.get("queue_days"), l.get("applicants")]
         rec = open_.get(lid)
         if rec is None:
+            rec = _reopen_if_blip(cdir, units, lid, now)
+            if rec is not None:
+                open_[lid] = rec
+        if rec is None:
             ukey = unit_key(l)
             prior = units.get(ukey, [])
             rec = {
@@ -182,6 +219,18 @@ def update_city(hist_dir: Path, city: str, payload: dict, now: str | None = None
         else:
             rec["last_seen"] = now
             rec["rent"] = l.get("rent_sek", rec.get("rent"))
+            # A record filed under an older, coarser unit key moves to the
+            # current one, taking its own earlier occurrences with it.
+            ukey = unit_key(l)
+            if rec.get("unit") != ukey:
+                old = units.get(rec.get("unit"), [])
+                mine = [o for o in old if o.get("id") == lid]
+                units[rec.get("unit")] = [o for o in old if o.get("id") != lid]
+                if not units[rec.get("unit")]:
+                    units.pop(rec.get("unit"), None)
+                target = units.setdefault(ukey, [])
+                target.extend(o for o in mine if o not in target)
+                rec["unit"] = ukey
             # Only record a change: the leader's days and the applicant count
             # are what move; storing every unchanged hour would bloat the file.
             last = rec["obs"][-1] if rec.get("obs") else None
@@ -395,13 +444,18 @@ def summarize_city(hist_dir: Path, city: str, today: str | None = None) -> dict:
     gates = {
         "market": {"ready": days_collected >= g["market"]["days"],
                    "have": days_collected, "need": g["market"]["days"], "unit": "days"},
-        "difficulty": {"ready": len(finals) >= g["difficulty"]["finals"]
-                       and areas_with_3 >= g["difficulty"]["areas_with_3"],
-                       "have": len(finals), "need": g["difficulty"]["finals"], "unit": "closings"},
-        "projected_wait": {"ready": len(finals) >= g["projected_wait"]["finals"]
-                           and days_collected >= g["projected_wait"]["days"],
-                           "have": len(finals), "need": g["projected_wait"]["finals"],
-                           "unit": "closings"},
+        "difficulty": ({"ready": False, "have": areas_with_3, "need": g["difficulty"]["areas_with_3"], "unit": "areas"}
+                       if len(finals) >= g["difficulty"]["finals"] and areas_with_3 < g["difficulty"]["areas_with_3"]
+                       else {"ready": len(finals) >= g["difficulty"]["finals"]
+                             and areas_with_3 >= g["difficulty"]["areas_with_3"],
+                             "have": len(finals), "need": g["difficulty"]["finals"], "unit": "closings"}),
+        # Two conditions; the bar shows whichever is still short — "40 / 30
+        # closings" next to "not ready yet" read as a bug.
+        "projected_wait": ({"ready": False, "have": days_collected, "need": g["projected_wait"]["days"], "unit": "days"}
+                           if len(finals) >= g["projected_wait"]["finals"] and days_collected < g["projected_wait"]["days"]
+                           else {"ready": len(finals) >= g["projected_wait"]["finals"]
+                                 and days_collected >= g["projected_wait"]["days"],
+                                 "have": len(finals), "need": g["projected_wait"]["finals"], "unit": "closings"}),
         "pick3": {"ready": uplift["n"] >= g["pick3"]["uplift_samples"],
                   "have": uplift["n"], "need": g["pick3"]["uplift_samples"],
                   "unit": "closings"},

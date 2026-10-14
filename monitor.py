@@ -43,6 +43,7 @@ import re
 import sys
 import threading
 import time
+from urllib.parse import quote
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -428,6 +429,11 @@ def geocode_listing_address(address: str, area: str, cache: dict,
     data/address_cache.json if a dot ever lands somewhere silly, same as the
     area cache.
     """
+    # "Mejerigatan 2 B Rum 533" names a room in a building; the geocoder only
+    # knows the building, and answered nothing for all five such SGS addresses
+    # (2026-10-14). Look up — and cache under — the building, which also means
+    # the old cached "nothing" for the full string is no longer consulted.
+    address = re.sub(r"\s+(?:rum|room|lgh|lägenhet)\s*(?:nr\.?\s*)?\d+\w*\s*$", "", address, flags=re.IGNORECASE).strip()
     if address in cache:
         return cache[address]
 
@@ -1449,8 +1455,11 @@ def _parse_max_years(card_text: str) -> int | None:
 
 
 def _parse_el_included(card_text: str) -> bool | None:
-    """True if the card says electricity is included; None if it says nothing
-    (deliberately not False — we don't actually know it's excluded)."""
+    """True if the card says electricity is included, False if it says it
+    isn't ("Elström ingår ej" — which the plain pattern also matched), None if
+    it says nothing."""
+    if _CARD_EL_EXCLUDED_RE.search(card_text):
+        return False
     return True if _CARD_EL_RE.search(card_text) else None
 
 
@@ -1475,7 +1484,12 @@ def _parse_card_extras(card_text: str) -> dict:
                  applicant's days, not a requirement.
     el_mode    — "included" | "schablon" | "excluded" | None (not stated).
     """
-    out = {"move_in": None, "applicants": None, "el_mode": None}
+    out = {"move_in": None, "applicants": None, "el_mode": None, "rent_months": None}
+    # "10 mån hyra": rent is charged ten months a year (summer free), which
+    # changes what a place costs over a year. Unstated means twelve.
+    rm = re.search(r"(\d{1,2})\s*mån(?:ader|aders)?\s*hyra", card_text, re.IGNORECASE)
+    if rm and 1 <= int(rm.group(1)) <= 12:
+        out["rent_months"] = int(rm.group(1))
     m = _CARD_VALUES_RE.search(card_text)
     if m:
         out["move_in"] = m.group("movein")
@@ -1515,22 +1529,13 @@ _CARD_ADDRESS_RE = re.compile(
     r"\s+(?P<number>\d+)\s*(?P<entrance>[A-ZÅÄÖ])?\s*/\s*(?P<unit>\d+)"
 )
 
-_TYPE_TRANSLATIONS = {
-    "rum i korridor": "Corridor room (dorm)",
-    "korridorrum": "Corridor room (dorm)",
-    "studentlägenhet": "Studio",
-}
-
-
 def _translate_housing_type(raw: str) -> str:
-    key = raw.strip().lower()
-    if key in _TYPE_TRANSLATIONS:
-        return _TYPE_TRANSLATIONS[key]
-    m = re.match(r"(\d+)\s*rum\s*och\s*(kök|kokvrå)", key)
-    if m:
-        n, kitchen_word = m.groups()
-        return f"{n} room + {'kitchen' if kitchen_word == 'kök' else 'kitchenette'}"
-    return raw.strip()
+    """The landlord's own wording, tidied. It used to translate a few SSSB
+    types to English ("Corridor room (dorm)"), which left one landlord's
+    corridor rooms in English beside everyone else's Swedish "1 rum & kök";
+    every type now reads as the landlord wrote it. history.py and the page
+    classify types on both languages, so nothing downstream depended on it."""
+    return re.sub(r"\s+", " ", raw).strip()
 
 
 def _parse_card_fields(card_text: str):
@@ -1539,10 +1544,21 @@ def _parse_card_fields(card_text: str):
     match the expected shape (falls back to the older, looser regexes so a
     format change degrades rather than silently returning nothing).
     """
+    # The type is everything between the carousel's "Previous Next" and the
+    # street address. Anchored on the address parser rather than on a single
+    # word before "<number> /": that missed "Armégatan 32 A / 1213" (entrance
+    # letter) entirely and swallowed "Norra" out of "Norra Stationsgatan 99",
+    # which left 13 of 38 live listings without a type (2026-10-14).
     housing_type = None
-    type_match = _CARD_TYPE_RE.match(card_text)
-    if type_match and type_match.group(1).strip():
-        housing_type = _translate_housing_type(type_match.group(1))
+    addr_match = _CARD_ADDRESS_RE.search(card_text)
+    if addr_match:
+        lead = re.sub(r"^\s*(?:Previous\s+Next\s+)?", "", card_text[:addr_match.start()]).strip()
+        if lead:
+            housing_type = _translate_housing_type(lead)
+    else:
+        type_match = _CARD_TYPE_RE.match(card_text)
+        if type_match and type_match.group(1).strip():
+            housing_type = _translate_housing_type(type_match.group(1))
 
     floor = _parse_floor(card_text)
     extras = (_parse_max_years(card_text), _parse_el_included(card_text))
@@ -1760,6 +1776,7 @@ def _refid_links_from_html(html: str) -> dict:
         if "refid=" not in href:
             continue
         url = href if href.startswith("http") else "https://minasidor.sssb.se" + href
+        url = re.sub(r"^http://", "https://", url)      # the page links plain http; it only redirects
         out.setdefault(url, a)
     return out
 
@@ -2197,6 +2214,77 @@ def _bf_is_student(ad: dict) -> bool | None:
     return None
 
 
+# What BF's feed leaves out but each ad's own page states: the move-in date,
+# the queue dates of the people who have applied so far ("Längsta anmälda
+# kötider" — the first is who would get it today), and the placement history
+# line ("De senaste tolv månaderna har vi förmedlat 174 … 25 procent av dem
+# hade en kötid kortare än 1 år"). One page per ad: fetched when an ad first
+# appears and refreshed every BF_DETAIL_MAX_AGE_H after that, carried between
+# runs in the published listings themselves, so no new cache file is needed.
+BF_DETAIL_MAX_AGE_H = 6
+_BF_MOVEIN_RE = re.compile(r'apartment-facts__text">\s*Inflytt\s*</span>\s*<span[^>]*>\s*(\d{4}-\d\d-\d\d)')
+_BF_QUEUE_BLOCK_RE = re.compile(r"Längsta anmälda kötider.*?</ul>", re.S)
+_BF_HISTORY_RE = re.compile(r"förmedlat\s+(\d+)\s.*?(\d+)\s*procent av dem hade en kötid kortare än\s*(\d+)\s*år", re.S)
+
+
+def _bf_parse_detail(page: str) -> dict:
+    import html as _html
+    text = _html.unescape(page)
+    out = {}
+    m = _BF_MOVEIN_RE.search(text)
+    if m:
+        out["move_in"] = m.group(1)
+    q = _BF_QUEUE_BLOCK_RE.search(text)
+    out["bf_queue_dates"] = sorted(re.findall(r"<li>\s*(\d{4}-\d\d-\d\d)\s*</li>", q.group(0))) if q else []
+    h = _BF_HISTORY_RE.search(re.sub(r"<[^>]+>", " ", text))
+    if h:
+        out["bf_history"] = {"placed": int(h.group(1)), "pct_under": int(h.group(2)), "years": int(h.group(3))}
+    return out
+
+
+def bf_enrich_details(listings: list[dict], previous: list[dict], now=None, max_age_h: float = BF_DETAIL_MAX_AGE_H,
+                      fetch=None) -> dict:
+    """Fill move_in / bf_queue_dates / bf_history on BF listings in place."""
+    now = now or datetime.now(timezone.utc)
+    prev = {l["id"]: l for l in previous if l.get("provider") == "Bostadsförmedlingen"}
+    fetch = fetch or (lambda url: requests.get(url, headers={"User-Agent": f"Mozilla/5.0 {USER_AGENT}"}, timeout=20))
+    stats = {"fetched": 0, "reused": 0, "failed": 0}
+    for l in listings:
+        if l.get("provider") != "Bostadsförmedlingen":
+            continue
+        p = prev.get(l["id"]) or {}
+        at = p.get("bf_detail_at")
+        fresh = False
+        if at:
+            try:
+                fresh = (now - datetime.fromisoformat(at)).total_seconds() < max_age_h * 3600
+            except ValueError:
+                fresh = False
+        if fresh:
+            for k in ("move_in", "bf_queue_dates", "bf_history", "bf_detail_at"):
+                if p.get(k) is not None:
+                    l[k] = p[k]
+            stats["reused"] += 1
+            continue
+        try:
+            r = fetch(l["url"])
+            r.raise_for_status()
+            l.update(_bf_parse_detail(r.text))
+            l["bf_detail_at"] = now.isoformat()
+            stats["fetched"] += 1
+            time.sleep(0.25)          # gentle: one page at a time
+        except Exception as e:  # noqa: BLE001 — a missing detail never drops a listing
+            # Keep what we knew, even if stale, rather than blanking it.
+            for k in ("move_in", "bf_queue_dates", "bf_history", "bf_detail_at"):
+                if p.get(k) is not None:
+                    l[k] = p[k]
+            stats["failed"] += 1
+            if stats["failed"] <= 3:
+                print(f"  · BF ad page {l['url']} → {_why(e)[1]}")
+    print(f"  BF ad pages: {stats['fetched']} fetched, {stats['reused']} reused (< {max_age_h:g} h old), {stats['failed']} failed")
+    return stats
+
+
 def fetch_bostadsformedlingen() -> list[dict]:
     """Fetch current STUDENT ads from Bostadsförmedlingen's public JSON feed.
 
@@ -2282,6 +2370,10 @@ def fetch_bostadsformedlingen() -> list[dict]:
         # hyresvärd names stay tried first in case the field ever appears.
         landlord = _bf_field(ad, "Hyresvard", "Hyresvärd", "Uthyrare",
                              "KoNamn", "Konamn", default="")
+        # BF's own stock says "Bostadskön" there (live, 2026-10-14), not the
+        # "Bostadsförmedlingen" expected above — the queue, not a landlord.
+        if str(landlord).strip().lower() in ("bostadskön", "bostadsförmedlingen"):
+            landlord = ""
         district = _bf_field(ad, "Stadsdel", "Omrade", "Område", default="") or ""
         kommun = _bf_field(ad, "Kommun", default="") or ""
 
@@ -2330,6 +2422,12 @@ def fetch_bostadsformedlingen() -> list[dict]:
             "move_in": None,
             "coords": coords,
             "url": _bf_listing_url(ad, coords),
+            # Queue time, in years, of the people similar flats went to over
+            # the past year (lower and upper quartile) — the closest thing this
+            # feed has to SSSB's queue days.
+            "bf_similar_years": (lambda st: [st.get("KotidFordelningQ1"), st.get("KotidFordelningQ3")]
+                                 if isinstance(st, dict) and st.get("KotidFordelningQ1") is not None else None)(
+                                     ad.get("LiknadeLagenhetStatistik")),
         })
 
     with_coords = sum(1 for l in listings if l["coords"])
@@ -2435,7 +2533,11 @@ def _dotnet_date(value) -> str | None:
     if not m:
         return None
     try:
-        return datetime.fromtimestamp(int(m.group(1)) / 1000, timezone.utc).date().isoformat()
+        # In Swedish time, not UTC: SGS stamps dates at local midnight, so
+        # "1 January" arrives as 23:00 UTC on 31 December and the UTC date was a
+        # day early for every SGS move-in (2026-10-14).
+        from zoneinfo import ZoneInfo
+        return datetime.fromtimestamp(int(m.group(1)) / 1000, ZoneInfo("Europe/Stockholm")).date().isoformat()
     except (ValueError, OverflowError, OSError):
         return None
 
@@ -2522,8 +2624,58 @@ def fetch_sgs(categories=None) -> tuple[list[dict], list[str]]:
                 "provider": "SGS",
                 "landlord": "SGS Studentbostäder",
             })
-    print(f"  kept {len(listings)} SGS listing(s)")
+    # The list endpoint leaves out what a reader needs most — the application
+    # deadline — and the floor and electricity terms. Each object's own record
+    # has them; one small request per listing (a dozen or two).
+    for l in listings:
+        oid = l["id"][4:]
+        try:
+            r = requests.get(f"{SGS_API}/{oid}", headers={
+                "User-Agent": USER_AGENT, "Accept": "application/json", "Referer": SGS_SITE,
+                "Origin": "https://minasidor.sgs.se", "x-api-key": SGS_API_KEY,
+                "x-momentum-device-key": SGS_DEVICE_KEY}, timeout=20)
+            r.raise_for_status()
+            d = _decode_json(r)
+        except (requests.RequestException, ValueError) as e:
+            print(f"  · SGS details {oid} → {_why(e)[1]}")
+            continue
+        l.update(_sgs_details(d))
+    with_deadline = sum(1 for l in listings if l.get("deadline"))
+    print(f"  kept {len(listings)} SGS listing(s); {with_deadline} with an application deadline")
     return listings, notes
+
+
+def _sgs_details(d: dict) -> dict:
+    """Deadline, floor and electricity from one SGS object record."""
+    out = {}
+    deadline = _dotnet_date(((d.get("application") or {}).get("openTo")))
+    if deadline:
+        out["deadline"] = deadline
+    floor_txt = ((d.get("location") or {}).get("floorDisplayName") or "").strip()
+    m = re.search(r"(-?\d+)", floor_txt)
+    if m:
+        out["floor"] = int(m.group(1))
+    elif floor_txt.lower().startswith(("botten", "entré", "entre")):
+        out["floor"] = 0
+    # The official apartment number, so history can tell this flat from its
+    # neighbours when SGS re-posts it under a new market id.
+    loc = d.get("location") or {}
+    a = loc.get("address") or {}
+    # Street, number and postcode as SGS records them: an unambiguous geocoding
+    # query, where the display name may carry "Rum 533" after the building.
+    street_no = " ".join(x for x in (str(a.get("street") or "").strip(), str(a.get("streetnumber") or "").strip()) if x)
+    if street_no and a.get("postcode"):
+        out["geocode_hint"] = f"{street_no}, {str(a['postcode']).strip()}, {str(a.get('city') or 'Göteborg').strip().title()}, Sweden"
+    apt = str(loc.get("officialApartmentNumber") or "").strip()
+    street = str(((loc.get("address") or {}).get("address")) or "").strip()
+    if apt and street:
+        out["apartment_id"] = f"{street}#{apt}"
+    included = " | ".join((x.get("displayName") or "") for x in (d.get("included") or [])).lower()
+    if re.search(r"el(förbrukning|ström)?\s+tillkommer", included):
+        out["el_included"] = False
+    elif re.search(r"el(förbrukning|ström)?\s+ingår", included):
+        out["el_included"] = True
+    return out
 
 
 # ── AF Bostäder, Lund ────────────────────────────────────────────────────
@@ -2613,7 +2765,11 @@ def fetch_afbostader() -> tuple[list[dict], list[str]]:
             # Postcode and town are what make the address unambiguous nationally,
             # the same anchoring geocode_listing_address() does for SSSB.
             "geocode_hint": ", ".join(x for x in (address, zipcode, town, "Sweden") if x),
-            "url": AF_SITE,
+            # The listing's own page, built the way AF's site builds it (its
+            # list page links "bostadsdetalj/?obj={{productId}}&area={{area}}");
+            # the generic list page was every Lund row's link until 2026-10-14.
+            "url": (f"{AF_SITE}bostadsdetalj/?obj={quote(str(it.get('productId')))}"
+                    f"&area={quote((it.get('area') or '').strip())}&mode=0") if it.get("productId") else AF_SITE,
             "provider": "AF Bostäder",
             "landlord": "AF Bostäder",
         })
@@ -2673,6 +2829,62 @@ PROVIDER_FETCHERS = {
 }
 
 
+# A landlord that answers "0 listings" where the last run had several is far
+# more often a hiccup than an empty market: SGS did exactly that on 2026-10-10,
+# and the next run's 16 listings were all recorded as closed, then as new —
+# "16 new listings" in every alert and NEW badges on the lot. So: keep the last
+# run's listings whose deadline hasn't passed, for up to a day and a half, and
+# say so. A market that really empties shows as empty once that window ends.
+EMPTY_GUARD_MIN = 5
+EMPTY_GUARD_HOURS = 36
+
+
+def _guard_empty_provider(provider: str, rows: list, notes: list, previous: dict, now=None):
+    if rows:
+        return rows, notes
+    prev_rows = [l for l in previous.get("listings") or [] if l.get("provider") == provider]
+    if len(prev_rows) < EMPTY_GUARD_MIN:
+        return rows, notes
+    now = now or datetime.now(timezone.utc)
+    try:
+        age_h = (now - datetime.fromisoformat(previous.get("generated_at"))).total_seconds() / 3600
+    except (TypeError, ValueError):
+        return rows, notes
+    if age_h > EMPTY_GUARD_HOURS:
+        return rows, notes
+    from zoneinfo import ZoneInfo
+    today = now.astimezone(ZoneInfo("Europe/Stockholm")).date().isoformat()
+    keep = [dict(l) for l in prev_rows if not l.get("deadline") or str(l["deadline"])[:10] >= today]
+    if keep:
+        msg = (f"returned no listings (the previous run had {len(prev_rows)}); kept the "
+               f"{len(keep)} still open from {age_h:.0f} h ago")
+        print(f"  ! {provider} {msg}")
+        notes.append(msg)
+    return keep, notes
+
+
+RECENTLY_GONE_HOURS = 48
+
+
+def _recently_gone(previous: dict, listings: list, now) -> dict:
+    """{id: {first_seen, gone_at}} for listings missing now but seen within
+    RECENTLY_GONE_HOURS — carried in the payload from run to run."""
+    current = {l["id"] for l in listings}
+    out = {}
+    for i, g in (previous.get("recently_gone") or {}).items():
+        try:
+            fresh = (now - datetime.fromisoformat(g.get("gone_at"))).total_seconds() < RECENTLY_GONE_HOURS * 3600
+        except (TypeError, ValueError):
+            fresh = False
+        if fresh and i not in current:
+            out[i] = g
+    gone_at = previous.get("generated_at") or now.isoformat()
+    for l in previous.get("listings") or []:
+        if l["id"] not in current:
+            out.setdefault(l["id"], {"first_seen": l.get("first_seen"), "gone_at": gone_at})
+    return out
+
+
 def run_scrape(debug: bool = False, use_login: bool = False,
                http_only: bool = False, bike_routes: bool = True,
                bf_bike_routes: bool = False, city: str = DEFAULT_CITY) -> dict:
@@ -2717,6 +2929,7 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
             raise SystemExit(f"{city}: unknown provider fetcher {key!r} — known: "
                              f"{', '.join(sorted(PROVIDER_FETCHERS))}")
         rows, notes = spec["fn"](debug=debug, use_login=use_login, http_only=http_only)
+        rows, notes = _guard_empty_provider(spec["provider"], rows, list(notes), previous)
         # Stamped here rather than trusted from the fetcher. A fetcher that
         # forgot would otherwise have its listings quietly treated as
         # coordinate-based, which skips their address geocoding and leaves them
@@ -2910,8 +3123,16 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
     # before is not the same thing as 170 listings having just appeared. That is
     # the case that used to badge, and notify about, the entire list.
     now = datetime.now(timezone.utc)
+    if any(l.get("provider") == "Bostadsförmedlingen" for l in listings):
+        bf_enrich_details(listings, previous.get("listings", []), now=now)
     had_history = bool(previous.get("generated_at"))
-    prev_seen = {l["id"]: l.get("first_seen") for l in previous["listings"]}
+    # Listings that vanished from a recent run, with when we first saw them. A
+    # listing missing from one scrape (a landlord's flaky page, a timeout) and
+    # back in the next is the same listing, not a new one — without this it
+    # was announced as NEW again and alerted on twice.
+    recently_gone = _recently_gone(previous, listings, now)
+    prev_seen = {**{i: g.get("first_seen") for i, g in recently_gone.items()},
+                 **{l["id"]: l.get("first_seen") for l in previous["listings"]}}
     for l in listings:
         if not had_history:
             l["first_seen"] = None
@@ -3027,6 +3248,7 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
         # list rather than per-area because they're their own map layer.
         "groceries": grocery_stores,
         "new_listing_ids": [l["id"] for l in new_listings],
+        "recently_gone": recently_gone,
     }
     listings_file(city).write_text(json.dumps(result, indent=2, ensure_ascii=False))
     write_cities_index()

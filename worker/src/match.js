@@ -71,6 +71,19 @@ export function wouldGet(sub, l, today) {
   return mine != null && mine >= l.queue_days;
 }
 
+// Bostadsförmedlingen ranks applicants by queue date; each ad's page lists the
+// earliest dates among those who have applied so far (bf_queue_dates). Against
+// your own queue date (`bf_since`) that says whether you'd be first today —
+// "so far", since applications stay open until the deadline. null when either
+// side is unknown; { lead, nobody } or { lead: false, short } otherwise.
+export function bfStanding(sub, l) {
+  if (!sub.bf_since || !Array.isArray(l.bf_queue_dates)) return null;
+  const first = l.bf_queue_dates[0];
+  if (!first) return { lead: true, nobody: true };
+  const gap = daysBetween(sub.bf_since, first);
+  return gap >= 0 ? { lead: true } : { lead: false, short: -gap };
+}
+
 // SSSB-style listings (a queue-days figure) match when your running count
 // meets it. Listings decided by a deadline instead (Bostadsförmedlingen, SGS,
 // AF) have nothing to compare a count against, so they only match a watch
@@ -81,6 +94,8 @@ export function matches(sub, l, today, data) {
     const mine = runningDays(sub, today);
     return mine != null && mine >= l.queue_days;
   }
+  const bf = bfStanding(sub, l);
+  if (bf && bf.lead) return true;
   return !!sub.all_new;
 }
 
@@ -107,8 +122,10 @@ export function plan(sub, listings, today, data) {
 
 // Keeps the remembered id lists from growing forever: anything no longer
 // listed is dropped, which is also what lets a re-listed flat notify again.
-export function remember(sub, listings, sent) {
-  const live = new Set(listings.map(l => l.id));
+export function remember(sub, listings, sent, recentlyGone = {}) {
+  // A listing missing from one run (recently_gone, from the scrape) is still
+  // remembered, so it isn't announced again when it comes back.
+  const live = new Set([...listings.map(l => l.id), ...Object.keys(recentlyGone || {})]);
   const keep = (arr, add) => [...new Set([...(arr || []).filter(id => live.has(id)), ...add.map(l => l.id)])];
   return {
     ...sub,

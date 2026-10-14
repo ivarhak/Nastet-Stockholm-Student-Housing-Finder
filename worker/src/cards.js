@@ -11,7 +11,7 @@
 // values ≤ 1024 characters and ≤ 6000 characters across one message. Past
 // the budget a card says how many more there are and links to the site.
 
-import { commuteMin, fits, wouldGet, runningDays, stockholmToday, NO_UNION_CAP } from './match.js';
+import { commuteMin, fits, wouldGet, bfStanding, runningDays, stockholmToday, NO_UNION_CAP } from './match.js';
 import { CITIES, describeFilters } from './summary.js';
 
 const COLOR = { head: 0xd9a13b, get: 0x3ba55c, deadline: 0x5865f2, wait: 0x99aab5, fresh: 0xd9a13b, closing: 0xed4245 };
@@ -26,12 +26,17 @@ function field(env, sub, data, l, today, isNew) {
   const bike = commuteMin(l, data, sub.campus);
   const mine = runningDays(sub, today);
   const get = wouldGet(sub, l, today);
-  const facts = [l.rent_sek != null ? `**${nf(l.rent_sek)} kr**` : null, l.size_sqm ? `${l.size_sqm} m²` : null,
+  const facts = [l.rent_sek != null ? `**${nf(l.rent_sek)} kr**${l.rent_months && l.rent_months < 12 ? ` (${l.rent_months} months a year)` : ''}` : null,
+                 l.size_sqm ? `${l.size_sqm} m²` : null,
                  bike != null ? `${bike} min by bike` : null, l.type ? String(l.type) : null].filter(Boolean).join(' · ');
+  // Bostadsförmedlingen: where you stand among those who've applied so far.
+  const bf = bfStanding(sub, l);
+  const bfText = bf ? (bf.nobody ? '✅ nobody has applied yet' : bf.lead ? '✅ you\'d lead so far' : `${nf(bf.short)} days short so far`)
+    : (Array.isArray(l.bf_queue_dates) && l.bf_queue_dates[0] ? `first in line queued since ${l.bf_queue_dates[0]}` : null);
   const stand = typeof l.queue_days === 'number'
     ? (get ? `✅ you'd lead — ${nf(l.queue_days)} queue days`
            : `${nf(l.queue_days)} queue days${mine != null ? ` · ${nf(l.queue_days - mine)} short` : ''}`)
-    : (l.deadline ? `apply by **${day(l.deadline)}**` : 'open to apply');
+    : [bfText, l.deadline ? `apply by **${day(l.deadline)}**` : 'open to apply'].filter(Boolean).join(' · ');
   const when = [stand, l.move_in ? `move-in ${String(l.move_in).slice(0, 10)}` : null].filter(Boolean).join(' · ');
   const url = `${site(env)}/?listing=${encodeURIComponent(l.id)}#${sub.city}`;
   return {

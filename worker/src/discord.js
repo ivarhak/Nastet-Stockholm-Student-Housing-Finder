@@ -78,6 +78,7 @@ export function describe(sub, today, data) {
   bits.push(d == null ? 'no queue days given'
     : sub.union === false ? `${d} queue days today (no student union, so capped at ${Math.max(sub.days, NO_UNION_CAP)})`
     : `${d} queue days today (counting a day per day)`);
+  if (sub.bf_since) bits.push(`in Bostadsförmedlingen's queue since ${sub.bf_since}`);
   bits.push(describeFilters(sub, data));
   const freq = sub.freq || 'instant';
   const at = Number.isInteger(sub.hour) ? sub.hour : DEFAULT_HOUR;
@@ -139,6 +140,12 @@ export function applySet(existing, o, data, today) {
   if (o.always !== undefined) sub.always = !!o.always;
   if (o.all_new !== undefined) sub.all_new = !!o.all_new;
   if (o.student_union !== undefined) sub.union = !!o.student_union;
+  if (o.bf_since !== undefined) {
+    const v = String(o.bf_since).trim();
+    if (/^(none|-|0)?$/i.test(v)) delete sub.bf_since;
+    else if (/^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v + 'T00:00:00Z')) && v <= today) sub.bf_since = v;
+    else problems.push('`bf_since` is the date you joined Bostadsförmedlingen\'s queue, as YYYY-MM-DD (or "none").');
+  }
   // A new watch gets summaries by default; the original one-DM-per-listing
   // behaviour is still there as frequency: instant.
   if (!base.city) sub.freq = sub.freq || 'daily';
@@ -193,7 +200,7 @@ export async function handleInteraction(request, env, ctx) {
   if (o.name === 'show') {
     if (!existing) return reply('No watch running. Start one with `/watch set`.');
     return deferred(interaction, env, ctx, async () => {
-      await env.SUBS.put(key, JSON.stringify({ ...existing, last_active: new Date().toISOString() }));
+      await env.SUBS.put(key, JSON.stringify({ ...existing, last_active: new Date().toISOString(), idle_warned: undefined }));
       const data = await cityData(env, existing.city);
       return `Watching: ${describe(existing, today, data)}.${data ? `\n${preview(existing, data)}` : ''}\n`
         + 'Change any one setting with `/watch set` · a summary now with `/watch now` · stop with `/watch stop`.';
@@ -202,6 +209,8 @@ export async function handleInteraction(request, env, ctx) {
   if (o.name === 'now') {
     if (!existing) return reply('No watch running. Start one with `/watch set`.');
     return deferred(interaction, env, ctx, async () => {
+      // Using the bot counts as activity, so an idle watch isn't deleted.
+      await env.SUBS.put(key, JSON.stringify({ ...existing, last_active: new Date().toISOString(), idle_warned: undefined }));
       const data = await cityData(env, existing.city);
       if (!data) return 'Could not read the listings right now — try again in a minute.';
       // Every listing that fits, as cards. A look, not a summary: it doesn't
@@ -219,6 +228,7 @@ export async function handleInteraction(request, env, ctx) {
       Object.assign(sub, {
         created: (existing && existing.created) || new Date().toISOString(),
         last_active: new Date().toISOString(),
+        idle_warned: undefined,
         // Kept across an update so changing the rent cap doesn't re-send old news.
         notified: (!fresh && existing.notified) || [],
         outbid: (!fresh && existing.outbid) || [],
@@ -264,6 +274,7 @@ export const COMMANDS = [{
       { type: 4, name: 'max_rent', description: 'Highest rent in kr per month (0 = no limit)', min_value: 0, max_value: 50000 },
       { type: 3, name: 'areas', description: 'Comma-separated areas, or "any"' },
       { type: 5, name: 'always', description: 'Send summaries even when nothing is new' },
+      { type: 3, name: 'bf_since', description: 'In Bostadsförmedlingen’s queue since (YYYY-MM-DD) — shows where you stand there' },
       { type: 5, name: 'student_union', description: 'Member of a student union (kår)? Without one SSSB stops your days at 90' },
       { type: 5, name: 'all_new', description: 'Instant mode: also DM every new deadline listing within your limits' },
     ] },

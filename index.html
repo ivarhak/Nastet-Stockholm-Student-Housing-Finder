@@ -2169,6 +2169,15 @@ function esc(v){
 }
 
 const I18N = { sv: {
+  bf_lead: 'Du skulle ligga först hittills',
+  bf_lead_t: 'Anmälan är öppen till sista dagen — någon med längre kötid kan fortfarande anmäla sig',
+  bf_nobody: 'Ingen har anmält sig än',
+  el_extra: 'el tillkommer',
+  rent_months: 'månaders hyra per år',
+  bf_first: 'först i kön står sedan',
+  bf_none: 'inga anmälda än',
+  bf_similar: 'liknande:',
+  bf_years: 'års kötid',
   mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
   p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
   pw_about: 'Hur många fler dagar du troligen behöver köa för en bostad i varje område, utifrån hur många ködagar bostäder där nyligen gick för.',
@@ -4309,6 +4318,15 @@ function rowHtml(l, newIds, index = 0, featured = false){
   if (l.novice_priority) extras.push(t('novice', 'novice priority'));
   if (l.floor != null) extras.push(Number(l.floor) === 0 ? t('ground_floor', 'ground floor') : t('floor', 'floor ') + l.floor);
   if (l.el_included === true) extras.push('el ingår');
+  else if (l.el_included === false) extras.push(t('el_extra', 'electricity extra'));
+  // "10 mån hyra": rent charged ten months a year, so the yearly cost is lower.
+  if (l.rent_months && l.rent_months < 12) extras.push(`${l.rent_months} ${t('rent_months', 'months’ rent a year')}`);
+  // Bostadsförmedlingen: the leading applicant's queue date so far, and the
+  // queue time similar flats went for over the past year.
+  if (Array.isArray(l.bf_queue_dates)) extras.push(l.bf_queue_dates.length
+    ? `${t('bf_first', 'first in line queued since')} ${l.bf_queue_dates[0]}` : t('bf_none', 'no applicants yet'));
+  if (Array.isArray(l.bf_similar_years) && l.bf_similar_years[0] != null)
+    extras.push(`${t('bf_similar', 'similar flats:')} ${l.bf_similar_years[0]}–${l.bf_similar_years[1]} ${t('bf_years', 'yrs queue')}`);
   // Elevator and balcony come from Bostadsförmedlingen's feed, which states
   // them; SSSB's list page never does, so these are display-only and there is
   // deliberately no filter for them — see the notes on el_included.
@@ -5182,9 +5200,30 @@ function sinceStrip(){
 
 // What the row knows about you: whether your running count leads it today,
 // whether it's over budget, and your marks — plus the buttons to change them.
+// Bostadsförmedlingen ranks applicants by queue date, and each ad's page lists
+// the earliest dates among people who have applied so far. Against your own
+// "in the queue since" date that says whether you'd be first today — "so far",
+// since applications stay open until the deadline. null when either is unknown.
+function bfStanding(l){
+  if (!profile.bf_since || !Array.isArray(l.bf_queue_dates)) return null;
+  const lead = l.bf_queue_dates[0];
+  if (!lead) return { lead: true, nobody: true };
+  const gap = daysBetween(profile.bf_since, lead);
+  return gap >= 0 ? { lead: true } : { lead: false, short: -gap };
+}
+function bfStandingChip(l){
+  const st = bfStanding(l);
+  if (!st) return '';
+  return st.lead
+    ? `<span class="fact you lead" title="${esc(t('bf_lead_t', 'Applications stay open until the deadline — someone queued longer can still apply'))}">${st.nobody ? t('bf_nobody', 'Nobody has applied yet') : t('bf_lead', 'You’d lead so far')}</span>`
+    : `<span class="fact you">${num(st.short)} ${t('days_short', 'days short')}</span>`;
+}
+
 function rowPersonal(l){
   const facts = [];
   const mine = profileDaysNow();
+  const bfChip = bfStandingChip(l);
+  if (bfChip) facts.push(bfChip);
   if (mine != null && typeof l.queue_days === 'number') {
     facts.push(mine >= l.queue_days
       ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>`
@@ -5357,7 +5396,8 @@ function whenLine(l){
 // enough has been recorded it says so, with how far along it is, rather than
 // putting a confident number on three data points.
 const GATE_UNITS = { days: ['days of data', 'dagars data'], closings: ['closings recorded', 'avslut registrerade'],
-                     'comparable listings': ['comparable listings', 'jämförbara bostäder'] };
+                     'comparable listings': ['comparable listings', 'jämförbara bostäder'],
+                     areas: ['areas with 3+ closings', 'områden med 3+ avslut'] };
 // What is being counted, in a sentence — a bare "0 / 30 closings recorded"
 // doesn't say what a closing is or why it matters.
 const GATE_WHAT = {
@@ -5365,6 +5405,8 @@ const GATE_WHAT = {
          'Nästet sparar en ögonblicksbild av bostäderna varje dag; det här behöver några veckors.'],
   closings: ['Each time an SSSB listing closes, Nästet records how many queue days it finally went for.',
              'Varje gång en SSSB-bostad stänger sparar Nästet hur många ködagar den till slut gick för.'],
+  areas: ['Each area needs a few recorded closings before its colour means anything.',
+          'Varje område behöver några registrerade avslut innan färgen betyder något.'],
   'comparable listings': ['Listings of the same kind and size to compare rents against.',
                           'Bostäder av samma slag och storlek att jämföra hyran med.'],
 };
@@ -5590,7 +5632,8 @@ function hoverCardHtml(rows, heading){
   const nz = noiseText(l.noise);
   const mine = profileDaysNow();
   const you = mine != null && typeof l.queue_days === 'number'
-    ? (mine >= l.queue_days ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>` : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`) : '';
+    ? (mine >= l.queue_days ? `<span class="fact you lead">${t('you_lead', 'You’d lead today')}</span>` : `<span class="fact you">${num(l.queue_days - mine)} ${t('days_short', 'days short')}</span>`)
+    : bfStandingChip(l);
   return `<div class="hc-head"><div><div class="hc-title">${esc(l.address || l.area)}</div>
       <div class="hc-sub">${esc(l.area || '')}${l.landlord && l.landlord !== l.provider ? ' · ' + esc(l.landlord) : ''}</div></div>
       ${l.rent_sek ? `<div class="hc-rent">${num(rentShown(l))}<span>${allInMode ? t('per_month_allin', 'kr / month all-in') : t('per_month_unit', 'kr / month')}</span></div>` : ''}</div>

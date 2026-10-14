@@ -117,6 +117,7 @@ export async function runNotify(env, now = new Date(), fetchImpl = fetch) {
 
   const today = stockholmToday(now);
   const idleBefore = new Date(now.getTime() - IDLE_DAYS * 86400000).toISOString();
+  const warnBefore = new Date(now.getTime() - (IDLE_DAYS - 7) * 86400000).toISOString();
   let cursor;
   do {
     const page = await env.SUBS.list({ prefix: 'sub:', cursor });
@@ -124,7 +125,17 @@ export async function runNotify(env, now = new Date(), fetchImpl = fetch) {
       const sub = await env.SUBS.get(name, 'json');
       if (!sub) continue;
       out.subs++;
-      if ((sub.last_active || sub.created || '') < idleBefore) {
+      // A week's notice before an idle watch is deleted: someone who only
+      // reads the summaries would otherwise just stop hearing from the bot.
+      if (!sub.idle_warned && (sub.last_active || sub.created || '') < warnBefore) {
+        const res = await sendDm(env, sub, name.slice(4), { content: 'Your Nästet watch has had no commands for almost six months, '
+          + 'so it will be deleted in a week. Run `/watch show` (or any /watch command) to keep it.', allowed_mentions: { parse: [] } }, fetchImpl);
+        await env.SUBS.put(name, JSON.stringify({ ...sub, idle_warned: new Date(now).toISOString() }));
+        if (res.ok) out.warned = (out.warned || 0) + 1;
+        continue;
+      }
+      if ((sub.last_active || sub.created || '') < idleBefore && sub.idle_warned
+          && sub.idle_warned < new Date(now.getTime() - 6 * 86400000).toISOString()) {
         await env.SUBS.delete(name); out.deleted++; continue;
       }
       if ((sub.freq || 'instant') === 'instant') {
@@ -136,7 +147,7 @@ export async function runNotify(env, now = new Date(), fetchImpl = fetch) {
                                                              allowed_mentions: { parse: [] } }, fetchImpl);
         if (res.ok) {
           out.sent++;
-          await env.SUBS.put(name, JSON.stringify({ ...remember(sub, data.listings, todo), dm: res.channel || sub.dm }));
+          await env.SUBS.put(name, JSON.stringify({ ...remember(sub, data.listings, todo, data.recently_gone), dm: res.channel || sub.dm }));
         } else {
           // Not remembered, so it's retried next pass — unless Discord says the
           // user can't be reached at all, which retrying won't fix.
@@ -151,7 +162,11 @@ export async function runNotify(env, now = new Date(), fetchImpl = fetch) {
       const data = await dataFor(sub.city);
       if (!data) continue;
       const sum = summarize(env, sub, data, now);
-      const next = { ...sub, last_slot: slot, seen: data.listings.map(l => l.id) };
+      // What this summary covered, plus anything only briefly missing — so a
+      // listing that blinks out of one scrape isn't "new" in the next summary.
+      const gone = data.recently_gone || {};
+      const next = { ...sub, last_slot: slot,
+                     seen: [...new Set([...data.listings.map(l => l.id), ...(sub.seen || []).filter(id => id in gone)])] };
       if (!sum.worthSending && !sub.always) {
         out.quiet++;
         await env.SUBS.put(name, JSON.stringify(next));

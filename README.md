@@ -289,6 +289,7 @@ give is changed):
 |---|---|
 | `/watch set days:312 campus:KTH max_commute:30 max_rent:6000` | Start a watch, or change any part of it |
 | `/watch set frequency:twice_daily hour:7` | Summaries at 07:00 and 19:00, Stockholm time. Also `daily`, `weekly` (Mondays) and `instant` |
+| `/watch set bf_since:2025-09-01` | Your place in Bostadsförmedlingen's queue: its listings then say whether you'd lead so far, and a listing you lead counts as a match |
 | `/watch set student_union:False` | Not in a student union (kår): your days stop at 90, as SSSB counts them |
 | `/watch set areas:Jerum, Lappkärrsberget` | Only these areas; `areas:any` clears it, as `max_rent:0` and `max_commute:0` clear those |
 | `/watch show` | Your settings, and how many listings fit them right now |

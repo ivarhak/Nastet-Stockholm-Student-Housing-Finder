@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { verifySignature, handleInteraction, applySet } from '../src/discord.js';
-import { plan, remember, matches, runningDays, commuteMin, fits, latestSlot, dueSlot } from '../src/match.js';
+import { plan, remember, matches, runningDays, commuteMin, fits, latestSlot, dueSlot, bfStanding } from '../src/match.js';
 import { summarize } from '../src/summary.js';
 import { syncCommands } from '../src/commands.js';
 import { cards } from '../src/cards.js';
@@ -237,7 +237,7 @@ test('runNotify: DMs matches once, skips unchanged cities, deletes idle', async 
   const SUBS = kv();
   const now = new Date('2026-10-11T10:00:00Z');
   await SUBS.put('sub:1', JSON.stringify({ city: 'stockholm', days: 100, from: '2026-10-11', dm: 'c1', last_active: now.toISOString() }));
-  await SUBS.put('sub:2', JSON.stringify({ city: 'stockholm', days: 100, from: '2026-10-11', last_active: '2025-01-01T00:00:00Z' }));
+  await SUBS.put('sub:2', JSON.stringify({ city: 'stockholm', days: 100, from: '2026-10-11', dm: 'c2', last_active: '2025-01-01T00:00:00Z' }));
   const listings = { generated_at: 'g1', new_listing_ids: ['x'], listings: [{ id: 'x', area: 'Jerum', address: 'Studentbacken 1', queue_days: 80, rent_sek: 4000 }] };
   const posts = [];
   const f = async (url, init) => {
@@ -249,15 +249,18 @@ test('runNotify: DMs matches once, skips unchanged cities, deletes idle', async 
   };
   const env = { SUBS, SITE_URL: 'https://xn--nstet-gra.se', DISCORD_BOT_TOKEN: 't', DIGEST_WEBHOOK_STOCKHOLM: 'https://hook' };
   let r = await runNotify(env, now, f);
-  assert.equal(r.sent, 1); assert.equal(r.deleted, 1); assert.equal(r.digests, 1);
+  assert.equal(r.sent, 1); assert.equal(r.deleted, 0); assert.equal(r.warned, 1); assert.equal(r.digests, 1);
+  assert.ok(JSON.parse(SUBS.m.get('sub:2')).idle_warned);           // a week's notice first
+  assert.match(posts.find(p => /deleted in a week/.test((p[1] || {}).content || ''))[1].content, /\/watch show/);
   const dm = posts.find(p => p[0].includes('/channels/c1/messages'));
   assert.match(dm[1].content, /Studentbacken 1/);
   assert.match(dm[1].content, /\?listing=x#stockholm/);
   r = await runNotify(env, now, f);
   assert.deepEqual(r.changed, []);                 // same generated_at: nothing read
   await SUBS.delete('meta:seen:stockholm');
+  const before = posts.filter(p => p[0].includes('/channels/c1/messages')).length;
   r = await runNotify(env, now, f);
-  assert.equal(r.sent, 0);                         // already told
+  assert.equal(posts.filter(p => p[0].includes('/channels/c1/messages')).length, before);   // already told
 });
 
 test('/notify: HMAC and freshness enforced', async () => {
@@ -324,4 +327,37 @@ test('cards: every fitting listing, grouped, inside Discord limits', () => {
   // Capped without a union.
   const capped = cards({ SITE_URL: 'https://s' }, { ...sub, days: 90, union: false }, DATA, new Date('2026-10-30T10:00:00Z'), 'all');
   assert.match(capped[0].description, /\*\*90\*\* \(capped at 90 — no student union\)/);
+});
+
+test('idle: deleted only a week after the warning', async () => {
+  const SUBS = kv();
+  const now = new Date('2026-10-11T10:00:00Z');
+  await SUBS.put('sub:2', JSON.stringify({ city: 'stockholm', last_active: '2025-01-01T00:00:00Z', idle_warned: '2026-10-08T10:00:00Z' }));
+  await SUBS.put('sub:3', JSON.stringify({ city: 'stockholm', last_active: '2025-01-01T00:00:00Z', idle_warned: '2026-10-01T10:00:00Z' }));
+  const f = async url => String(url).endsWith('/cities.json') ? new Response(JSON.stringify({ cities: {} })) : new Response('{}');
+  const r = await runNotify({ SUBS, SITE_URL: 'https://s', DISCORD_BOT_TOKEN: 't' }, now, f);
+  assert.equal(r.deleted, 1);
+  assert.ok(SUBS.m.has('sub:2')); assert.ok(!SUBS.m.has('sub:3'));
+});
+
+test('Bostadsförmedlingen standing from bf_since and the leading queue dates', () => {
+  const l = { id: 'bf-1', provider: 'Bostadsförmedlingen', area: 'Kärrtorp', deadline: '2026-10-15', bf_queue_dates: ['2025-09-08', '2026-09-09'], rent_sek: 7950 };
+  assert.deepEqual(bfStanding({ bf_since: '2024-01-01' }, l), { lead: true });
+  assert.deepEqual(bfStanding({ bf_since: '2025-09-18' }, l), { lead: false, short: 10 });
+  assert.deepEqual(bfStanding({ bf_since: '2025-09-18' }, { ...l, bf_queue_dates: [] }), { lead: true, nobody: true });
+  assert.equal(bfStanding({}, l), null);
+  assert.equal(matches({ bf_since: '2024-01-01' }, l, '2026-10-11', null), true);   // leading so far → worth a DM
+  assert.equal(matches({ bf_since: '2026-01-01' }, l, '2026-10-11', null), false);
+  const e = cards({ SITE_URL: 'https://s' }, { city: 'stockholm', bf_since: '2024-01-01' }, { ...DATA, listings: [l] }, new Date('2026-10-11T10:00:00Z'), 'all');
+  assert.match(e[1].fields[0].value, /you'd lead so far · apply by/);
+  const { sub, problems } = applySet({ city: 'stockholm', freq: 'daily' }, { bf_since: '2025-09-01' }, DATA, '2026-10-11');
+  assert.equal(sub.bf_since, '2025-09-01'); assert.equal(problems.length, 0);
+  assert.match(applySet({ city: 'stockholm' }, { bf_since: 'last year' }, DATA, '2026-10-11').problems[0], /YYYY-MM-DD/);
+});
+
+test('a listing missing for one run is not announced again', () => {
+  const sub = { days: 100, from: '2026-10-11', notified: ['a'] };
+  const kept = remember(sub, [], { fresh: [], outbid: [], closing: [] }, { a: { gone_at: '2026-10-11T09:00:00Z' } });
+  assert.deepEqual(kept.notified, ['a']);
+  assert.deepEqual(remember(sub, [], { fresh: [], outbid: [], closing: [] }).notified, []);
 });
