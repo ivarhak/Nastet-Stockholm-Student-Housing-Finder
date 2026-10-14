@@ -89,6 +89,8 @@
  ],
  "Bostadsförmedlingen:apt:202615996": [
   {
+   "closed_at": "2026-10-14T13:20:05.437932+00:00",
+   "final_days": null,
    "first_seen": "2026-10-13T22:18:19.025572+00:00",
    "id": "bf-305630"
   }

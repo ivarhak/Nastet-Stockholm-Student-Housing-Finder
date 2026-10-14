@@ -1065,6 +1065,32 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618128"
  },
+ "bf-305630": {
+  "address": "Albanovägen 4",
+  "area": "Norra Djurgården",
+  "class": "corridor",
+  "closed_at": "2026-10-14T13:20:05.437932+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-13T22:18:19.025572+00:00",
+  "floor": 0,
+  "last_seen": "2026-10-14T12:28:16.949435+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-13T22:18:19.025572+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-14",
+  "rent": 6213,
+  "size": 14,
+  "type": "Studentkorridor",
+  "unit": "Bostadsförmedlingen:apt:202615996"
+ },
  "sssb-Jerum-Studentbacken 21-1008": {
   "address": "Studentbacken 21",
   "area": "Jerum",
