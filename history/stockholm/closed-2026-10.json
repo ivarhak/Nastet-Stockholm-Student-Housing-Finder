@@ -3588,6 +3588,52 @@
   "type": "1 rum & pentry",
   "unit": "sssb-Pax-Emmylundsvägen 5-1520"
  },
+ "sssb-Strix-Armégatan 32 A-1213": {
+  "address": "Armégatan 32 A",
+  "area": "Strix",
+  "class": "corridor",
+  "closed_at": "2026-10-14T08:18:16.745771+00:00",
+  "deadline": null,
+  "final_days": 268,
+  "first_seen": "2026-10-13T09:18:05.564334+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-14T07:18:17.959928+00:00",
+  "move_in": "2026-10-16",
+  "obs": [
+   [
+    "2026-10-13T09:18:05.564334+00:00",
+    0,
+    1
+   ],
+   [
+    "2026-10-13T10:18:12.041562+00:00",
+    49,
+    2
+   ],
+   [
+    "2026-10-13T18:18:21.698074+00:00",
+    49,
+    3
+   ],
+   [
+    "2026-10-13T19:18:15.597542+00:00",
+    217,
+    4
+   ],
+   [
+    "2026-10-13T22:18:19.025572+00:00",
+    268,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 3622,
+  "size": 16,
+  "type": null,
+  "unit": "sssb-Strix-Armégatan 32 A-1213"
+ },
  "sssb-Strix-Armégatan 32 B-1312": {
   "address": "Armégatan 32 B",
   "area": "Strix",
