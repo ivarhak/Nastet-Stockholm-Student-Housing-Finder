@@ -29,18 +29,6 @@
    "id": "sgs-mpDPvmfvwWT7dqcBdJccqkD8"
   }
  ],
- "SGS:Doktor Lindhs Gata 6:13.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-FhrhftWywrGWwhwhwDbFVCdd"
-  }
- ],
- "SGS:Framgången 256:28.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-xrXqJbbFCbxdgW6bwgyJBQPy"
-  }
- ],
  "SGS:Kronhusgatan 2 C:32.0:None": [
   {
    "closed_at": "2026-10-10T22:01:14.092821+00:00",
@@ -49,32 +37,12 @@
    "id": "sgs-KFCrCXwG7bQtpQgDJjKmWTCP"
   }
  ],
- "SGS:Lilla Regementsvägen 8:51.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-rGVhPVDP79FbWqcBK6gtKKtj"
-  }
- ],
  "SGS:Lillatorpsgatan 2 C:32.0:None": [
   {
    "closed_at": "2026-10-10T22:01:14.092821+00:00",
    "final_days": null,
    "first_seen": "2026-10-09T20:12:28.613134+00:00",
    "id": "sgs-DjjrvxMtkgmhhTxVQB4p97P4"
-  },
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-ychFPyffbhtjyxvqpGRwh6Wy"
-  }
- ],
- "SGS:Lindholmsallén 29:27.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-YqWyQgpM67c4wrPqGKKGfPKC"
-  },
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-wvGqCQcwyGGtWWP9bPt77qvM"
   }
  ],
  "SGS:Lindholmsallén 37:63.0:None": [
@@ -83,24 +51,6 @@
    "final_days": null,
    "first_seen": "2026-10-09T20:12:28.613134+00:00",
    "id": "sgs-tWkBMxhf8p8kdYJjMhgKpfYw"
-  }
- ],
- "SGS:Mejerigatan 2 A Rum 1071:14.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-VrwfgXthXwqJ6mdGPWJ4Tjmg"
-  }
- ],
- "SGS:Mejerigatan 2 B Rum 533:14.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-rBRwBfMmMwDfPTqCFCjFKxhR"
-  }
- ],
- "SGS:Motgången 301:56.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-7kp66tQybcpKVkgyjQWqYG8G"
   }
  ],
  "SGS:Motgången 326 Rum 22:18.5:None": [
@@ -135,12 +85,6 @@
    "id": "sgs-4QFvrqPY9xbdvpPKFmyvV9mJ"
   }
  ],
- "SGS:Omgången 470 Rum 31:18.5:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-kvV8TwtxqTtgQbXgmvQBgRRb"
-  }
- ],
  "SGS:Postgatan 18:25.0:None": [
   {
    "closed_at": "2026-10-10T22:01:14.092821+00:00",
@@ -155,12 +99,6 @@
    "final_days": null,
    "first_seen": "2026-10-09T20:12:28.613134+00:00",
    "id": "sgs-Wmw6dr4YVgJqvDTcR8CxvYT8"
-  }
- ],
- "SGS:Richertsgatan 2c Rum 3301:19.5:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-GBy4wgtPHXTwWXm6hCvpHqyp"
   }
  ],
  "SGS:Richertsgatan 2d Rum 4201:19.5:None": [
@@ -187,12 +125,6 @@
    "id": "sgs-jrgCqFqHY4BrBkTwRQy9cjV8"
   }
  ],
- "SGS:Studiegången 6:61.0:None": [
-  {
-   "first_seen": "2026-10-11T22:18:49.588637+00:00",
-   "id": "sgs-YMdtVd6prKFYC7Dj8Bc6DQtf"
-  }
- ],
  "SGS:Uppstigen 144 Rum 33:18.5:None": [
   {
    "closed_at": "2026-10-13T14:18:19.949968+00:00",
@@ -209,19 +141,91 @@
    "id": "sgs-kQQXQJqJ6hDHfqHC4MtQGqRg"
   }
  ],
- "SGS:Volrat Thamsgatan 20:65.0:None": [
+ "SGS:apt:Doktor Lindhs Gata 6#1003": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-FhrhftWywrGWwhwhwDbFVCdd"
+  }
+ ],
+ "SGS:apt:Framgången 256#1001": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-xrXqJbbFCbxdgW6bwgyJBQPy"
+  }
+ ],
+ "SGS:apt:Lilla Regementsvägen 8#1305": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-rGVhPVDP79FbWqcBK6gtKKtj"
+  }
+ ],
+ "SGS:apt:Lillatorpsgatan 2 C#1104": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-ychFPyffbhtjyxvqpGRwh6Wy"
+  }
+ ],
+ "SGS:apt:Lindholmsallén 29#1004": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-YqWyQgpM67c4wrPqGKKGfPKC"
+  }
+ ],
+ "SGS:apt:Lindholmsallén 29#1107": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-wvGqCQcwyGGtWWP9bPt77qvM"
+  }
+ ],
+ "SGS:apt:Mejerigatan 2 A Rum 1071#2002": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-VrwfgXthXwqJ6mdGPWJ4Tjmg"
+  }
+ ],
+ "SGS:apt:Mejerigatan 2 B Rum 533#1512": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-rBRwBfMmMwDfPTqCFCjFKxhR"
+  }
+ ],
+ "SGS:apt:Motgången 301#1302": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-7kp66tQybcpKVkgyjQWqYG8G"
+  }
+ ],
+ "SGS:apt:Omgången 470 Rum 31#1201": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-kvV8TwtxqTtgQbXgmvQBgRRb"
+  }
+ ],
+ "SGS:apt:Richertsgatan 2c Rum 3301#1209": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-GBy4wgtPHXTwWXm6hCvpHqyp"
+  }
+ ],
+ "SGS:apt:Studiegången 6#1110": [
+  {
+   "first_seen": "2026-10-11T22:18:49.588637+00:00",
+   "id": "sgs-YMdtVd6prKFYC7Dj8Bc6DQtf"
+  }
+ ],
+ "SGS:apt:Volrat Thamsgatan 20#1103": [
   {
    "first_seen": "2026-10-11T22:18:49.588637+00:00",
    "id": "sgs-c6bMGgkjJMypVdyqFtwW6mRk"
   }
  ],
- "SGS:Åvägen 6 A Rum 421:25.0:None": [
+ "SGS:apt:Åvägen 6 A Rum 421#1421": [
   {
    "first_seen": "2026-10-11T22:18:49.588637+00:00",
    "id": "sgs-kmtYYWC8bqdcVByvBHQ9DgyB"
   }
  ],
- "SGS:Övre Husargatan 13:44.0:None": [
+ "SGS:apt:Övre Husargatan 13#1302": [
   {
    "first_seen": "2026-10-11T22:18:49.588637+00:00",
    "id": "sgs-DRFvFKpK8mtJThV6KTPGDGmq"
