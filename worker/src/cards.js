@@ -19,6 +19,14 @@ const BUDGET = 5600;
 const nf = n => Number(n).toLocaleString('sv-SE');
 const day = iso => new Date(String(iso).slice(0, 10) + 'T12:00:00Z')
   .toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+const unit = l => (String(l.id || '').startsWith('sssb-') ? (String(l.id).match(/-(\d{3,5})$/) || [])[1] : null);
+// "today" / "tomorrow" read faster than a date when that's what it is.
+function when(iso, today) {
+  const d = String(iso).slice(0, 10);
+  if (d === today) return 'today';
+  const tomorrow = new Date(Date.parse(today + 'T12:00:00Z') + 86400000).toISOString().slice(0, 10);
+  return d === tomorrow ? 'tomorrow' : day(d);
+}
 const clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 const site = env => (env.SITE_URL || '').replace(/\/$/, '');
 
@@ -36,35 +44,46 @@ function field(env, sub, data, l, today, isNew) {
   const stand = typeof l.queue_days === 'number'
     ? (get ? `✅ you'd lead — ${nf(l.queue_days)} queue days`
            : `${nf(l.queue_days)} queue days${mine != null ? ` · ${nf(l.queue_days - mine)} short` : ''}`)
-    : [bfText, l.deadline ? `apply by **${day(l.deadline)}**` : 'open to apply'].filter(Boolean).join(' · ');
-  const when = [stand, l.move_in ? `move-in ${String(l.move_in).slice(0, 10)}` : null].filter(Boolean).join(' · ');
+    : [bfText, l.deadline ? `apply by **${when(l.deadline, today)}**` : 'open to apply'].filter(Boolean).join(' · ');
+  const timing = [stand, l.move_in ? `move-in ${String(l.move_in).slice(0, 10)}` : null].filter(Boolean).join(' · ');
   const url = `${site(env)}/?listing=${encodeURIComponent(l.id)}#${sub.city}`;
   return {
-    name: clip(`${isNew ? '🆕 ' : ''}${l.address || l.area}${l.address && l.area ? ` · ${l.area}` : ''}`, 250),
-    value: clip(`${facts}\n${when} · [Open ↗](${url})`, 1020),
+    // SSSB rooms in one building often look identical; the apartment number
+    // (the last part of the id, "sssb-Strix-Armégatan 32 A-1213") tells them apart.
+    name: clip(`${isNew ? '🆕 ' : ''}${l.address || l.area}${unit(l) ? ` (lgh ${unit(l)})` : ''}${l.address && l.area ? ` · ${l.area}` : ''}`, 250),
+    value: clip(`${facts}\n${timing} · [Open ↗](${url})`, 1020),
   };
 }
 
 // Fills cards from groups until the character budget runs out.
+// Fills cards from groups within the character budget, shared fairly: each
+// non-empty group gets an equal slice first, and whatever a short group
+// doesn't use is handed on — so one long list can't leave the next group
+// as nothing but "…and 38 more". "More" goes last, as a field, since Discord
+// draws a card's description above its list.
 function pack(env, groups, used) {
+  const live = groups.filter(g => g.list.length).slice(0, 9);
   const embeds = [];
-  for (const g of groups) {
-    if (!g.list.length || embeds.length >= 9) continue;
+  let budget = BUDGET - used;
+  live.forEach((g, gi) => {
+    const share = Math.floor(budget / (live.length - gi));
     const e = { title: `${g.title} (${g.list.length})`, color: g.color, fields: [] };
+    if (g.description) e.description = g.description;
     let size = e.title.length + (g.description || '').length;
+    const moreLen = 90;
     for (const f of g.list) {
       const n = f.name.length + f.value.length;
-      if (e.fields.length >= 25 || used + size + n > BUDGET) break;
+      if (e.fields.length >= 24 || size + n + moreLen > share) break;
       e.fields.push(f); size += n;
     }
     const left = g.list.length - e.fields.length;
-    const more = left ? `…and ${left} more — [see them on the site](${site(env)}/#${g.city})` : '';
-    const desc = [g.description, more].filter(Boolean).join('\n');
-    if (desc) e.description = desc;
-    if (!e.fields.length && !left) continue;
-    used += size + more.length;
+    if (left) {
+      const more = { name: '​', value: `…and ${left} more — [see them on the site](${site(env)}/#${g.city})` };
+      e.fields.push(more); size += more.value.length + 1;
+    }
+    budget -= size;
     embeds.push(e);
-  }
+  });
   return embeds;
 }
 

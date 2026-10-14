@@ -323,7 +323,7 @@ test('cards: every fitting listing, grouped, inside Discord limits', () => {
     + (x.fields || []).reduce((m, f) => m + f.name.length + f.value.length, 0), 0);
   assert.ok(big.length <= 10 && size <= 6000, `${big.length} embeds, ${size} chars`);
   assert.ok(big.every(x => !x.fields || x.fields.length <= 25));
-  assert.ok(big.some(x => /more — \[see them on the site\]/.test(x.description || '')));
+  assert.ok(big.some(x => (x.fields || []).some(f => /more — \[see them on the site\]/.test(f.value))));
   // Capped without a union.
   const capped = cards({ SITE_URL: 'https://s' }, { ...sub, days: 90, union: false }, DATA, new Date('2026-10-30T10:00:00Z'), 'all');
   assert.match(capped[0].description, /\*\*90\*\* \(capped at 90 — no student union\)/);
@@ -349,7 +349,7 @@ test('Bostadsförmedlingen standing from bf_since and the leading queue dates', 
   assert.equal(matches({ bf_since: '2024-01-01' }, l, '2026-10-11', null), true);   // leading so far → worth a DM
   assert.equal(matches({ bf_since: '2026-01-01' }, l, '2026-10-11', null), false);
   const e = cards({ SITE_URL: 'https://s' }, { city: 'stockholm', bf_since: '2024-01-01' }, { ...DATA, listings: [l] }, new Date('2026-10-11T10:00:00Z'), 'all');
-  assert.match(e[1].fields[0].value, /you'd lead so far · apply by/);
+  assert.match(e[1].fields[0].value, /you'd lead so far · apply by \*\*(Thu 15 Oct|tomorrow|today)\*\*/);
   const { sub, problems } = applySet({ city: 'stockholm', freq: 'daily' }, { bf_since: '2025-09-01' }, DATA, '2026-10-11');
   assert.equal(sub.bf_since, '2025-09-01'); assert.equal(problems.length, 0);
   assert.match(applySet({ city: 'stockholm' }, { bf_since: 'last year' }, DATA, '2026-10-11').problems[0], /YYYY-MM-DD/);
