@@ -96,5 +96,19 @@
    "median_rent_sqm": 262.6,
    "new": 38
   }
+ },
+ "2026-10-16": {
+  "Bostadsförmedlingen": {
+   "available": 56,
+   "median_leader_days": null,
+   "median_rent_sqm": 279.2,
+   "new": 0
+  },
+  "SSSB": {
+   "available": 38,
+   "median_leader_days": 167.0,
+   "median_rent_sqm": 262.6,
+   "new": 0
+  }
  }
 }
