@@ -25,6 +25,58 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202616707"
  },
+ "bf-304622": {
+  "address": "Hanstavägen 51",
+  "area": "Kista",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-09T20:12:27.017271+00:00",
+  "floor": 13,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-09T20:12:27.017271+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-02",
+  "rent": 11468,
+  "size": 49,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202615073"
+ },
+ "bf-304623": {
+  "address": "Hanstavägen 51",
+  "area": "Kista",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-09T20:12:27.017271+00:00",
+  "floor": 8,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-09T20:12:27.017271+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-02",
+  "rent": 6296,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202616687"
+ },
  "bf-304715": {
   "address": "Albanovägen 4",
   "area": "Norra Djurgården",
@@ -2131,6 +2183,422 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202615128"
  },
+ "bf-305440": {
+  "address": "Söderarmsvägen 26A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618229"
+ },
+ "bf-305441": {
+  "address": "Söderarmsvägen 26A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618228"
+ },
+ "bf-305442": {
+  "address": "Söderarmsvägen 26A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618226"
+ },
+ "bf-305443": {
+  "address": "Söderarmsvägen 28A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618230"
+ },
+ "bf-305444": {
+  "address": "Söderarmsvägen 28A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618231"
+ },
+ "bf-305445": {
+  "address": "Söderarmsvägen 28A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618233"
+ },
+ "bf-305446": {
+  "address": "Söderarmsvägen 30B",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618234"
+ },
+ "bf-305473": {
+  "address": "Alphyddevägen 12",
+  "area": "Alphyddan",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 6801,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618209"
+ },
+ "bf-305474": {
+  "address": "Alphyddevägen 12",
+  "area": "Alphyddan",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 7,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 6582,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618173"
+ },
+ "bf-305486": {
+  "address": "Elin Falks Gata 2",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7260,
+  "size": 26,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618245"
+ },
+ "bf-305489": {
+  "address": "Elin Falks Gata 2",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 0,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 6980,
+  "size": 23,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618240"
+ },
+ "bf-305490": {
+  "address": "Elin Falks Gata 2",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 0,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7260,
+  "size": 26,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618239"
+ },
+ "bf-305491": {
+  "address": "Elin Falks Gata 1",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 10398,
+  "size": 41,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618238"
+ },
+ "bf-305492": {
+  "address": "Bigarråvägen 3",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 8490,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618252"
+ },
+ "bf-305495": {
+  "address": "Herrhagsvägen 137",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7260,
+  "size": 26,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618250"
+ },
+ "bf-305496": {
+  "address": "Herrhagsvägen 137",
+  "area": "Tallkrogen",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-12T22:18:12.257352+00:00",
+  "floor": -1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": null,
+  "obs": [
+   [
+    "2026-10-12T22:18:12.257352+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-13",
+  "rent": 7260,
+  "size": 26,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618248"
+ },
  "bf-305574": {
   "address": "Värtavägen 60",
   "area": "Ladugårdsgärdet",
@@ -2468,6 +2936,136 @@
   "size": 14,
   "type": "Studentkorridor",
   "unit": "Bostadsförmedlingen:apt:202615996"
+ },
+ "bf-305750": {
+  "address": "Albanovägen 5",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-14T22:18:21.549475+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-14T22:18:21.549475+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-15",
+  "rent": 8905,
+  "size": 29,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618324"
+ },
+ "bf-305822": {
+  "address": "Fakultetsgränd  8",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-14T22:18:21.549475+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-14T22:18:21.549475+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-15",
+  "rent": 7774,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618463"
+ },
+ "bf-305823": {
+  "address": "Fakultetsgränd  8",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-14T22:18:21.549475+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-14T22:18:21.549475+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-15",
+  "rent": 9329,
+  "size": 32,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618462"
+ },
+ "bf-305824": {
+  "address": "Fakultetsgränd  8",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-14T22:18:21.549475+00:00",
+  "floor": 0,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-14T22:18:21.549475+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-15",
+  "rent": 7631,
+  "size": 20,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618459"
+ },
+ "bf-305837": {
+  "address": "Glasfibergatan 4",
+  "area": "Älvsjö",
+  "class": "1room",
+  "closed_at": "2026-10-18T22:18:31.712425+00:00",
+  "deadline": "2026-10-18",
+  "final_days": null,
+  "first_seen": "2026-10-14T22:18:21.549475+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-18T21:19:26.676179+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-14T22:18:21.549475+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-15",
+  "rent": 8532,
+  "size": 39,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618401"
  },
  "sssb-Birka-Simrishamnsvägen 15-1007": {
   "address": "Simrishamnsvägen 15",
