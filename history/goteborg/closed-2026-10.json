@@ -285,6 +285,32 @@
   "type": "1 rum och kokvrå",
   "unit": "SGS:apt:Helmutsrogatan 15#1102"
  },
+ "sgs-BGtvCcyVqjyCk88vhd8pFhjF": {
+  "address": "Uppstigen 128 Rum 23",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "closed_at": "2026-10-19T22:19:29.331899+00:00",
+  "deadline": "2026-10-19",
+  "final_days": null,
+  "first_seen": "2026-10-18T22:19:33.677315+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-19T21:19:07.917307+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-18T22:19:33.677315+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4703,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Uppstigen 128 Rum 23#1103"
+ },
  "sgs-DRFvFKpK8mtJThV6KTPGDGmq": {
   "address": "Övre Husargatan 13",
   "area": "Husaren",
@@ -597,6 +623,32 @@
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:apt:Omgången 434 Rum 22#1102"
  },
+ "sgs-Q7q7Rwp76jK6PVD68VDjTrgK": {
+  "address": "Richertsgatan 1",
+  "area": "Viktor Rydberg",
+  "class": "1room",
+  "closed_at": "2026-10-19T22:19:29.331899+00:00",
+  "deadline": "2026-10-19",
+  "final_days": null,
+  "first_seen": "2026-10-18T22:19:33.677315+00:00",
+  "floor": null,
+  "last_seen": "2026-10-19T21:19:07.917307+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-18T22:19:33.677315+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 6696,
+  "size": 38.0,
+  "type": "1 rum och kök",
+  "unit": "SGS:apt:Richertsgatan 1#1008"
+ },
  "sgs-QBDqmwvKhFK8wKg8VfprqTMj": {
   "address": "Burggrevegatan 15",
   "area": "Odin",
@@ -778,6 +830,32 @@
   "size": 19.5,
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:Richertsgatan 2b Rum 2309:19.5:None"
+ },
+ "sgs-WwyFdVKJFrDBmhx84pRBjvG7": {
+  "address": "Tyghusvägen 10",
+  "area": "Kviberg",
+  "class": "1room",
+  "closed_at": "2026-10-19T22:19:29.331899+00:00",
+  "deadline": "2026-10-19",
+  "final_days": null,
+  "first_seen": "2026-10-18T22:19:33.677315+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-19T21:19:07.917307+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-18T22:19:33.677315+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5503,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Tyghusvägen 10#1310"
  },
  "sgs-YHDqfwKgCb9jxpq4YrffbhJP": {
   "address": "Kjellmansgatan 11 Rum 106",

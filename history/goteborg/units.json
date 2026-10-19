@@ -447,6 +447,8 @@
  ],
  "SGS:apt:Richertsgatan 1#1008": [
   {
+   "closed_at": "2026-10-19T22:19:29.331899+00:00",
+   "final_days": null,
    "first_seen": "2026-10-18T22:19:33.677315+00:00",
    "id": "sgs-Q7q7Rwp76jK6PVD68VDjTrgK"
   }
@@ -563,6 +565,8 @@
  ],
  "SGS:apt:Tyghusvägen 10#1310": [
   {
+   "closed_at": "2026-10-19T22:19:29.331899+00:00",
+   "final_days": null,
    "first_seen": "2026-10-18T22:19:33.677315+00:00",
    "id": "sgs-WwyFdVKJFrDBmhx84pRBjvG7"
   }
@@ -589,6 +593,8 @@
  ],
  "SGS:apt:Uppstigen 128 Rum 23#1103": [
   {
+   "closed_at": "2026-10-19T22:19:29.331899+00:00",
+   "final_days": null,
    "first_seen": "2026-10-18T22:19:33.677315+00:00",
    "id": "sgs-BGtvCcyVqjyCk88vhd8pFhjF"
   }
