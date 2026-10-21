@@ -1,16 +1,16 @@
 {
- "sgs-4v4xjKFcmGfqfkymXgXyKgDf": {
-  "address": "Motgången 358 Rum 34",
+ "sgs-4DxvQhP6vBpTMGVXq4jytDJ6": {
+  "address": "Framgången 228 Rum 92",
   "area": "Olofshöjd",
   "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": -1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -18,527 +18,47 @@
   "prior_listings": 0,
   "provider": "SGS",
   "published_at": null,
-  "rent": 4777,
+  "rent": 4721,
   "size": 18.5,
   "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Motgången 358 Rum 34#1204"
+  "unit": "SGS:apt:Framgången 228 Rum 92#0902"
  },
- "sgs-DHRfhkG9Xr9bwHyr4t48wcgH": {
-  "address": "Motgången 358 Rum 31",
-  "area": "Olofshöjd",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4777,
-  "size": 18.5,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Motgången 358 Rum 31#1201"
- },
- "sgs-DWXfm49pWfwpwcPDgXYQmkQ6": {
-  "address": "Lindholmsallén 29",
-  "area": "Lindholmsallén",
+ "sgs-4KxFy7JVjDrqx4Jwv9gBKrV7": {
+  "address": "Åvägen 6 A Rum 421",
+  "area": "Gårda",
   "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 5803,
-  "size": 27.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Lindholmsallén 29#1009"
- },
- "sgs-DXQ4YkhKkYG8MHRHpmqmppJj": {
-  "address": "Lindholmsallén 29",
-  "area": "Lindholmsallén",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 3,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 6079,
-  "size": 27.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Lindholmsallén 29#1306"
- },
- "sgs-FkbPHWKhVYqDYHrdGF8hbT8R": {
-  "address": "Sven Brolids väg 13",
-  "area": "Sven Brolids väg",
-  "class": "2plus",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
   "floor": 4,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 9749,
-  "size": 61.0,
-  "type": "3 rum och kök",
-  "unit": "SGS:apt:Sven Brolids väg 13#1402"
- },
- "sgs-KpgxdDHccjfGGT6vxPJXPx8x": {
-  "address": "Uppstigen 126 Rum 23",
-  "area": "Olofshöjd",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4703,
-  "size": 18.5,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Uppstigen 126 Rum 23#1103"
- },
- "sgs-KqXjYFbHjmpc9Mc7H9QtxDdG": {
-  "address": "Viktor Rydbergsgatan 48 Rum 105",
-  "area": "Viktor Rydberg",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4562,
-  "size": 16.4,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Viktor Rydbergsgatan 48 Rum 105#1005"
- },
- "sgs-KyXGf7jbK7G9wpCwKqXJ7mrM": {
-  "address": "Lisa Sass gata 12A",
-  "area": "Selma",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 5082,
-  "size": 23.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Lisa Sass gata 12A#1209"
- },
- "sgs-MKQc87xBrPpqg7XDttvqGXhh": {
-  "address": "Motgången 326 Rum 33",
-  "area": "Olofshöjd",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4765,
-  "size": 18.5,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Motgången 326 Rum 33#1203"
- },
- "sgs-PGhgDVhPPQtWbvbvtwcm8MkR": {
-  "address": "Studiegången 16",
-  "area": "Rosendal",
-  "class": "2plus",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 7491,
-  "size": 40.0,
-  "type": "2 rum och kök",
-  "unit": "SGS:apt:Studiegången 16#1205"
- },
- "sgs-RKDMvDcRFRD9pTFVHMQkW8Pr": {
-  "address": "Uppstigen 127 Rum 24",
-  "area": "Olofshöjd",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
   ],
-  "prior_listings": 0,
+  "prior_listings": 1,
   "provider": "SGS",
   "published_at": null,
-  "rent": 4800,
-  "size": 18.5,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Uppstigen 127 Rum 24#1104"
- },
- "sgs-TQkybbVYgjGKjYfJMwYctxMQ": {
-  "address": "Prickskyttestigen 12",
-  "area": "Prickskyttestigen",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 5374,
-  "size": 26.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Prickskyttestigen 12#1001"
- },
- "sgs-V77fKpMcmTYDWQ8fg8xYgw7j": {
-  "address": "Gibraltargatan 25",
-  "area": "Gibraltar",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 6245,
-  "size": 29.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Gibraltargatan 25#1103"
- },
- "sgs-VHgWJwqXqP4B7ttD7Kg7QVk8": {
-  "address": "Viktor Rydbergsgatan 48 Rum 351",
-  "area": "Viktor Rydberg",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 3,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4768,
-  "size": 20.4,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Viktor Rydbergsgatan 48 Rum 351#1314"
- },
- "sgs-VkGDt9GBXJ7FgmQtJ9QKYMKb": {
-  "address": "Sven Brolids väg 13",
-  "area": "Sven Brolids väg",
-  "class": "2plus",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 9749,
-  "size": 61.0,
-  "type": "3 rum och kök",
-  "unit": "SGS:apt:Sven Brolids väg 13#1001"
- },
- "sgs-WMPwVcBdVHHydm996F6c6YGK": {
-  "address": "Mejerigatan 2 A Rum 784",
-  "area": "Ostkupan",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 7,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4222,
-  "size": 14.0,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Mejerigatan 2 A Rum 784#1706"
- },
- "sgs-cD4yC9pjpXpH8tjMGgTGPRbD": {
-  "address": "Viktor Rydbergsgatan 48 Rum 156",
-  "area": "Viktor Rydberg",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4564,
-  "size": 16.4,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Viktor Rydbergsgatan 48 Rum 156#1119"
- },
- "sgs-cwGpwvWfwYjFChYVcWjmQMdy": {
-  "address": "Doktor Belfrages gata 5",
-  "area": "Guldhedstornet",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 3,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-02-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 6811,
-  "size": 28.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Doktor Belfrages gata 5#1303"
- },
- "sgs-gWWGhpbvFxrHmTwqPMtW9W4c": {
-  "address": "Birger Jarlsgatan 3",
-  "area": "Birger Jarl",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 5970,
-  "size": 31.0,
-  "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Birger Jarlsgatan 3#1131"
- },
- "sgs-h9XMpchcT6JwwrT7DbXghPJT": {
-  "address": "Tyghusvägen 10",
-  "area": "Kviberg",
-  "class": "2plus",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 7550,
-  "size": 42.0,
-  "type": "2 rum och kök",
-  "unit": "SGS:apt:Tyghusvägen 10#1202"
- },
- "sgs-hYbXHHCvpHJMBhM8GCfwGKCM": {
-  "address": "Fredrik Bloms väg 27",
-  "area": "Nya Varvet",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 5296,
-  "size": 16.0,
+  "rent": 5663,
+  "size": 25.0,
   "type": "Enkelrum med kokskåp",
-  "unit": "SGS:apt:Fredrik Bloms väg 27#1013"
+  "unit": "SGS:apt:Åvägen 6 A Rum 421#1421"
  },
- "sgs-p6WVj6C8ThKbxCBwqfxCcT8H": {
-  "address": "Mejerigatan 2 A Rum 572",
-  "area": "Ostkupan",
-  "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 5,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-18T22:19:33.677315+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "SGS",
-  "published_at": null,
-  "rent": 4571,
-  "size": 14.0,
-  "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Mejerigatan 2 A Rum 572#1503"
- },
- "sgs-q8v7YvmwrXyVTqbqtJhM98Vf": {
-  "address": "Studiegången 4 Rum 007",
+ "sgs-4xQkfBVcYF6HbYKbDJWCWhqx": {
+  "address": "Studiegången 4 Rum 109",
   "area": "Rosendal",
   "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -549,20 +69,284 @@
   "rent": 4871,
   "size": 19.0,
   "type": "Enkelrum med kokskåp",
-  "unit": "SGS:apt:Studiegången 4 Rum 007#1003"
+  "unit": "SGS:apt:Studiegången 4 Rum 109#1105"
  },
- "sgs-wc9Vh7XcbgdkTWDg4h89YBYm": {
-  "address": "Lilla Regementsvägen 10",
-  "area": "Kviberg",
-  "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": null,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
+ "sgs-8hx7p9hP6BVM8Gv9k4cfRGWQ": {
+  "address": "Uppstigen 144 Rum 23",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4727,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Uppstigen 144 Rum 23#1103"
+ },
+ "sgs-9Gf6pjvKxt6PjcKdcBfyVCqw": {
+  "address": "Omgången 448",
+  "area": "Olofshöjd",
+  "class": "2plus",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": -1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 6871,
+  "size": 38.0,
+  "type": "2 rum och kök",
+  "unit": "SGS:apt:Omgången 448#0901"
+ },
+ "sgs-B7gd4DcBDYhDfxRqY4cwX4jF": {
+  "address": "Lilla Regementsvägen 14",
+  "area": "Kviberg",
+  "class": "2plus",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 9034,
+  "size": 54.0,
+  "type": "3 rum och kök",
+  "unit": "SGS:apt:Lilla Regementsvägen 14#1313"
+ },
+ "sgs-CMJDPbjjbB76frHJyh7yJGKW": {
+  "address": "Uppstigen 128 Rum 34",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4703,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Uppstigen 128 Rum 34#1204"
+ },
+ "sgs-Dk9jH94j8v4vykrGMKrkcy74": {
+  "address": "Kjellmansgatan 11 Rum 201",
+  "area": "Kjellmansgatan",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4587,
+  "size": 19.0,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Kjellmansgatan 11 Rum 201#1105"
+ },
+ "sgs-GTvPvJhCHHBttkWrrvp8R6dh": {
+  "address": "Uppstigen 138 Rum 22",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4800,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Uppstigen 138 Rum 22#1102"
+ },
+ "sgs-GffbJc4c7T7rCHkhFVtWVkRT": {
+  "address": "Lindholmsallén 25",
+  "area": "Lindholmsallén",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": null,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 6079,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Lindholmsallén 25#1008"
+ },
+ "sgs-Hbb9YxfxdqX94vCmcWMkHvJT": {
+  "address": "Lisa Sass gata 12A",
+  "area": "Selma",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5082,
+  "size": 23.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Lisa Sass gata 12A#1416"
+ },
+ "sgs-J99dWQky7wkmRqxcgvMQHCyh": {
+  "address": "Ametistgatan 6",
+  "area": "Opaltorget",
+  "class": "2plus",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 8625,
+  "size": 55.0,
+  "type": "3 rum och kök",
+  "unit": "SGS:apt:Ametistgatan 6#1502"
+ },
+ "sgs-Jc4RchWDMHJX89y7WBDpH6kT": {
+  "address": "Plejadgatan 20",
+  "area": "Plejaden",
+  "class": "2plus",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 11939,
+  "size": 85.0,
+  "type": "5 rum och kök",
+  "unit": "SGS:apt:Plejadgatan 20#1210"
+ },
+ "sgs-MPJ7bQBvKjgQxhqpBFKtMGH6": {
+  "address": "Kjellmansgatan 11 Rum 402",
+  "area": "Kjellmansgatan",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4587,
+  "size": 19.0,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Kjellmansgatan 11 Rum 402#1304"
+ },
+ "sgs-MX7KwCWHJbMrwH6QCjYHdbqJ": {
+  "address": "Lilla Regementsvägen 10",
+  "area": "Kviberg",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": null,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -573,20 +357,92 @@
   "rent": 5332,
   "size": 25.0,
   "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Lilla Regementsvägen 10#1006"
+  "unit": "SGS:apt:Lilla Regementsvägen 10#1013"
  },
- "sgs-wyBRxJFrbpj4WMybPDG48jcX": {
-  "address": "Omgången 432 Rum 91",
-  "area": "Olofshöjd",
+ "sgs-QkTMBYtyvtD9hvxPf9mbyGFb": {
+  "address": "Doktor Lindhs Gata 6",
+  "area": "Dr Lindhs Gata",
   "class": "corridor",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": -1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": null,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4465,
+  "size": 13.0,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Doktor Lindhs Gata 6#1003"
+ },
+ "sgs-Qq9GJt8KpXqFY96RWTtFqypj": {
+  "address": "Tyghusvägen 8",
+  "area": "Kviberg",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5503,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Tyghusvägen 8#1310"
+ },
+ "sgs-T6Dh8vgK4PXwMfbTWwFD7tTR": {
+  "address": "Lindholmsallén 29",
+  "area": "Lindholmsallén",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5987,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Lindholmsallén 29#1107"
+ },
+ "sgs-Xp7pJrhJJ6dBcYYHRptVHGCB": {
+  "address": "Motgången 332 Rum 82",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": -2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -594,23 +450,23 @@
   "prior_listings": 0,
   "provider": "SGS",
   "published_at": null,
-  "rent": 4746,
+  "rent": 4765,
   "size": 18.5,
   "type": "Enkelrum med gruppkök",
-  "unit": "SGS:apt:Omgången 432 Rum 91#0901"
+  "unit": "SGS:apt:Motgången 332 Rum 82#0801"
  },
- "sgs-xxfW46q8YkQfhHhVTwF9tcq8": {
-  "address": "Fridhemsgatan 58",
-  "area": "Fridhemsgatan",
+ "sgs-bDHxJj8tCRC9HwhR6rbCrdgK": {
+  "address": "Anders Carlssons gata 1",
+  "area": "Smedjan",
   "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
   "floor": 4,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -618,23 +474,23 @@
   "prior_listings": 0,
   "provider": "SGS",
   "published_at": null,
-  "rent": 5636,
-  "size": 25.0,
+  "rent": 6712,
+  "size": 30.0,
   "type": "1 rum och kokvrå",
-  "unit": "SGS:apt:Fridhemsgatan 58#1404"
+  "unit": "SGS:apt:Anders Carlssons gata 1#1414"
  },
- "sgs-ymfrR8pFC76PtWyD8mdjf8BH": {
-  "address": "Åvägen 6 A",
-  "area": "Gårda",
+ "sgs-dX6wjH9ccmKfx4rVMWJ9tyfc": {
+  "address": "Fredrik Bloms väg 27",
+  "area": "Nya Varvet",
   "class": "1room",
-  "deadline": "2026-10-21",
-  "first_seen": "2026-10-18T22:19:33.677315+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-21T21:18:48.185341+00:00",
-  "move_in": "2027-01-01",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": null,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
   "obs": [
    [
-    "2026-10-18T22:19:33.677315+00:00",
+    "2026-10-21T22:01:53.519973+00:00",
     null,
     null
    ]
@@ -642,9 +498,153 @@
   "prior_listings": 0,
   "provider": "SGS",
   "published_at": null,
-  "rent": 7658,
-  "size": 47.0,
-  "type": "1 rum och kök",
-  "unit": "SGS:apt:Åvägen 6 A#1131"
+  "rent": 5814,
+  "size": 20.0,
+  "type": "Enkelrum med kokskåp",
+  "unit": "SGS:apt:Fredrik Bloms väg 27#1001"
+ },
+ "sgs-fdfk6RqQ96WPhPDwWCDWkdHT": {
+  "address": "Kjellmansgatan 9 Rum 115",
+  "area": "Kjellmansgatan",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4526,
+  "size": 19.0,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Kjellmansgatan 9 Rum 115#1009"
+ },
+ "sgs-rTr67htYppGkt9DkFPgYymdb": {
+  "address": "Plejadgatan 22",
+  "area": "Plejaden",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4894,
+  "size": 21.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Plejadgatan 22#1205"
+ },
+ "sgs-v6WpkjcHk4yqMHTtqrcCqCYK": {
+  "address": "Studiegången 10 B",
+  "area": "Rosendal",
+  "class": "2plus",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 7619,
+  "size": 58.4,
+  "type": "3 rum och kök",
+  "unit": "SGS:apt:Studiegången 10 B#1304"
+ },
+ "sgs-wjW6fDCtpXWmYxf4DxfjyRcg": {
+  "address": "Grevegårdsvägen 166",
+  "area": "Grevegårdsvägen",
+  "class": "1room",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": null,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4389,
+  "size": 28.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Grevegårdsvägen 166#1001"
+ },
+ "sgs-xDymcPH4MJbVkJjHj8f7BJGc": {
+  "address": "Framgången 220 Rum 22",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4721,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Framgången 220 Rum 22#1104"
+ },
+ "sgs-yhhhRkXXfcwDPRJGGGthbcGK": {
+  "address": "Motgången 348 Rum 32",
+  "area": "Olofshöjd",
+  "class": "corridor",
+  "deadline": "2026-10-24",
+  "first_seen": "2026-10-21T22:01:53.519973+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-21T22:01:53.519973+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-21T22:01:53.519973+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4783,
+  "size": 18.5,
+  "type": "Enkelrum med gruppkök",
+  "unit": "SGS:apt:Motgången 348 Rum 32#1202"
  }
 }
