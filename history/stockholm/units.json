@@ -3275,12 +3275,16 @@
  ],
  "sssb-Pax-Emmylundsvägen 5-0901": [
   {
+   "closed_at": "2026-10-27T09:18:58.957792+00:00",
+   "final_days": 372,
    "first_seen": "2026-10-26T11:22:08.440976+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-0901"
   }
  ],
  "sssb-Pax-Emmylundsvägen 5-1019": [
   {
+   "closed_at": "2026-10-27T09:18:58.957792+00:00",
+   "final_days": 372,
    "first_seen": "2026-10-26T13:18:58.672769+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1019"
   }
@@ -3533,6 +3537,8 @@
  ],
  "sssb-Strix-Armégatan 32 B-1314": [
   {
+   "closed_at": "2026-10-27T09:18:58.957792+00:00",
+   "final_days": 383,
    "first_seen": "2026-10-26T11:22:08.440976+00:00",
    "id": "sssb-Strix-Armégatan 32 B-1314"
   }
@@ -3563,6 +3569,8 @@
  ],
  "sssb-Strix-Armégatan 32 C-1204": [
   {
+   "closed_at": "2026-10-27T09:18:58.957792+00:00",
+   "final_days": 492,
    "first_seen": "2026-10-26T11:22:08.440976+00:00",
    "id": "sssb-Strix-Armégatan 32 C-1204"
   }
