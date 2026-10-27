@@ -5225,6 +5225,32 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618788"
  },
+ "bf-306397": {
+  "address": "Attackvägen 10",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "closed_at": "2026-10-27T07:19:43.973543+00:00",
+  "deadline": "2026-10-27",
+  "final_days": null,
+  "first_seen": "2026-10-20T22:19:18.038961+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T06:19:30.147195+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-20T22:19:18.038961+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-21",
+  "rent": 6105,
+  "size": 27,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618795"
+ },
  "bf-306435": {
   "address": "Golvläggargränd 10",
   "area": "Liljeholmen",
