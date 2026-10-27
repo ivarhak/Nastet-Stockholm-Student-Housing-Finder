@@ -1,76 +1,4 @@
 {
- "bf-306197": {
-  "address": "Hanstavägen 51",
-  "area": "Kista",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-19T22:19:00.187926+00:00",
-  "floor": 11,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-19T22:19:00.187926+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 1,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-20",
-  "rent": 6621,
-  "size": 24,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202616741"
- },
- "bf-306305": {
-  "address": "Albanovägen 4",
-  "area": "Norra Djurgården",
-  "class": "corridor",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-20T22:19:18.038961+00:00",
-  "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-11-01",
-  "obs": [
-   [
-    "2026-10-20T22:19:18.038961+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 1,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-21",
-  "rent": 6213,
-  "size": 14,
-  "type": "Studentkorridor",
-  "unit": "Bostadsförmedlingen:apt:202617204"
- },
- "bf-306340": {
-  "address": "Hälsovägen 20",
-  "area": "Flemingsberg",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-20T22:19:18.038961+00:00",
-  "floor": 10,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-20T22:19:18.038961+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-21",
-  "rent": 5082,
-  "size": 23,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618581"
- },
  "bf-306368": {
   "address": "Attackvägen 10",
   "area": "Barkarbystaden",
@@ -78,7 +6,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-20T22:19:18.038961+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -95,150 +23,6 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202617348"
  },
- "bf-306394": {
-  "address": "Ansgariegatan 8",
-  "area": "Södermalm",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-20T22:19:18.038961+00:00",
-  "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-20T22:19:18.038961+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-21",
-  "rent": 8151,
-  "size": 19,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618756"
- },
- "bf-306396": {
-  "address": "Hanstavägen 49",
-  "area": "Kista",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-20T22:19:18.038961+00:00",
-  "floor": 11,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-11-19",
-  "obs": [
-   [
-    "2026-10-20T22:19:18.038961+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-21",
-  "rent": 6684,
-  "size": 24,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618801"
- },
- "bf-306398": {
-  "address": "Röntgenvägen 5",
-  "area": "Flemingsberg",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-20T22:19:18.038961+00:00",
-  "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-20T22:19:18.038961+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-21",
-  "rent": 4667,
-  "size": 23,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618753"
- },
- "bf-306407": {
-  "address": "Söderarmsvägen 30B",
-  "area": "Kärrtorp",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-21T22:00:56.933715+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-21T22:00:56.933715+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 1,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-22",
-  "rent": 7950,
-  "size": 25,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618234"
- },
- "bf-306427": {
-  "address": "Tenstagången 55",
-  "area": "Tensta",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-21T22:00:56.933715+00:00",
-  "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-21T22:00:56.933715+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-22",
-  "rent": 5932,
-  "size": 22,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618782"
- },
- "bf-306428": {
-  "address": "Tenstagången 55",
-  "area": "Tensta",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-21T22:00:56.933715+00:00",
-  "floor": 13,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-21T22:00:56.933715+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-22",
-  "rent": 5932,
-  "size": 22,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618783"
- },
  "bf-306444": {
   "address": "Hanstavägen 49",
   "area": "Kista",
@@ -246,7 +30,7 @@
   "deadline": "2026-10-28",
   "first_seen": "2026-10-21T22:00:56.933715+00:00",
   "floor": 8,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -263,30 +47,6 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202616694"
  },
- "bf-306476": {
-  "address": "Ruddammsvägen 65",
-  "area": "Norra Djurgården",
-  "class": "corridor",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-21T22:00:56.933715+00:00",
-  "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-11-01",
-  "obs": [
-   [
-    "2026-10-21T22:00:56.933715+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 1,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-22",
-  "rent": 6213,
-  "size": 14,
-  "type": "Studentkorridor",
-  "unit": "Bostadsförmedlingen:apt:202616391"
- },
  "bf-306508": {
   "address": "Waldemar Rudins väg 12",
   "area": "Sköndal",
@@ -294,7 +54,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -318,7 +78,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -342,7 +102,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -366,7 +126,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -390,7 +150,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 7,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -414,7 +174,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -438,7 +198,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 13,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -462,7 +222,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -486,7 +246,7 @@
   "deadline": "2026-10-28",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -510,7 +270,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -534,7 +294,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
@@ -558,7 +318,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-02",
   "obs": [
    [
@@ -582,7 +342,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -606,7 +366,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 10,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -630,7 +390,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 12,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -654,7 +414,7 @@
   "deadline": "2026-10-29",
   "first_seen": "2026-10-22T22:19:10.034065+00:00",
   "floor": 9,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -678,7 +438,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": -2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -702,7 +462,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
@@ -726,7 +486,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -743,78 +503,6 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618241"
  },
- "bf-306645": {
-  "address": "Roslagstullsbacken 41",
-  "area": "Norra Djurgården",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 6996,
-  "size": 33,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618729"
- },
- "bf-306647": {
-  "address": "Mässvägen 2A",
-  "area": "Älvsjö",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 9009,
-  "size": 43,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618882"
- },
- "bf-306648": {
-  "address": "Mässvägen 2A",
-  "area": "Älvsjö",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 7339,
-  "size": 29,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618867"
- },
  "bf-306651": {
   "address": "Herrhagsvägen 137",
   "area": "Tallkrogen",
@@ -822,7 +510,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": -1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -839,54 +527,6 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618248"
  },
- "bf-306660": {
-  "address": "Mässvägen 2A",
-  "area": "Älvsjö",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2027-02-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 7427,
-  "size": 28,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202619057"
- },
- "bf-306662": {
-  "address": "Sankt Göransgatan 151",
-  "area": "Stadshagen",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2026-12-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 6035,
-  "size": 22,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202618873"
- },
  "bf-306668": {
   "address": "Dialoggatan 22",
   "area": "Hägersten",
@@ -894,7 +534,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -918,7 +558,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 5,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -942,7 +582,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -966,7 +606,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -990,7 +630,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 13,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-20",
   "obs": [
    [
@@ -1014,7 +654,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 8,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1038,7 +678,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1062,7 +702,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 14,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1086,7 +726,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-23T22:18:53.069040+00:00",
   "floor": 12,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1103,30 +743,6 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618874"
  },
- "bf-306691": {
-  "address": "Albanovägen 5",
-  "area": "Norra Djurgården",
-  "class": "1room",
-  "deadline": "2026-10-27",
-  "first_seen": "2026-10-23T22:18:53.069040+00:00",
-  "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
-  "move_in": "2027-01-01",
-  "obs": [
-   [
-    "2026-10-23T22:18:53.069040+00:00",
-    null,
-    null
-   ]
-  ],
-  "prior_listings": 0,
-  "provider": "Bostadsförmedlingen",
-  "published_at": "2026-10-24",
-  "rent": 9610,
-  "size": 34,
-  "type": "Studentlägenhet",
-  "unit": "Bostadsförmedlingen:apt:202619062"
- },
  "bf-306726": {
   "address": "Alphyddevägen 16",
   "area": "Alphyddan",
@@ -1134,7 +750,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 9,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-02-01",
   "obs": [
    [
@@ -1158,7 +774,7 @@
   "deadline": "2026-10-28",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-03-01",
   "obs": [
    [
@@ -1182,7 +798,7 @@
   "deadline": "2026-10-28",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1206,7 +822,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 13,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1230,7 +846,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1254,7 +870,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1278,7 +894,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1302,7 +918,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1326,7 +942,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1350,7 +966,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 8,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1374,7 +990,7 @@
   "deadline": "2026-10-28",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1398,7 +1014,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1422,7 +1038,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 5,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1446,7 +1062,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1470,7 +1086,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1494,7 +1110,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1518,7 +1134,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1542,7 +1158,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1566,7 +1182,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1590,7 +1206,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1614,7 +1230,7 @@
   "deadline": "2026-11-04",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 4,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1638,7 +1254,7 @@
   "deadline": "2026-11-10",
   "first_seen": "2026-10-26T23:19:40.051486+00:00",
   "floor": 7,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1655,6 +1271,462 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202610707"
  },
+ "bf-306849": {
+  "address": "Albanovägen 4",
+  "area": "Norra Djurgården",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": -3,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 6213,
+  "size": 14,
+  "type": "Studentkorridor",
+  "unit": "Bostadsförmedlingen:apt:202618849"
+ },
+ "bf-306861": {
+  "address": "Majorsvägen 30A",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 5282,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619154"
+ },
+ "bf-306862": {
+  "address": "Majorsvägen 30A",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 5282,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619156"
+ },
+ "bf-306863": {
+  "address": "Majorsvägen 30A",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 5282,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619173"
+ },
+ "bf-306867": {
+  "address": "Majorsvägen 28",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 6657,
+  "size": 39,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619171"
+ },
+ "bf-306868": {
+  "address": "Majorsvägen 28",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7308,
+  "size": 40,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619187"
+ },
+ "bf-306871": {
+  "address": "Majorsvägen 28",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7308,
+  "size": 40,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619172"
+ },
+ "bf-306883": {
+  "address": "Glasfibergatan 4",
+  "area": "Älvsjö",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7132,
+  "size": 27,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619121"
+ },
+ "bf-306885": {
+  "address": "Söderarmsvägen 30B",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "deadline": "2026-11-05",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 2,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202601140"
+ },
+ "bf-306886": {
+  "address": "Söderarmsvägen 26A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "deadline": "2026-11-05",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 2,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202616103"
+ },
+ "bf-306894": {
+  "address": "Albanovägen 4",
+  "area": "Norra Djurgården",
+  "class": "corridor",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": -2,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 6213,
+  "size": 14,
+  "type": "Studentkorridor",
+  "unit": "Bostadsförmedlingen:apt:202619063"
+ },
+ "bf-306895": {
+  "address": "Albanovägen 5",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 0,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7632,
+  "size": 20,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619195"
+ },
+ "bf-306896": {
+  "address": "Albanovägen 5",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 9330,
+  "size": 32,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619197"
+ },
+ "bf-306897": {
+  "address": "Albanovägen 5",
+  "area": "Norra Djurgården",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 9752,
+  "size": 35,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619196"
+ },
+ "bf-306901": {
+  "address": "Sankt Göransgatan 95",
+  "area": "Kungsholmen",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 7,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 6540,
+  "size": 19,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619200"
+ },
+ "bf-306903": {
+  "address": "Sankt Göransgatan 95",
+  "area": "Kungsholmen",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 5,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 7338,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619199"
+ },
+ "bf-306904": {
+  "address": "Kristinehovsgatan 12",
+  "area": "Södermalm",
+  "class": "1room",
+  "deadline": "2026-10-29",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 10326,
+  "size": 30,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619169"
+ },
+ "bf-306906": {
+  "address": "Majorsvägen 30A",
+  "area": "Barkarbystaden",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": 5282,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619155"
+ },
+ "bf-306923": {
+  "address": "Hanstavägen 51",
+  "area": "Kista",
+  "class": "1room",
+  "deadline": "2026-11-11",
+  "first_seen": "2026-10-27T23:19:14.919051+00:00",
+  "floor": null,
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
+  "move_in": "2026-11-01",
+  "obs": [
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-28",
+  "rent": null,
+  "size": null,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202615312"
+ },
  "sssb-Birka-Simrishamnsvägen 15-1502": {
   "address": "Simrishamnsvägen 15",
   "area": "Birka",
@@ -1662,7 +1734,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 5,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1689,6 +1761,11 @@
     "2026-10-27T10:18:56.306330+00:00",
     824,
     3
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    825,
+    3
    ]
   ],
   "prior_listings": 1,
@@ -1706,7 +1783,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1738,6 +1815,11 @@
     "2026-10-27T17:18:57.993796+00:00",
     752,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    753,
+    5
    ]
   ],
   "prior_listings": 0,
@@ -1755,7 +1837,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1792,6 +1874,11 @@
     "2026-10-27T12:18:57.064892+00:00",
     502,
     8
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    503,
+    8
    ]
   ],
   "prior_listings": 0,
@@ -1809,7 +1896,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1846,6 +1933,11 @@
     "2026-10-27T12:18:57.064892+00:00",
     424,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    425,
+    6
    ]
   ],
   "prior_listings": 0,
@@ -1863,7 +1955,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1920,6 +2012,11 @@
     "2026-10-27T14:19:26.589288+00:00",
     605,
     13
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    606,
+    14
    ]
   ],
   "prior_listings": 0,
@@ -1937,7 +2034,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1984,6 +2081,11 @@
     "2026-10-27T17:18:57.993796+00:00",
     362,
     9
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    363,
+    11
    ]
   ],
   "prior_listings": 0,
@@ -2001,7 +2103,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2053,6 +2155,11 @@
     "2026-10-27T14:19:26.589288+00:00",
     605,
     10
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    606,
+    11
    ]
   ],
   "prior_listings": 0,
@@ -2070,7 +2177,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2122,6 +2229,11 @@
     "2026-10-27T14:19:26.589288+00:00",
     605,
     11
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    606,
+    13
    ]
   ],
   "prior_listings": 0,
@@ -2139,7 +2251,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 7,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2191,6 +2303,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     165,
     10
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    166,
+    10
    ]
   ],
   "prior_listings": 0,
@@ -2208,7 +2325,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-16",
   "obs": [
    [
@@ -2242,7 +2359,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2281,7 +2398,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2318,6 +2435,11 @@
     "2026-10-27T11:18:57.026921+00:00",
     122,
     3
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    123,
+    3
    ]
   ],
   "prior_listings": 0,
@@ -2335,7 +2457,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-16",
   "obs": [
    [
@@ -2362,6 +2484,11 @@
     "2026-10-27T15:19:03.537133+00:00",
     305,
     3
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    306,
+    3
    ]
   ],
   "prior_listings": 1,
@@ -2379,7 +2506,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2416,6 +2543,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     824,
     6
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    825,
+    6
    ]
   ],
   "prior_listings": 0,
@@ -2433,7 +2565,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2485,6 +2617,11 @@
     "2026-10-27T10:18:56.306330+00:00",
     1040,
     12
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    1041,
+    12
    ]
   ],
   "prior_listings": 0,
@@ -2502,7 +2639,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2549,6 +2686,11 @@
     "2026-10-27T09:18:58.957792+00:00",
     147,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    148,
+    5
    ]
   ],
   "prior_listings": 1,
@@ -2566,7 +2708,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2608,6 +2750,11 @@
     "2026-10-27T18:19:01.933995+00:00",
     614,
     11
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    615,
+    11
    ]
   ],
   "prior_listings": 0,
@@ -2625,7 +2772,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2662,6 +2809,11 @@
     "2026-10-27T17:18:57.993796+00:00",
     122,
     6
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    123,
+    6
    ]
   ],
   "prior_listings": 0,
@@ -2679,7 +2831,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 9,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2706,6 +2858,11 @@
     "2026-10-27T19:19:50.971432+00:00",
     136,
     3
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    137,
+    3
    ]
   ],
   "prior_listings": 0,
@@ -2723,7 +2880,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2770,6 +2927,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     123,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    124,
+    5
    ]
   ],
   "prior_listings": 1,
@@ -2787,7 +2949,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-16",
   "obs": [
    [
@@ -2829,6 +2991,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     123,
     4
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    124,
+    4
    ]
   ],
   "prior_listings": 2,
@@ -2846,7 +3013,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 1,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2883,6 +3050,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     123,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    124,
+    5
    ]
   ],
   "prior_listings": 1,
@@ -2900,7 +3072,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-16",
   "obs": [
    [
@@ -2937,6 +3109,11 @@
     "2026-10-27T19:19:50.971432+00:00",
     104,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    105,
+    5
    ]
   ],
   "prior_listings": 1,
@@ -2954,7 +3131,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 6,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2981,6 +3158,11 @@
     "2026-10-27T20:16:22.861599+00:00",
     130,
     4
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    131,
+    4
    ]
   ],
   "prior_listings": 0,
@@ -2998,7 +3180,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 7,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -3050,6 +3232,11 @@
     "2026-10-27T15:19:03.537133+00:00",
     1203,
     10
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    1204,
+    11
    ]
   ],
   "prior_listings": 1,
@@ -3067,7 +3254,7 @@
   "deadline": null,
   "first_seen": "2026-10-27T14:19:26.589288+00:00",
   "floor": 8,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
@@ -3089,6 +3276,11 @@
     "2026-10-27T21:18:58.319694+00:00",
     1203,
     5
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    1204,
+    6
    ]
   ],
   "prior_listings": 0,
@@ -3106,7 +3298,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 9,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -3143,6 +3335,11 @@
     "2026-10-27T19:19:50.971432+00:00",
     130,
     4
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    131,
+    4
    ]
   ],
   "prior_listings": 0,
@@ -3160,7 +3357,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T11:22:08.440976+00:00",
   "floor": 3,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
@@ -3197,6 +3394,11 @@
     "2026-10-27T15:19:03.537133+00:00",
     146,
     2
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    147,
+    2
    ]
   ],
   "prior_listings": 0,
@@ -3214,7 +3416,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T11:22:08.440976+00:00",
   "floor": 2,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-11-01",
   "obs": [
    [
@@ -3261,6 +3463,11 @@
     "2026-10-27T22:19:07.351449+00:00",
     121,
     1
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    122,
+    1
    ]
   ],
   "prior_listings": 0,
@@ -3278,7 +3485,7 @@
   "deadline": null,
   "first_seen": "2026-10-26T15:19:14.455882+00:00",
   "floor": 0,
-  "last_seen": "2026-10-27T22:19:07.351449+00:00",
+  "last_seen": "2026-10-27T23:19:14.919051+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -3299,6 +3506,11 @@
    [
     "2026-10-26T23:19:40.051486+00:00",
     305,
+    2
+   ],
+   [
+    "2026-10-27T23:19:14.919051+00:00",
+    306,
     2
    ]
   ],
