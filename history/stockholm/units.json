@@ -3633,6 +3633,8 @@
  ],
  "sssb-Strix-Armégatan 32 A-1830": [
   {
+   "closed_at": "2026-10-28T09:19:12.982175+00:00",
+   "final_days": 1204,
    "first_seen": "2026-10-27T14:19:26.589288+00:00",
    "id": "sssb-Strix-Armégatan 32 A-1830"
   }
@@ -3683,6 +3685,8 @@
  ],
  "sssb-Strix-Armégatan 32 B-1314": [
   {
+   "closed_at": "2026-10-28T09:19:12.982175+00:00",
+   "final_days": 147,
    "first_seen": "2026-10-26T11:22:08.440976+00:00",
    "id": "sssb-Strix-Armégatan 32 B-1314"
   }
@@ -3713,6 +3717,8 @@
  ],
  "sssb-Strix-Armégatan 32 C-1204": [
   {
+   "closed_at": "2026-10-28T09:19:12.982175+00:00",
+   "final_days": 122,
    "first_seen": "2026-10-26T11:22:08.440976+00:00",
    "id": "sssb-Strix-Armégatan 32 C-1204"
   }
