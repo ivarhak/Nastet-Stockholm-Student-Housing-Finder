@@ -6,7 +6,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -103,6 +103,11 @@
     "2026-10-31T18:19:31.957708+00:00",
     null,
     21
+   ],
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    20
    ]
   ],
   "prior_listings": 0,
@@ -120,7 +125,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -197,6 +202,54 @@
   "type": "1 Rum",
   "unit": "af-12183"
  },
+ "af-12197": {
+  "address": "Råbyvägen 17",
+  "area": "Vegalyckan",
+  "class": "1room",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 5983,
+  "size": 26.5,
+  "type": "1 Rum",
+  "unit": "af-12197"
+ },
+ "af-12631": {
+  "address": "Kämnärsvägen 40",
+  "area": "Proto",
+  "class": "2plus",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    1
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8798,
+  "size": 40.9,
+  "type": "2 Rum",
+  "unit": "af-12631"
+ },
  "af-12738": {
   "address": "Kämnärsvägen 42",
   "area": "Proto",
@@ -204,7 +257,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 4,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -298,7 +351,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 5,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -412,7 +465,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 3,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -529,6 +582,30 @@
   "type": "1 Rum",
   "unit": "af-13199"
  },
+ "af-13351": {
+  "address": "Kämnärsvägen 86",
+  "area": "Hippocampus",
+  "class": "1room",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7080,
+  "size": 27.0,
+  "type": "1 Rum",
+  "unit": "af-13351"
+ },
  "af-13658": {
   "address": "Kämnärsvägen 3 A",
   "area": "Pireus",
@@ -536,7 +613,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -648,6 +725,30 @@
   "type": "1 Rum",
   "unit": "af-13658"
  },
+ "af-13723": {
+  "address": "Kämnärsvägen 7",
+  "area": "Pireus",
+  "class": "2plus",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    1
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 8679,
+  "size": 44.0,
+  "type": "2 Rum",
+  "unit": "af-13723"
+ },
  "af-14065": {
   "address": "Kämnärsvägen 24",
   "area": "Rhodos",
@@ -655,7 +756,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 5,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -712,6 +813,30 @@
   "type": "1 Rum",
   "unit": "af-14065"
  },
+ "af-1419": {
+  "address": "Gylleholmsgatan 13 J",
+  "area": "Gylleholm",
+  "class": "1room",
+  "deadline": "2026-11-03",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    1
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 5531,
+  "size": 22.3,
+  "type": "1 Rum",
+  "unit": "af-1419"
+ },
  "af-1524": {
   "address": "Ällingavägen 3 D",
   "area": "Vildanden",
@@ -719,7 +844,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 1,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -851,6 +976,30 @@
   "type": "1 Rum",
   "unit": "af-1524"
  },
+ "af-1653": {
+  "address": "Ulrikedalsvägen 16 B",
+  "area": "Ulrikedal",
+  "class": "2plus",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 9235,
+  "size": 79.9,
+  "type": "4 Rum",
+  "unit": "af-1653"
+ },
  "af-1879": {
   "address": "Magistratsvägen 57 N",
   "area": "Delphi",
@@ -858,7 +1007,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1017,7 +1166,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1146,7 +1295,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 4,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1228,6 +1377,30 @@
   "type": "3 Rum",
   "unit": "af-2043"
  },
+ "af-2046": {
+  "address": "Råbyvägen 15 K",
+  "area": "Studentlyckan",
+  "class": "2plus",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7588,
+  "size": 51.6,
+  "type": "2 Rum",
+  "unit": "af-2046"
+ },
  "af-2867": {
   "address": "Kämnärsvägen 19 L",
   "area": "Kämnärsrätten",
@@ -1235,7 +1408,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 1,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1292,6 +1465,11 @@
     "2026-10-31T20:19:31.350264+00:00",
     null,
     13
+   ],
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    12
    ]
   ],
   "prior_listings": 0,
@@ -1309,7 +1487,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 3,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1421,6 +1599,30 @@
   "type": "1 Rum",
   "unit": "af-3107"
  },
+ "af-3310": {
+  "address": "Magistratsvägen 55 R",
+  "area": "Delphi",
+  "class": "2plus",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    1
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 7277,
+  "size": 61.0,
+  "type": "2 Rum",
+  "unit": "af-3310"
+ },
  "af-3453": {
   "address": "Ällingavägen 5 B",
   "area": "Vildanden",
@@ -1428,7 +1630,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1502,7 +1704,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1596,7 +1798,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2027-01-01",
   "obs": [
    [
@@ -1708,6 +1910,54 @@
   "type": "2 Rum",
   "unit": "af-3785"
  },
+ "af-4179": {
+  "address": "Kämnärsvägen 71 F",
+  "area": "Park",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 2,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4676,
+  "size": 19.9,
+  "type": "Korridorrum",
+  "unit": "af-4179"
+ },
+ "af-4506": {
+  "address": "Tunavägen 39 D",
+  "area": "Sparta",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 6,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4960,
+  "size": 18.7,
+  "type": "Korridorrum",
+  "unit": "af-4506"
+ },
  "af-4905": {
   "address": "Magistratsvägen 55 L",
   "area": "Delphi",
@@ -1715,7 +1965,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1779,7 +2029,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 1,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1821,6 +2071,30 @@
   "type": "Korridorrum",
   "unit": "af-5056"
  },
+ "af-5236": {
+  "address": "Magistratsvägen 55 X",
+  "area": "Delphi",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4768,
+  "size": 20.2,
+  "type": "Korridorrum",
+  "unit": "af-5236"
+ },
  "af-5455": {
   "address": "Ulrikedalsvägen 30 B",
   "area": "Ulrikedal",
@@ -1828,7 +2102,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 3,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -1912,7 +2186,7 @@
   "deadline": "2026-11-02",
   "first_seen": "2026-10-29T23:19:49.709015+00:00",
   "floor": 1,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2006,7 +2280,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 4,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2043,6 +2317,30 @@
   "type": "Korridorrum",
   "unit": "af-5655"
  },
+ "af-6307": {
+  "address": "Ällingavägen 5 A",
+  "area": "Vildanden",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 1,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 3722,
+  "size": 20.3,
+  "type": "Korridorrum",
+  "unit": "af-6307"
+ },
  "af-6760": {
   "address": "Södra Esplanaden 32 C",
   "area": "Parentesen",
@@ -2050,7 +2348,7 @@
   "deadline": "2026-11-01",
   "first_seen": "2026-10-28T23:20:26.632020+00:00",
   "floor": 2,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2159,7 +2457,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 4,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2206,6 +2504,30 @@
   "type": "Korridorrum",
   "unit": "af-6776"
  },
+ "af-6797": {
+  "address": "Södra Esplanaden 32 D",
+  "area": "Parentesen",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 3,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 3747,
+  "size": 17.4,
+  "type": "Korridorrum",
+  "unit": "af-6797"
+ },
  "af-6880": {
   "address": "Södra Esplanaden 30 B",
   "area": "Parentesen",
@@ -2213,7 +2535,7 @@
   "deadline": "2026-11-03",
   "first_seen": "2026-10-30T23:19:27.252593+00:00",
   "floor": 1,
-  "last_seen": "2026-10-31T22:19:19.382714+00:00",
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
   "move_in": "2026-12-01",
   "obs": [
    [
@@ -2259,5 +2581,29 @@
   "size": 18.5,
   "type": "Korridorrum",
   "unit": "af-6880"
+ },
+ "af-6971": {
+  "address": "Ällingavägen 7 J",
+  "area": "Vildanden",
+  "class": "corridor",
+  "deadline": "2026-11-04",
+  "first_seen": "2026-10-31T23:19:44.500582+00:00",
+  "floor": 4,
+  "last_seen": "2026-10-31T23:19:44.500582+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-31T23:19:44.500582+00:00",
+    null,
+    0
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "AF Bostäder",
+  "published_at": null,
+  "rent": 4040,
+  "size": 19.2,
+  "type": "Korridorrum",
+  "unit": "af-6971"
  }
 }
