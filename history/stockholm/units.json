@@ -3113,6 +3113,10 @@
    "final_days": 1195,
    "first_seen": "2026-10-22T08:19:16.433957+00:00",
    "id": "sssb-Kungshamra-Kungshamra 82-1125"
+  },
+  {
+   "first_seen": "2026-11-02T10:19:04.643104+00:00",
+   "id": "sssb-Kungshamra-Kungshamra 82-1125"
   }
  ],
  "sssb-Kungshamra-Kungshamra 82-1224": [
@@ -3853,6 +3857,18 @@
    "final_days": 1209,
    "first_seen": "2026-10-09T20:12:27.017271+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1520"
+  }
+ ],
+ "sssb-Pax-Emmylundsvägen 5-1522": [
+  {
+   "first_seen": "2026-11-02T10:19:04.643104+00:00",
+   "id": "sssb-Pax-Emmylundsvägen 5-1522"
+  }
+ ],
+ "sssb-Pax-Emmylundsvägen 5-1613": [
+  {
+   "first_seen": "2026-11-02T10:19:04.643104+00:00",
+   "id": "sssb-Pax-Emmylundsvägen 5-1613"
   }
  ],
  "sssb-Roslagstull-Roslagstullsbacken 5-1403": [
