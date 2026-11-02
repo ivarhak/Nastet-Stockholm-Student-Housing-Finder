@@ -571,6 +571,84 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202618952"
  },
+ "bf-306744": {
+  "address": "Söderarmsvägen 26A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-11-02T23:18:21.358560+00:00",
+  "deadline": "2026-11-02",
+  "final_days": null,
+  "first_seen": "2026-10-26T23:19:40.051486+00:00",
+  "floor": 1,
+  "last_seen": "2026-11-02T22:18:38.377023+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-26T23:19:40.051486+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-27",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618226"
+ },
+ "bf-306745": {
+  "address": "Söderarmsvägen 28A",
+  "area": "Kärrtorp",
+  "class": "1room",
+  "closed_at": "2026-11-02T23:18:21.358560+00:00",
+  "deadline": "2026-11-02",
+  "final_days": null,
+  "first_seen": "2026-10-26T23:19:40.051486+00:00",
+  "floor": 5,
+  "last_seen": "2026-11-02T22:18:38.377023+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-26T23:19:40.051486+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-27",
+  "rent": 7950,
+  "size": 25,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202618231"
+ },
+ "bf-307061": {
+  "address": "Albanovägen 4",
+  "area": "Norra Djurgården",
+  "class": "corridor",
+  "closed_at": "2026-11-02T23:18:21.358560+00:00",
+  "deadline": "2026-11-02",
+  "final_days": null,
+  "first_seen": "2026-10-29T23:00:58.793985+00:00",
+  "floor": -1,
+  "last_seen": "2026-11-02T22:18:38.377023+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-10-29T23:00:58.793985+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-10-30",
+  "rent": 6213,
+  "size": 14,
+  "type": "Studentkorridor",
+  "unit": "Bostadsförmedlingen:apt:202618786"
+ },
  "sssb-Birka-Simrishamnsvägen 15-1609": {
   "address": "Simrishamnsvägen 15",
   "area": "Birka",
