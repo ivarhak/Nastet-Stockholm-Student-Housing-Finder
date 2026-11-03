@@ -2266,6 +2266,72 @@
   "type": "1 rum & pentry",
   "unit": "sssb-Kungshamra-Kungshamra 48-1105"
  },
+ "sssb-Kungshamra-Kungshamra 82-1125": {
+  "address": "Kungshamra 82",
+  "area": "Kungshamra",
+  "class": "1room",
+  "closed_at": "2026-11-03T09:18:11.098141+00:00",
+  "deadline": null,
+  "final_days": 384,
+  "first_seen": "2026-11-02T10:19:04.643104+00:00",
+  "floor": 1,
+  "last_seen": "2026-11-03T08:18:15.148346+00:00",
+  "move_in": "2026-11-03",
+  "obs": [
+   [
+    "2026-11-02T10:19:04.643104+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-02T12:18:57.151400+00:00",
+    383,
+    3
+   ],
+   [
+    "2026-11-02T13:19:05.221739+00:00",
+    588,
+    4
+   ],
+   [
+    "2026-11-02T14:18:13.272009+00:00",
+    588,
+    5
+   ],
+   [
+    "2026-11-02T21:18:17.793098+00:00",
+    588,
+    6
+   ],
+   [
+    "2026-11-02T22:18:38.377023+00:00",
+    383,
+    6
+   ],
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    384,
+    6
+   ],
+   [
+    "2026-11-03T00:18:12.254263+00:00",
+    384,
+    7
+   ],
+   [
+    "2026-11-03T04:18:01.882796+00:00",
+    384,
+    8
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 5411,
+  "size": 23,
+  "type": "1 rum & pentry",
+  "unit": "sssb-Kungshamra-Kungshamra 82-1125"
+ },
  "sssb-Lappkärrsberget-Amanuensvägen 3-1003": {
   "address": "Amanuensvägen 3",
   "area": "Lappkärrsberget",
@@ -2760,6 +2826,108 @@
   "size": 22,
   "type": "1 rum & pentry",
   "unit": "sssb-Pax-Emmylundsvägen 5-1403"
+ },
+ "sssb-Pax-Emmylundsvägen 5-1522": {
+  "address": "Emmylundsvägen 5",
+  "area": "Pax",
+  "class": "2plus",
+  "closed_at": "2026-11-03T09:18:11.098141+00:00",
+  "deadline": null,
+  "final_days": 510,
+  "first_seen": "2026-11-02T10:19:04.643104+00:00",
+  "floor": 5,
+  "last_seen": "2026-11-03T08:18:15.148346+00:00",
+  "move_in": "2026-11-03",
+  "obs": [
+   [
+    "2026-11-02T10:19:04.643104+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-02T11:19:00.229664+00:00",
+    62,
+    1
+   ],
+   [
+    "2026-11-02T20:18:16.749229+00:00",
+    509,
+    2
+   ],
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    510,
+    2
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 13103,
+  "size": 59,
+  "type": "2 rum & pentry",
+  "unit": "sssb-Pax-Emmylundsvägen 5-1522"
+ },
+ "sssb-Pax-Emmylundsvägen 5-1613": {
+  "address": "Emmylundsvägen 5",
+  "area": "Pax",
+  "class": "1room",
+  "closed_at": "2026-11-03T09:18:11.098141+00:00",
+  "deadline": null,
+  "final_days": 861,
+  "first_seen": "2026-11-02T10:19:04.643104+00:00",
+  "floor": 6,
+  "last_seen": "2026-11-03T08:18:15.148346+00:00",
+  "move_in": "2026-11-03",
+  "obs": [
+   [
+    "2026-11-02T10:19:04.643104+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-02T11:19:00.229664+00:00",
+    860,
+    2
+   ],
+   [
+    "2026-11-02T12:18:57.151400+00:00",
+    860,
+    3
+   ],
+   [
+    "2026-11-02T14:18:13.272009+00:00",
+    860,
+    4
+   ],
+   [
+    "2026-11-02T16:18:41.409579+00:00",
+    860,
+    5
+   ],
+   [
+    "2026-11-02T18:18:18.241467+00:00",
+    860,
+    6
+   ],
+   [
+    "2026-11-02T19:18:03.443549+00:00",
+    860,
+    5
+   ],
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    861,
+    5
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 5266,
+  "size": 22,
+  "type": "1 rum & pentry",
+  "unit": "sssb-Pax-Emmylundsvägen 5-1613"
  },
  "sssb-Strix-Armégatan 32 C-1607": {
   "address": "Armégatan 32 C",

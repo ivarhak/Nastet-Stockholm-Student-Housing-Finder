@@ -3309,6 +3309,8 @@
    "id": "sssb-Kungshamra-Kungshamra 82-1125"
   },
   {
+   "closed_at": "2026-11-03T09:18:11.098141+00:00",
+   "final_days": 384,
    "first_seen": "2026-11-02T10:19:04.643104+00:00",
    "id": "sssb-Kungshamra-Kungshamra 82-1125"
   }
@@ -4113,12 +4115,16 @@
  ],
  "sssb-Pax-Emmylundsvägen 5-1522": [
   {
+   "closed_at": "2026-11-03T09:18:11.098141+00:00",
+   "final_days": 510,
    "first_seen": "2026-11-02T10:19:04.643104+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1522"
   }
  ],
  "sssb-Pax-Emmylundsvägen 5-1613": [
   {
+   "closed_at": "2026-11-03T09:18:11.098141+00:00",
+   "final_days": 861,
    "first_seen": "2026-11-02T10:19:04.643104+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1613"
   }
