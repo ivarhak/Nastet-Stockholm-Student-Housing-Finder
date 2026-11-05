@@ -53,6 +53,8 @@
    "id": "bf-306261"
   },
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-27T23:19:14.919051+00:00",
    "id": "bf-306885"
   }
@@ -275,6 +277,8 @@
    "id": "bf-306063"
   },
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-27T23:19:14.919051+00:00",
    "id": "bf-306886"
   }
@@ -1669,6 +1673,10 @@
    "final_days": null,
    "first_seen": "2026-10-23T22:18:53.069040+00:00",
    "id": "bf-306615"
+  },
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307679"
   }
  ],
  "Bostadsförmedlingen:apt:202618686": [
@@ -1861,6 +1869,10 @@
    "final_days": null,
    "first_seen": "2026-10-20T22:19:18.038961+00:00",
    "id": "bf-306292"
+  },
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307671"
   }
  ],
  "Bostadsförmedlingen:apt:202618795": [
@@ -2123,6 +2135,10 @@
    "final_days": null,
    "first_seen": "2026-10-26T23:19:40.051486+00:00",
    "id": "bf-306730"
+  },
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307729"
   }
  ],
  "Bostadsförmedlingen:apt:202618999": [
@@ -2171,6 +2187,8 @@
  ],
  "Bostadsförmedlingen:apt:202619050": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T23:00:58.793985+00:00",
    "id": "bf-307076"
   }
@@ -2459,24 +2477,32 @@
  ],
  "Bostadsförmedlingen:apt:202619312": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307354"
   }
  ],
  "Bostadsförmedlingen:apt:202619322": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307383"
   }
  ],
  "Bostadsförmedlingen:apt:202619323": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307377"
   }
  ],
  "Bostadsförmedlingen:apt:202619324": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307384"
   }
@@ -2489,78 +2515,104 @@
  ],
  "Bostadsförmedlingen:apt:202619351": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307036"
   }
  ],
  "Bostadsförmedlingen:apt:202619352": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307035"
   }
  ],
  "Bostadsförmedlingen:apt:202619353": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307034"
   }
  ],
  "Bostadsförmedlingen:apt:202619354": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307032"
   }
  ],
  "Bostadsförmedlingen:apt:202619355": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307031"
   }
  ],
  "Bostadsförmedlingen:apt:202619356": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307345"
   }
  ],
  "Bostadsförmedlingen:apt:202619357": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307346"
   }
  ],
  "Bostadsförmedlingen:apt:202619359": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307030"
   }
  ],
  "Bostadsförmedlingen:apt:202619360": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307029"
   }
  ],
  "Bostadsförmedlingen:apt:202619361": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307028"
   }
  ],
  "Bostadsförmedlingen:apt:202619362": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307027"
   }
  ],
  "Bostadsförmedlingen:apt:202619363": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307026"
   }
  ],
  "Bostadsförmedlingen:apt:202619364": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307025"
   }
@@ -2573,24 +2625,32 @@
  ],
  "Bostadsförmedlingen:apt:202619398": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307344"
   }
  ],
  "Bostadsförmedlingen:apt:202619427": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307496"
   }
  ],
  "Bostadsförmedlingen:apt:202619428": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307498"
   }
  ],
  "Bostadsförmedlingen:apt:202619429": [
   {
+   "closed_at": "2026-11-05T23:18:58.606865+00:00",
+   "final_days": null,
    "first_seen": "2026-11-03T23:18:20.018229+00:00",
    "id": "bf-307500"
   }
@@ -2615,6 +2675,12 @@
    "id": "bf-307326"
   }
  ],
+ "Bostadsförmedlingen:apt:202619519": [
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307660"
+  }
+ ],
  "Bostadsförmedlingen:apt:202619543": [
   {
    "first_seen": "2026-11-04T23:18:54.288271+00:00",
@@ -2625,6 +2691,18 @@
   {
    "first_seen": "2026-11-04T23:18:54.288271+00:00",
    "id": "bf-307561"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619561": [
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307659"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619563": [
+  {
+   "first_seen": "2026-11-05T23:18:58.606865+00:00",
+   "id": "bf-307658"
   }
  ],
  "Bostadsförmedlingen:apt:202619570": [
