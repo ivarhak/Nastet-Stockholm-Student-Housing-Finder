@@ -2765,12 +2765,16 @@
  ],
  "sssb-Embla-Maltgatan 4-1508": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 483,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Embla-Maltgatan 4-1508"
   }
  ],
  "sssb-Embla-Maltgatan 4-1515": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 537,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Embla-Maltgatan 4-1515"
   }
@@ -2796,6 +2800,10 @@
    "closed_at": "2026-11-02T15:19:01.962740+00:00",
    "final_days": 845,
    "first_seen": "2026-10-29T09:18:58.473728+00:00",
+   "id": "sssb-Forum-Körsbärsvägen 2 B-1001"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Forum-Körsbärsvägen 2 B-1001"
   }
  ],
@@ -2855,6 +2863,8 @@
  ],
  "sssb-Forum-Körsbärsvägen 4 C-1218": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 711,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Forum-Körsbärsvägen 4 C-1218"
   }
@@ -2931,6 +2941,8 @@
  ],
  "sssb-Hugin & Munin-Öregrundsgatan 9-1901": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 797,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Hugin & Munin-Öregrundsgatan 9-1901"
   }
@@ -2948,6 +2960,10 @@
    "closed_at": "2026-11-02T15:19:01.962740+00:00",
    "final_days": 798,
    "first_seen": "2026-10-29T09:18:58.473728+00:00",
+   "id": "sssb-Idun-Norra Stationsgatan 99-1157"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Idun-Norra Stationsgatan 99-1157"
   }
  ],
@@ -2985,6 +3001,8 @@
  ],
  "sssb-Idun-Norra Stationsgatan 99-1351": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 891,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Idun-Norra Stationsgatan 99-1351"
   }
@@ -3015,6 +3033,8 @@
  ],
  "sssb-Idun-Norra Stationsgatan 99-1566": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 813,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Idun-Norra Stationsgatan 99-1566"
   }
@@ -3051,6 +3071,8 @@
  ],
  "sssb-Idun-Norra Stationsgatan 99-1658": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 895,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Idun-Norra Stationsgatan 99-1658"
   }
@@ -3068,6 +3090,10 @@
    "closed_at": "2026-10-26T15:19:14.455882+00:00",
    "final_days": 1195,
    "first_seen": "2026-10-22T08:19:16.433957+00:00",
+   "id": "sssb-Idun-Norra Stationsgatan 99-1776"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Idun-Norra Stationsgatan 99-1776"
   }
  ],
@@ -3109,6 +3135,12 @@
    "id": "sssb-Jerum-Studentbacken 21-1109"
   }
  ],
+ "sssb-Jerum-Studentbacken 21-1114": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Jerum-Studentbacken 21-1114"
+  }
+ ],
  "sssb-Jerum-Studentbacken 21-1118": [
   {
    "closed_at": "2026-10-19T14:02:47.569899+00:00",
@@ -3137,6 +3169,12 @@
    "id": "sssb-Jerum-Studentbacken 21-1312"
   }
  ],
+ "sssb-Jerum-Studentbacken 21-1318": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Jerum-Studentbacken 21-1318"
+  }
+ ],
  "sssb-Jerum-Studentbacken 21-1401": [
   {
    "closed_at": "2026-10-19T14:02:47.569899+00:00",
@@ -3163,6 +3201,8 @@
  ],
  "sssb-Jerum-Studentbacken 23-1016": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 170,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Jerum-Studentbacken 23-1016"
   }
@@ -3173,6 +3213,12 @@
    "final_days": 153,
    "first_seen": "2026-10-15T08:19:26.780474+00:00",
    "id": "sssb-Jerum-Studentbacken 23-1114"
+  }
+ ],
+ "sssb-Jerum-Studentbacken 23-1214": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Jerum-Studentbacken 23-1214"
   }
  ],
  "sssb-Jerum-Studentbacken 23-1303": [
@@ -3193,6 +3239,8 @@
  ],
  "sssb-Jerum-Studentbacken 23-1416": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 1157,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Jerum-Studentbacken 23-1416"
   }
@@ -3223,6 +3271,8 @@
  ],
  "sssb-Jerum-Studentbacken 25-1017": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 811,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Jerum-Studentbacken 25-1017"
   }
@@ -3249,6 +3299,12 @@
    "final_days": 152,
    "first_seen": "2026-10-22T08:19:16.433957+00:00",
    "id": "sssb-Jerum-Studentbacken 25-1407"
+  }
+ ],
+ "sssb-Jerum-Studentbacken 25-1515": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Jerum-Studentbacken 25-1515"
   }
  ],
  "sssb-Kungshamra-Kungshamra 11-1011": [
@@ -3283,6 +3339,8 @@
  ],
  "sssb-Kungshamra-Kungshamra 11-1220": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 205,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 11-1220"
   }
@@ -3306,6 +3364,10 @@
    "closed_at": "2026-10-29T09:18:58.473728+00:00",
    "final_days": 0,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
+   "id": "sssb-Kungshamra-Kungshamra 15 B-1001"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Kungshamra-Kungshamra 15 B-1001"
   }
  ],
@@ -3375,6 +3437,8 @@
  ],
  "sssb-Kungshamra-Kungshamra 3-1108": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 609,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 3-1108"
   }
@@ -3397,6 +3461,8 @@
  ],
  "sssb-Kungshamra-Kungshamra 3-1227": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 1247,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 3-1227"
   }
@@ -3435,8 +3501,16 @@
  ],
  "sssb-Kungshamra-Kungshamra 47-1208": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 609,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 47-1208"
+  }
+ ],
+ "sssb-Kungshamra-Kungshamra 48-1007": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Kungshamra-Kungshamra 48-1007"
   }
  ],
  "sssb-Kungshamra-Kungshamra 48-1105": [
@@ -3467,6 +3541,10 @@
    "final_days": 826,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
    "id": "sssb-Kungshamra-Kungshamra 55 A-1101"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Kungshamra-Kungshamra 55 A-1101"
   }
  ],
  "sssb-Kungshamra-Kungshamra 56 A-1001": [
@@ -3485,6 +3563,8 @@
  ],
  "sssb-Kungshamra-Kungshamra 62 B-1102": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 477,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 62 B-1102"
   }
@@ -3505,6 +3585,8 @@
  ],
  "sssb-Kungshamra-Kungshamra 82-1215": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 609,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Kungshamra-Kungshamra 82-1215"
   }
@@ -3539,6 +3621,12 @@
    "id": "sssb-Kurland-Kammakargatan 36 A-1402"
   }
  ],
+ "sssb-Kurland-Kammakargatan 36 B-1301": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Kurland-Kammakargatan 36 B-1301"
+  }
+ ],
  "sssb-Kurland-Kammakargatan 36 B-1302": [
   {
    "closed_at": "2026-10-19T14:02:47.569899+00:00",
@@ -3565,6 +3653,8 @@
  ],
  "sssb-Lappkärrsberget-Forskarbacken 10-1102": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 156,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Lappkärrsberget-Forskarbacken 10-1102"
   }
@@ -3604,6 +3694,10 @@
    "closed_at": "2026-10-29T09:18:58.473728+00:00",
    "final_days": 149,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
+   "id": "sssb-Lappkärrsberget-Forskarbacken 12-1209"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Lappkärrsberget-Forskarbacken 12-1209"
   }
  ],
@@ -3673,6 +3767,8 @@
  ],
  "sssb-Lappkärrsberget-Forskarbacken 7-1108": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 155,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Lappkärrsberget-Forskarbacken 7-1108"
   }
@@ -3703,6 +3799,8 @@
  ],
  "sssb-Lappkärrsberget-Professorsslingan 10-1334": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 832,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 10-1334"
   }
@@ -3785,6 +3883,10 @@
    "final_days": 122,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 47-1605"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 47-1605"
   }
  ],
  "sssb-Lappkärrsberget-Professorsslingan 47-1906": [
@@ -3793,6 +3895,12 @@
    "final_days": 150,
    "first_seen": "2026-10-09T20:12:27.017271+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 47-1906"
+  }
+ ],
+ "sssb-Lappkärrsberget-Professorsslingan 47-2003": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 47-2003"
   }
  ],
  "sssb-Lappkärrsberget-Professorsslingan 49-1507": [
@@ -3821,6 +3929,12 @@
    "final_days": 588,
    "first_seen": "2026-10-19T14:02:47.569899+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 49-1804"
+  }
+ ],
+ "sssb-Lappkärrsberget-Professorsslingan 49-1906": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 49-1906"
   }
  ],
  "sssb-Lappkärrsberget-Professorsslingan 51-1301": [
@@ -3855,6 +3969,12 @@
    "id": "sssb-Lappkärrsberget-Professorsslingan 51-1603"
   }
  ],
+ "sssb-Lappkärrsberget-Professorsslingan 51-1902": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 51-1902"
+  }
+ ],
  "sssb-Lappkärrsberget-Professorsslingan 51-1907": [
   {
    "closed_at": "2026-10-29T09:18:58.473728+00:00",
@@ -3863,8 +3983,16 @@
    "id": "sssb-Lappkärrsberget-Professorsslingan 51-1907"
   }
  ],
+ "sssb-Lappkärrsberget-Professorsslingan 53-1403": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 53-1403"
+  }
+ ],
  "sssb-Lappkärrsberget-Professorsslingan 53-1606": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 100,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 53-1606"
   }
@@ -3885,12 +4013,24 @@
    "id": "sssb-Lappkärrsberget-Professorsslingan 57-1102"
   }
  ],
+ "sssb-Lappkärrsberget-Professorsslingan 57-1103": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 57-1103"
+  }
+ ],
  "sssb-Lappkärrsberget-Professorsslingan 61-1002": [
   {
    "closed_at": "2026-10-12T14:18:15.110068+00:00",
    "final_days": 150,
    "first_seen": "2026-10-09T20:12:27.017271+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 61-1002"
+  }
+ ],
+ "sssb-Lappkärrsberget-Professorsslingan 61-1602": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 61-1602"
   }
  ],
  "sssb-Lappkärrsberget-Professorsslingan 61-1605": [
@@ -3905,6 +4045,12 @@
    "final_days": 98,
    "first_seen": "2026-10-19T14:02:47.569899+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 61-1605"
+  }
+ ],
+ "sssb-Lappkärrsberget-Professorsslingan 65-1211": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lappkärrsberget-Professorsslingan 65-1211"
   }
  ],
  "sssb-Lappkärrsberget-Professorsslingan 65-1503": [
@@ -4041,6 +4187,10 @@
    "final_days": 395,
    "first_seen": "2026-10-09T20:12:27.017271+00:00",
    "id": "sssb-Lucidor-Skomakargatan 24 B-1302"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Lucidor-Skomakargatan 24 B-1302"
   }
  ],
  "sssb-Lucidor-Skomakargatan 24 B-1401": [
@@ -4157,6 +4307,8 @@
  ],
  "sssb-Pax-Emmylundsvägen 1-1216": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 202,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Pax-Emmylundsvägen 1-1216"
   }
@@ -4203,6 +4355,8 @@
  ],
  "sssb-Pax-Emmylundsvägen 3-1314": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 202,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Pax-Emmylundsvägen 3-1314"
   }
@@ -4233,6 +4387,8 @@
  ],
  "sssb-Pax-Emmylundsvägen 5-1014": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 402,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1014"
   }
@@ -4266,6 +4422,10 @@
    "closed_at": "2026-11-02T15:19:01.962740+00:00",
    "final_days": 389,
    "first_seen": "2026-10-29T09:18:58.473728+00:00",
+   "id": "sssb-Pax-Emmylundsvägen 5-1403"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Pax-Emmylundsvägen 5-1403"
   }
  ],
@@ -4441,12 +4601,16 @@
  ],
  "sssb-Strix-Armégatan 32 A-1620": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 202,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Strix-Armégatan 32 A-1620"
   }
  ],
  "sssb-Strix-Armégatan 32 A-1625": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 202,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Strix-Armégatan 32 A-1625"
   }
@@ -4478,6 +4642,10 @@
    "closed_at": "2026-10-29T09:18:58.473728+00:00",
    "final_days": 606,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
+   "id": "sssb-Strix-Armégatan 32 A-1715"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
    "id": "sssb-Strix-Armégatan 32 A-1715"
   }
  ],
@@ -4519,6 +4687,12 @@
    "id": "sssb-Strix-Armégatan 32 A-1913"
   }
  ],
+ "sssb-Strix-Armégatan 32 A-1914": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Strix-Armégatan 32 A-1914"
+  }
+ ],
  "sssb-Strix-Armégatan 32 A-1920": [
   {
    "closed_at": "2026-10-26T15:19:14.455882+00:00",
@@ -4527,8 +4701,16 @@
    "id": "sssb-Strix-Armégatan 32 A-1920"
   }
  ],
+ "sssb-Strix-Armégatan 32 B-1112": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Strix-Armégatan 32 B-1112"
+  }
+ ],
  "sssb-Strix-Armégatan 32 B-1205": [
   {
+   "closed_at": "2026-11-05T09:19:14.983131+00:00",
+   "final_days": 162,
    "first_seen": "2026-11-02T15:19:01.962740+00:00",
    "id": "sssb-Strix-Armégatan 32 B-1205"
   }
@@ -4589,6 +4771,12 @@
    "id": "sssb-Strix-Armégatan 32 C-1204"
   }
  ],
+ "sssb-Strix-Armégatan 32 C-1401": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Strix-Armégatan 32 C-1401"
+  }
+ ],
  "sssb-Strix-Armégatan 32 C-1607": [
   {
    "closed_at": "2026-11-02T15:19:01.962740+00:00",
@@ -4639,6 +4827,10 @@
    "final_days": 307,
    "first_seen": "2026-10-26T15:19:14.455882+00:00",
    "id": "sssb-Strix-Armégatan 34-1006"
+  },
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Strix-Armégatan 34-1006"
   }
  ],
  "sssb-Vätan-David Bagares Gata 6-1201": [
@@ -4655,6 +4847,12 @@
    "final_days": 2181,
    "first_seen": "2026-10-15T08:19:26.780474+00:00",
    "id": "sssb-Vätan-David Bagares Gata 6-1403"
+  }
+ ],
+ "sssb-Vätan-David Bagares Gata 6-1406": [
+  {
+   "first_seen": "2026-11-05T09:19:14.983131+00:00",
+   "id": "sssb-Vätan-David Bagares Gata 6-1406"
   }
  ],
  "sssb-Vätan-David Bagares Gata 6-1407": [
