@@ -230,5 +230,13 @@
    "median_rent_sqm": 208.8,
    "new": 2
   }
+ },
+ "2026-11-07": {
+  "AF Bostäder": {
+   "available": 20,
+   "median_leader_days": null,
+   "median_rent_sqm": 208.8,
+   "new": 0
+  }
  }
 }
