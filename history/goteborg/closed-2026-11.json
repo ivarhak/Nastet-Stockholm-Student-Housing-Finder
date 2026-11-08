@@ -1845,6 +1845,32 @@
   "type": "3 rum och kök",
   "unit": "SGS:apt:Lindholmsallén 39#1705"
  },
+ "sgs-bH7y6WmmPJXVGwxBDvJtgGvG": {
+  "address": "Studiegången 8",
+  "area": "Rosendal",
+  "class": "2plus",
+  "closed_at": "2026-11-08T23:19:13.842138+00:00",
+  "deadline": "2026-11-08",
+  "final_days": null,
+  "first_seen": "2026-11-06T08:19:20.296911+00:00",
+  "floor": null,
+  "last_seen": "2026-11-08T22:18:49.247404+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-06T08:19:20.296911+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 7185,
+  "size": 52.0,
+  "type": "2 rum och kök",
+  "unit": "SGS:apt:Studiegången 8#1001"
+ },
  "sgs-bcmYcCwdhKtCwKTxB6bXGJKB": {
   "address": "Sven Brolids väg 3",
   "area": "Sven Brolids väg",

@@ -269,6 +269,12 @@
    "id": "sgs-r6fk8pfpY79dhjtbhJQyTPp8"
   }
  ],
+ "SGS:apt:Burggrevegatan 15#1905": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-dhYqWHfbDVB9YGQbrKyF98Tj"
+  }
+ ],
  "SGS:apt:Doktor Belfrages gata 5#1104": [
   {
    "closed_at": "2026-10-28T23:20:16.759431+00:00",
@@ -347,6 +353,12 @@
    "id": "sgs-RXyHWPMcVX9tMTmvCCkMjfTm"
   }
  ],
+ "SGS:apt:Framgången 216 Rum 11#1001": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-rdhqRW9cX7xf6Hvg4xvDwHmR"
+  }
+ ],
  "SGS:apt:Framgången 220 Rum 22#1104": [
   {
    "closed_at": "2026-10-24T22:18:29.087636+00:00",
@@ -391,6 +403,10 @@
    "final_days": null,
    "first_seen": "2026-11-01T23:20:29.572728+00:00",
    "id": "sgs-QbPWxYRJMjt64H9kBGfdxRJD"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-QbPWxYRJMjt64H9kBGfdxRJD"
   }
  ],
  "SGS:apt:Framgången 256#1001": [
@@ -421,6 +437,10 @@
    "final_days": null,
    "first_seen": "2026-10-28T23:20:16.759431+00:00",
    "id": "sgs-HVFQmpCdRyC87mmRrwkr7DjF"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-RXHR7GgW6mpHYyFyWmqHMddB"
   }
  ],
  "SGS:apt:Fredrik Bloms väg 27#1013": [
@@ -511,6 +531,12 @@
    "id": "sgs-XrDjmM8kjmg6VqVXCcq9jDFj"
   }
  ],
+ "SGS:apt:Helmutsrogatan 15#1007": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-hq8wFCW9QhCMwThFXKqhvwx7"
+  }
+ ],
  "SGS:apt:Helmutsrogatan 15#1102": [
   {
    "closed_at": "2026-10-17T22:18:38.983239+00:00",
@@ -597,6 +623,12 @@
    "final_days": null,
    "first_seen": "2026-11-01T23:20:29.572728+00:00",
    "id": "sgs-rrHYJRJ976cCCgV6fRRpcYyV"
+  }
+ ],
+ "SGS:apt:Lennart Torstenssonsgatan 2 rum 407#1307": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-t9xmfgkJ8C6KFfgGQdyPWDMB"
   }
  ],
  "SGS:apt:Lilla Regementsvägen 10#1006": [
@@ -813,6 +845,12 @@
    "id": "sgs-M4ykpgBq7w7jJwDWbrRDYg8f"
   }
  ],
+ "SGS:apt:Lindholmsallén 37#1507": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-Q8G6HT74pJwRJMM6wtVVRHmg"
+  }
+ ],
  "SGS:apt:Lindholmsallén 39#1702": [
   {
    "closed_at": "2026-10-17T22:18:38.983239+00:00",
@@ -879,6 +917,12 @@
    "id": "sgs-qwcVvj4HJqR8WBCWJpT7bvfx"
   }
  ],
+ "SGS:apt:Medicinaregatan 2 Rum 302#1103": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-f6wrqTHTYMQpbVTtXpmMwCHM"
+  }
+ ],
  "SGS:apt:Medicinaregatan 2#1016": [
   {
    "closed_at": "2026-11-07T23:18:59.711147+00:00",
@@ -901,6 +945,10 @@
    "final_days": null,
    "first_seen": "2026-10-28T23:20:16.759431+00:00",
    "id": "sgs-TtcJkWfBpvwb4tHkrfTGbXMq"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-tgBkcTYgKRGbGMCKpytWWwWh"
   }
  ],
  "SGS:apt:Mejerigatan 2 A Rum 1083#2007": [
@@ -908,6 +956,10 @@
    "closed_at": "2026-11-04T23:19:50.780555+00:00",
    "final_days": null,
    "first_seen": "2026-11-01T23:20:29.572728+00:00",
+   "id": "sgs-v87dWMWBdGbbMfjJdhX7T4hh"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
    "id": "sgs-v87dWMWBdGbbMfjJdhX7T4hh"
   }
  ],
@@ -1028,6 +1080,10 @@
    "closed_at": "2026-11-04T23:19:50.780555+00:00",
    "final_days": null,
    "first_seen": "2026-11-01T23:20:29.572728+00:00",
+   "id": "sgs-cxPmBHKXTR9wGyHY4XfhgJrY"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
    "id": "sgs-cxPmBHKXTR9wGyHY4XfhgJrY"
   }
  ],
@@ -1323,6 +1379,12 @@
    "id": "sgs-rTr67htYppGkt9DkFPgYymdb"
   }
  ],
+ "SGS:apt:Plejadgatan 22#1313": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-MDvDTDgKb8tTDbR9XPP96TkD"
+  }
+ ],
  "SGS:apt:Plejadgatan 24#1108": [
   {
    "closed_at": "2026-10-28T23:20:16.759431+00:00",
@@ -1539,6 +1601,10 @@
    "final_days": null,
    "first_seen": "2026-10-14T22:19:39.402742+00:00",
    "id": "sgs-FRBTbqYf6qmKPFpwcd8P8jyD"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-9vkMXRf8CrpQkjqHMt4RjRfJ"
   }
  ],
  "SGS:apt:Studiegången 3 Rum 313#1308": [
@@ -1651,6 +1717,8 @@
  ],
  "SGS:apt:Studiegången 8#1001": [
   {
+   "closed_at": "2026-11-08T23:19:13.842138+00:00",
+   "final_days": null,
    "first_seen": "2026-11-06T08:19:20.296911+00:00",
    "id": "sgs-bH7y6WmmPJXVGwxBDvJtgGvG"
   }
@@ -1755,6 +1823,12 @@
    "final_days": null,
    "first_seen": "2026-11-04T23:19:50.780555+00:00",
    "id": "sgs-FJ6CVXBPbrKbwjhCp6ppjvcQ"
+  }
+ ],
+ "SGS:apt:Tyghusvägen 10#1210": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-VtrkGdPQRG7qTqRCCkrXFdrQ"
   }
  ],
  "SGS:apt:Tyghusvägen 10#1310": [
@@ -1869,6 +1943,12 @@
    "id": "sgs-6BWWVDxwyXhPx8rd9mk96XvJ"
   }
  ],
+ "SGS:apt:Uppstigen 134 Rum 34#1204": [
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-yhttTfTtWtKp6DHFMd4BfyWy"
+  }
+ ],
  "SGS:apt:Uppstigen 136 Rum 33#1203": [
   {
    "closed_at": "2026-10-31T23:19:32.576137+00:00",
@@ -1951,6 +2031,10 @@
    "final_days": null,
    "first_seen": "2026-10-29T23:02:10.538170+00:00",
    "id": "sgs-pQqvHTbRCMgbPvjTkfPxRfjr"
+  },
+  {
+   "first_seen": "2026-11-08T23:19:13.842138+00:00",
+   "id": "sgs-jDQx4XgXVrxPfjvfGQM99Dkp"
   }
  ],
  "SGS:apt:Viktor Rydbergsgatan 48 Rum 351#1314": [
