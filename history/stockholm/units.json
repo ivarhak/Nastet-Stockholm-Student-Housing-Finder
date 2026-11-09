@@ -2413,12 +2413,16 @@
  ],
  "Bostadsförmedlingen:apt:202619224": [
   {
+   "closed_at": "2026-11-09T23:18:52.557289+00:00",
+   "final_days": null,
    "first_seen": "2026-11-02T23:18:21.358560+00:00",
    "id": "bf-307303"
   }
  ],
  "Bostadsförmedlingen:apt:202619225": [
   {
+   "closed_at": "2026-11-09T23:18:52.557289+00:00",
+   "final_days": null,
    "first_seen": "2026-11-02T23:18:21.358560+00:00",
    "id": "bf-307295"
   }
@@ -2467,6 +2471,8 @@
  ],
  "Bostadsförmedlingen:apt:202619268": [
   {
+   "closed_at": "2026-11-09T23:18:52.557289+00:00",
+   "final_days": null,
    "first_seen": "2026-11-02T23:18:21.358560+00:00",
    "id": "bf-307277"
   }
@@ -2487,12 +2493,16 @@
  ],
  "Bostadsförmedlingen:apt:202619291": [
   {
+   "closed_at": "2026-11-09T23:18:52.557289+00:00",
+   "final_days": null,
    "first_seen": "2026-11-02T23:18:21.358560+00:00",
    "id": "bf-307278"
   }
  ],
  "Bostadsförmedlingen:apt:202619292": [
   {
+   "closed_at": "2026-11-09T23:18:52.557289+00:00",
+   "final_days": null,
    "first_seen": "2026-11-02T23:18:21.358560+00:00",
    "id": "bf-307280"
   }
@@ -2573,6 +2583,10 @@
    "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307031"
+  },
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307971"
   }
  ],
  "Bostadsförmedlingen:apt:202619356": [
@@ -2637,6 +2651,10 @@
    "final_days": null,
    "first_seen": "2026-10-29T22:19:20.587753+00:00",
    "id": "bf-307025"
+  },
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307972"
   }
  ],
  "Bostadsförmedlingen:apt:202619367": [
@@ -2719,6 +2737,12 @@
    "id": "bf-307561"
   }
  ],
+ "Bostadsförmedlingen:apt:202619560": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307880"
+  }
+ ],
  "Bostadsförmedlingen:apt:202619561": [
   {
    "first_seen": "2026-11-05T23:18:58.606865+00:00",
@@ -2743,6 +2767,42 @@
    "id": "bf-307846"
   }
  ],
+ "Bostadsförmedlingen:apt:202619627": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307886"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619631": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307907"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619632": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307909"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619633": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307911"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619637": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307887"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619656": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307869"
+  }
+ ],
  "Bostadsförmedlingen:apt:202619666": [
   {
    "first_seen": "2026-11-06T23:19:07.526821+00:00",
@@ -2759,6 +2819,36 @@
   {
    "first_seen": "2026-11-06T23:19:07.526821+00:00",
    "id": "bf-307835"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619689": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307868"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619707": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307889"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619714": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307917"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619716": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307910"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619717": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307912"
   }
  ],
  "Bostadsförmedlingen:apt:202619720": [
@@ -2779,10 +2869,34 @@
    "id": "bf-307839"
   }
  ],
+ "Bostadsförmedlingen:apt:202619772": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307870"
+  }
+ ],
  "Bostadsförmedlingen:apt:202619775": [
   {
    "first_seen": "2026-11-06T23:19:07.526821+00:00",
    "id": "bf-307841"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619778": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307867"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619892": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307888"
+  }
+ ],
+ "Bostadsförmedlingen:apt:202619896": [
+  {
+   "first_seen": "2026-11-09T23:18:52.557289+00:00",
+   "id": "bf-307968"
   }
  ],
  "sssb-Birka-Simrishamnsvägen 15-1007": [

@@ -1715,6 +1715,136 @@
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202619242"
  },
+ "bf-307277": {
+  "address": "Alphyddevägen 16",
+  "area": "Alphyddan",
+  "class": "1room",
+  "closed_at": "2026-11-09T23:18:52.557289+00:00",
+  "deadline": "2026-11-09",
+  "final_days": null,
+  "first_seen": "2026-11-02T23:18:21.358560+00:00",
+  "floor": 13,
+  "last_seen": "2026-11-09T22:44:59.575632+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-03",
+  "rent": 7620,
+  "size": 28,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619268"
+ },
+ "bf-307278": {
+  "address": "Alphyddevägen 12",
+  "area": "Alphyddan",
+  "class": "1room",
+  "closed_at": "2026-11-09T23:18:52.557289+00:00",
+  "deadline": "2026-11-09",
+  "final_days": null,
+  "first_seen": "2026-11-02T23:18:21.358560+00:00",
+  "floor": 6,
+  "last_seen": "2026-11-09T22:44:59.575632+00:00",
+  "move_in": "2026-12-03",
+  "obs": [
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-03",
+  "rent": 6582,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619291"
+ },
+ "bf-307280": {
+  "address": "Alphyddevägen 12",
+  "area": "Alphyddan",
+  "class": "1room",
+  "closed_at": "2026-11-09T23:18:52.557289+00:00",
+  "deadline": "2026-11-09",
+  "final_days": null,
+  "first_seen": "2026-11-02T23:18:21.358560+00:00",
+  "floor": 6,
+  "last_seen": "2026-11-09T22:44:59.575632+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-03",
+  "rent": 6582,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619292"
+ },
+ "bf-307295": {
+  "address": "Björnkullaringen 30",
+  "area": "Flemingsberg",
+  "class": "corridor",
+  "closed_at": "2026-11-09T23:18:52.557289+00:00",
+  "deadline": "2026-11-09",
+  "final_days": null,
+  "first_seen": "2026-11-02T23:18:21.358560+00:00",
+  "floor": 0,
+  "last_seen": "2026-11-09T22:44:59.575632+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-03",
+  "rent": 4296,
+  "size": 22,
+  "type": "Studentkorridor",
+  "unit": "Bostadsförmedlingen:apt:202619225"
+ },
+ "bf-307303": {
+  "address": "Visättravägen 30",
+  "area": "Flemingsberg",
+  "class": "1room",
+  "closed_at": "2026-11-09T23:18:52.557289+00:00",
+  "deadline": "2026-11-09",
+  "final_days": null,
+  "first_seen": "2026-11-02T23:18:21.358560+00:00",
+  "floor": 8,
+  "last_seen": "2026-11-09T22:44:59.575632+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-02T23:18:21.358560+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-03",
+  "rent": 4663,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202619224"
+ },
  "bf-307307": {
   "address": "Albanovägen 5",
   "area": "Norra Djurgården",
