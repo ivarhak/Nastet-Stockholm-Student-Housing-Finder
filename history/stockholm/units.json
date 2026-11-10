@@ -3111,6 +3111,8 @@
  ],
  "sssb-Forum-Körsbärsvägen 4 B-1302": [
   {
+   "closed_at": "2026-11-10T09:18:15.709549+00:00",
+   "final_days": 125,
    "first_seen": "2026-11-09T10:19:11.898463+00:00",
    "id": "sssb-Forum-Körsbärsvägen 4 B-1302"
   }
@@ -4127,6 +4129,8 @@
  ],
  "sssb-Lappkärrsberget-Forskarbacken 21-1519": [
   {
+   "closed_at": "2026-11-10T09:18:15.709549+00:00",
+   "final_days": 129,
    "first_seen": "2026-11-09T15:18:10.991503+00:00",
    "id": "sssb-Lappkärrsberget-Forskarbacken 21-1519"
   }
@@ -4213,6 +4217,8 @@
  ],
  "sssb-Lappkärrsberget-Professorsslingan 31-1001": [
   {
+   "closed_at": "2026-11-10T09:18:15.709549+00:00",
+   "final_days": 722,
    "first_seen": "2026-11-09T10:19:11.898463+00:00",
    "id": "sssb-Lappkärrsberget-Professorsslingan 31-1001"
   }

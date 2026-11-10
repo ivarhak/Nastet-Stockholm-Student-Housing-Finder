@@ -2695,6 +2695,67 @@
   "type": "1 rum & pentry",
   "unit": "sssb-Forum-Körsbärsvägen 2 B-1001"
  },
+ "sssb-Forum-Körsbärsvägen 4 B-1302": {
+  "address": "Körsbärsvägen 4 B",
+  "area": "Forum",
+  "class": "corridor",
+  "closed_at": "2026-11-10T09:18:15.709549+00:00",
+  "deadline": null,
+  "final_days": 125,
+  "first_seen": "2026-11-09T10:19:11.898463+00:00",
+  "floor": 3,
+  "last_seen": "2026-11-10T08:18:06.643078+00:00",
+  "move_in": "2026-11-16",
+  "obs": [
+   [
+    "2026-11-09T10:19:11.898463+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-09T11:18:53.298048+00:00",
+    128,
+    1
+   ],
+   [
+    "2026-11-09T12:11:55.703197+00:00",
+    128,
+    2
+   ],
+   [
+    "2026-11-09T14:18:38.934604+00:00",
+    128,
+    3
+   ],
+   [
+    "2026-11-09T17:18:27.850052+00:00",
+    128,
+    4
+   ],
+   [
+    "2026-11-09T19:18:21.294415+00:00",
+    124,
+    3
+   ],
+   [
+    "2026-11-09T21:18:34.528404+00:00",
+    124,
+    4
+   ],
+   [
+    "2026-11-09T23:18:52.557289+00:00",
+    125,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 4909,
+  "size": 17,
+  "type": "Rum i korridor",
+  "unit": "sssb-Forum-Körsbärsvägen 4 B-1302"
+ },
  "sssb-Forum-Körsbärsvägen 4 C-1113": {
   "address": "Körsbärsvägen 4 C",
   "area": "Forum",
@@ -6876,6 +6937,62 @@
   "type": "1 rum & pentry",
   "unit": "sssb-Lappkärrsberget-Forskarbacken 13-1101"
  },
+ "sssb-Lappkärrsberget-Forskarbacken 21-1519": {
+  "address": "Forskarbacken 21",
+  "area": "Lappkärrsberget",
+  "class": "corridor",
+  "closed_at": "2026-11-10T09:18:15.709549+00:00",
+  "deadline": null,
+  "final_days": 129,
+  "first_seen": "2026-11-09T15:18:10.991503+00:00",
+  "floor": 5,
+  "last_seen": "2026-11-10T08:18:06.643078+00:00",
+  "move_in": "2026-11-10",
+  "obs": [
+   [
+    "2026-11-09T15:18:10.991503+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-09T16:18:22.448567+00:00",
+    128,
+    2
+   ],
+   [
+    "2026-11-09T17:18:27.850052+00:00",
+    128,
+    3
+   ],
+   [
+    "2026-11-09T19:18:21.294415+00:00",
+    128,
+    4
+   ],
+   [
+    "2026-11-09T20:18:08.690672+00:00",
+    128,
+    5
+   ],
+   [
+    "2026-11-09T23:18:52.557289+00:00",
+    129,
+    5
+   ],
+   [
+    "2026-11-10T08:18:06.643078+00:00",
+    129,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 4454,
+  "size": 18,
+  "type": "Rum i korridor",
+  "unit": "sssb-Lappkärrsberget-Forskarbacken 21-1519"
+ },
  "sssb-Lappkärrsberget-Forskarbacken 7-1108": {
   "address": "Forskarbacken 7",
   "area": "Lappkärrsberget",
@@ -7097,6 +7214,77 @@
   "size": 24,
   "type": "1 rum & pentry",
   "unit": "sssb-Lappkärrsberget-Professorsslingan 10-1334"
+ },
+ "sssb-Lappkärrsberget-Professorsslingan 31-1001": {
+  "address": "Professorsslingan 31",
+  "area": "Lappkärrsberget",
+  "class": "2plus",
+  "closed_at": "2026-11-10T09:18:15.709549+00:00",
+  "deadline": null,
+  "final_days": 722,
+  "first_seen": "2026-11-09T10:19:11.898463+00:00",
+  "floor": 0,
+  "last_seen": "2026-11-10T08:18:06.643078+00:00",
+  "move_in": "2026-11-16",
+  "obs": [
+   [
+    "2026-11-09T10:19:11.898463+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-09T11:18:53.298048+00:00",
+    483,
+    1
+   ],
+   [
+    "2026-11-09T12:11:55.703197+00:00",
+    483,
+    2
+   ],
+   [
+    "2026-11-09T13:18:22.885580+00:00",
+    738,
+    3
+   ],
+   [
+    "2026-11-09T14:18:38.934604+00:00",
+    738,
+    4
+   ],
+   [
+    "2026-11-09T17:18:27.850052+00:00",
+    738,
+    5
+   ],
+   [
+    "2026-11-09T19:18:21.294415+00:00",
+    721,
+    4
+   ],
+   [
+    "2026-11-09T21:18:34.528404+00:00",
+    721,
+    5
+   ],
+   [
+    "2026-11-09T23:18:52.557289+00:00",
+    722,
+    5
+   ],
+   [
+    "2026-11-10T06:19:33.755071+00:00",
+    722,
+    6
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 9441,
+  "size": 49,
+  "type": "2 rum & kök",
+  "unit": "sssb-Lappkärrsberget-Professorsslingan 31-1001"
  },
  "sssb-Lappkärrsberget-Professorsslingan 47-1605": {
   "address": "Professorsslingan 47",
