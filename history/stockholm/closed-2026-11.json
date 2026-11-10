@@ -3140,6 +3140,52 @@
   "type": "Rum i korridor",
   "unit": "sssb-Fyrtalet-Värtavägen 66-1103"
  },
+ "sssb-Fyrtalet-Värtavägen 66-1611": {
+  "address": "Värtavägen 66",
+  "area": "Fyrtalet",
+  "class": "corridor",
+  "closed_at": "2026-11-10T13:18:27.576609+00:00",
+  "deadline": null,
+  "final_days": 439,
+  "first_seen": "2026-11-09T15:18:10.991503+00:00",
+  "floor": 6,
+  "last_seen": "2026-11-10T12:18:58.157142+00:00",
+  "move_in": "2026-12-16",
+  "obs": [
+   [
+    "2026-11-09T15:18:10.991503+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-09T19:18:21.294415+00:00",
+    438,
+    1
+   ],
+   [
+    "2026-11-09T21:18:34.528404+00:00",
+    438,
+    2
+   ],
+   [
+    "2026-11-09T23:18:52.557289+00:00",
+    439,
+    2
+   ],
+   [
+    "2026-11-10T09:18:15.709549+00:00",
+    439,
+    3
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 167,
+  "size": 18,
+  "type": "Rum i korridor",
+  "unit": "sssb-Fyrtalet-Värtavägen 66-1611"
+ },
  "sssb-Hugin & Munin-Öregrundsgatan 11-1808": {
   "address": "Öregrundsgatan 11",
   "area": "Hugin & Munin",
