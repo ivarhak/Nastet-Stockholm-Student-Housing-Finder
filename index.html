@@ -913,6 +913,30 @@
     flex-direction:row; align-items:center; gap:14px; padding:10px 15px;
   }
   #filterBar .control-wide label{ min-width:52px; }
+  /* `.control{display:flex}` beats the user agent's [hidden], same as the chips. */
+  #filterBar .control[hidden], #filterBar .control.collapsed{ display:none; }
+  /* Row folders, under the cog. A dot marks a folded row that is filtering
+     something out, so a hidden chip can't silently narrow the map. */
+  .row-toggles{ display:flex; flex-direction:column; gap:3px; margin-top:8px; width:100%; align-items:stretch; }
+  .row-toggle{
+    position:relative; display:flex; align-items:center; justify-content:center; gap:4px;
+    padding:4px 2px; cursor:pointer; background:transparent; color:var(--dim);
+    border:1px solid var(--rule); border-radius:0;
+    font:400 8px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  .row-toggle[hidden]{ display:none; }
+  .row-toggle:hover{ color:var(--ink); border-color:var(--border); background:var(--card); }
+  .row-toggle:focus-visible{ outline:2px solid var(--ochre); outline-offset:1px; }
+  .row-toggle .rt-chev{
+    width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+    transform:translateY(1px) rotate(-135deg); transition:transform .2s ease;
+  }
+  .row-toggle[aria-expanded="false"]{ color:var(--accent-ink); border-color:var(--accent-ink); }
+  .row-toggle[aria-expanded="false"] .rt-chev{ transform:translateY(-2px) rotate(45deg); }
+  .row-toggle .rt-dot{ position:absolute; top:-3px; right:-3px; width:7px; height:7px; border-radius:50%; background:var(--accent-ink); }
+  .row-toggle .rt-dot[hidden]{ display:none; }
+  @media (prefers-reduced-motion: reduce){ .row-toggle .rt-chev{ transition:none; } }
   #schoolSelect{
     border-radius:0; max-width:none; width:100%;
     background:transparent; border-color:var(--rule);
@@ -1750,6 +1774,7 @@
     /* Comfortable touch targets. The desktop sizes are mouse-sized. */
     .legend button{padding:7px 12px;}
     #advToggle{width:36px;height:36px;}
+    .row-toggle{ padding:7px 2px; }
 
     /* The desk's hairline cells only make sense as a single row; stacked in two
        columns they draw rules to nowhere. */
@@ -1981,12 +2006,20 @@
         </svg>
         <span class="adv-count" id="advCount" hidden></span>
       </button>
+      <!-- Fold away the two chip rows below to give the map their height. They
+           sit here, under the cog, so they stay put when a row is gone. -->
+      <div class="row-toggles">
+        <button type="button" class="row-toggle" id="provRowToggle" data-row="providerRow"
+                aria-expanded="true" aria-controls="providerRow"><span class="rt-label"></span><span class="rt-chev" aria-hidden="true"></span><span class="rt-dot" hidden></span></button>
+        <button type="button" class="row-toggle" id="groupsRowToggle" data-row="groupsRow"
+                aria-expanded="true" aria-controls="groupsRow"><span class="rt-label"></span><span class="rt-chev" aria-hidden="true"></span><span class="rt-dot" hidden></span></button>
+      </div>
     </div>
 
     <!-- `control-wide` is inert on desktop and only used by the mobile media
          query, where the filter strip becomes a two-column grid and these two
          rows of chips need to span both columns. -->
-    <div class="control control-wide">
+    <div class="control control-wide" id="providerRow">
       <label data-i18n="provider">Provider</label>
       <div class="legend" id="providerChips">
         <!-- Provider chips are built from the payload by applyProviderChrome();
@@ -1998,7 +2031,7 @@
       </div>
     </div>
 
-    <div class="control control-wide">
+    <div class="control control-wide" id="groupsRow">
       <label id="groupsLabel" data-i18n="areas">Areas</label>
       <div class="legend" id="legend"></div>
     </div>
@@ -2179,6 +2212,8 @@ const I18N = { sv: {
   bf_similar: 'liknande:',
   bf_years: 'års kötid',
   yrs_plus: ' år+',
+  rt_prov: 'Källa', rt_groups: 'Omr.',
+  rt_hide: 'Dölj raden', rt_show: 'Visa raden', rt_filtering: 'filtrerar just nu',
   mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
   p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
   pw_about: 'Hur många fler dagar du troligen behöver köa för en bostad i varje område, utifrån hur många ködagar bostäder där nyligen gick för.',
@@ -3492,6 +3527,7 @@ function floorLabel(n){
 }
 
 function render(){
+  syncRowToggles();
   // Cheap: only rebuilds when the store list actually differs from what's drawn,
   // so this doesn't undo the point of keeping groceries out of renderMap().
   const stores = (currentData && currentData.groceries) || [];
@@ -6347,6 +6383,44 @@ function refreshAdvBadge(){
   badge.textContent = n;
   badge.hidden = n === 0;
 }
+
+// ---- folding the two chip rows ----
+// The provider and area-group rows cost the map two rows of height and are
+// rarely touched after the first visit, so each can be folded away. Remembered
+// per device; a folded row that is filtering something shows a dot.
+// `var`: render() can run before this line does, and a hoisted undefined is
+// something syncRowToggles() can check for — a `let` in its dead zone throws.
+var ROWS_KEY = 'nastet-rows-folded';
+var foldedRows = {};
+try { foldedRows = JSON.parse(localStorage.getItem(ROWS_KEY) || '{}') || {}; } catch (e) { foldedRows = {}; }
+function syncRowToggles(){
+  document.querySelectorAll('.row-toggle').forEach(btn => {
+    const row = document.getElementById(btn.dataset.row);
+    if (!row) return;
+    const groups = btn.dataset.row === 'groupsRow';
+    // A row the city doesn't have (one area group = no filter) has no folder.
+    btn.hidden = row.hidden;
+    const folded = !!(foldedRows && foldedRows[btn.dataset.row]);
+    row.classList.toggle('collapsed', folded);
+    btn.setAttribute('aria-expanded', String(!folded));
+    const name = groups ? document.getElementById('groupsLabel').textContent : t('provider', 'Provider');
+    btn.querySelector('.rt-label').textContent = groups ? t('rt_groups', 'Areas') : t('rt_prov', 'Prov.');
+    const filtering = folded && !!row.querySelector(groups ? '#legend button.off' : 'button[data-p].off');
+    btn.querySelector('.rt-dot').hidden = !filtering;
+    const tip = `${folded ? t('rt_show', 'Show the row') : t('rt_hide', 'Hide the row')}: ${name}`
+      + (filtering ? ` — ${t('rt_filtering', 'filtering right now')}` : '');
+    btn.title = tip; btn.setAttribute('aria-label', tip);
+  });
+}
+document.querySelector('.row-toggles').addEventListener('click', (e) => {
+  const btn = e.target.closest('.row-toggle');
+  if (!btn) return;
+  foldedRows[btn.dataset.row] = !foldedRows[btn.dataset.row];
+  try { localStorage.setItem(ROWS_KEY, JSON.stringify(foldedRows)); } catch (err) {}
+  syncRowToggles();
+  // The map has a fixed-height flex parent, so a row coming or going resizes it.
+  if (leafletMap) setTimeout(() => leafletMap.invalidateSize(), 0);
+});
 
 document.getElementById('advToggle').addEventListener('click', (e) => {
   const btn = e.currentTarget;

@@ -100,7 +100,8 @@ async function audit(page, label) {
       if (s.overflowY === 'hidden' && s.webkitLineClamp === 'none' && el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 3)
         out.clipped.push(`${desc(el)} height ${el.scrollHeight}>${el.clientHeight}`);
       // Sticking out of the window with nothing to scroll it into view.
-      if ((r.right > vw + 1 || r.left < -1) && !scrollsX(el) && s.position !== 'fixed')
+      // The map clips its own tooltips and popups at its edge; that's a map, not a layout fault.
+      if ((r.right > vw + 1 || r.left < -1) && !scrollsX(el) && s.position !== 'fixed' && !el.closest('.leaflet-container'))
         out.offscreen.push(`${desc(el)} x ${Math.round(r.left)}–${Math.round(r.right)} of ${vw}`);
     }
 
