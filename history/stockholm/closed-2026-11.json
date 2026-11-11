@@ -7800,6 +7800,52 @@
   "type": "2 rum & kök",
   "unit": "sssb-Lappkärrsberget-Professorsslingan 31-1001"
  },
+ "sssb-Lappkärrsberget-Professorsslingan 43-0901": {
+  "address": "Professorsslingan 43",
+  "area": "Lappkärrsberget",
+  "class": "2plus",
+  "closed_at": "2026-11-11T09:18:13.815552+00:00",
+  "deadline": null,
+  "final_days": 871,
+  "first_seen": "2026-11-10T10:18:43.020763+00:00",
+  "floor": null,
+  "last_seen": "2026-11-11T08:18:20.407122+00:00",
+  "move_in": "2026-11-16",
+  "obs": [
+   [
+    "2026-11-10T10:18:43.020763+00:00",
+    347,
+    1
+   ],
+   [
+    "2026-11-10T11:18:11.180435+00:00",
+    739,
+    2
+   ],
+   [
+    "2026-11-10T17:18:24.080815+00:00",
+    870,
+    3
+   ],
+   [
+    "2026-11-10T18:18:08.123048+00:00",
+    870,
+    4
+   ],
+   [
+    "2026-11-10T23:18:38.302152+00:00",
+    871,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 11665,
+  "size": 74,
+  "type": "4 rum & kök",
+  "unit": "sssb-Lappkärrsberget-Professorsslingan 43-0901"
+ },
  "sssb-Lappkärrsberget-Professorsslingan 47-1605": {
   "address": "Professorsslingan 47",
   "area": "Lappkärrsberget",
