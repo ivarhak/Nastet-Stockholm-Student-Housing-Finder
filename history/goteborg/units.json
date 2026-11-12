@@ -697,6 +697,8 @@
    "id": "sgs-v6QwXvf9KQh46TB4Jd8WkqM4"
   },
   {
+   "closed_at": "2026-11-12T14:19:24.372971+00:00",
+   "final_days": null,
    "first_seen": "2026-11-11T23:20:03.150676+00:00",
    "id": "sgs-bpDV9XRmD7K4w4D9GQ9RKbbQ"
   }
@@ -881,6 +883,8 @@
  ],
  "SGS:apt:Lindholmsallén 29#1706": [
   {
+   "closed_at": "2026-11-12T14:19:24.372971+00:00",
+   "final_days": null,
    "first_seen": "2026-11-11T23:20:03.150676+00:00",
    "id": "sgs-gbYQyvWmYYjrR99xWvfbdx89"
   }
@@ -903,6 +907,8 @@
  ],
  "SGS:apt:Lindholmsallén 39#1010": [
   {
+   "closed_at": "2026-11-12T14:19:24.372971+00:00",
+   "final_days": null,
    "first_seen": "2026-11-11T23:20:03.150676+00:00",
    "id": "sgs-bQ87PhbdcWfpwX44BjkvcytP"
   }

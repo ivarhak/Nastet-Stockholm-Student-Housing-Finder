@@ -2001,6 +2001,32 @@
   "type": "2 rum och kök",
   "unit": "SGS:apt:Studiegången 8#1001"
  },
+ "sgs-bQ87PhbdcWfpwX44BjkvcytP": {
+  "address": "Lindholmsallén 39",
+  "area": "Lindholmsallén",
+  "class": "1room",
+  "closed_at": "2026-11-12T14:19:24.372971+00:00",
+  "deadline": "2026-11-14",
+  "final_days": null,
+  "first_seen": "2026-11-11T23:20:03.150676+00:00",
+  "floor": null,
+  "last_seen": "2026-11-12T13:19:09.871576+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-11T23:20:03.150676+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5803,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Lindholmsallén 39#1010"
+ },
  "sgs-bcmYcCwdhKtCwKTxB6bXGJKB": {
   "address": "Sven Brolids väg 3",
   "area": "Sven Brolids väg",
@@ -2026,6 +2052,32 @@
   "size": 25.0,
   "type": "1 rum och kokvrå",
   "unit": "SGS:apt:Sven Brolids väg 3#1406"
+ },
+ "sgs-bpDV9XRmD7K4w4D9GQ9RKbbQ": {
+  "address": "Lilla Regementsvägen 14",
+  "area": "Kviberg",
+  "class": "1room",
+  "closed_at": "2026-11-12T14:19:24.372971+00:00",
+  "deadline": "2026-11-14",
+  "final_days": null,
+  "first_seen": "2026-11-11T23:20:03.150676+00:00",
+  "floor": 3,
+  "last_seen": "2026-11-12T13:19:09.871576+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-11T23:20:03.150676+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 1,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5515,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Lilla Regementsvägen 14#1303"
  },
  "sgs-cJ4J6pKFyYXKJQ6pRwVyrj84": {
   "address": "Brahegatan 9",
@@ -2286,6 +2338,32 @@
   "size": 18.5,
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:apt:Motgången 324 Rum 31#1201"
+ },
+ "sgs-gbYQyvWmYYjrR99xWvfbdx89": {
+  "address": "Lindholmsallén 29",
+  "area": "Lindholmsallén",
+  "class": "2plus",
+  "closed_at": "2026-11-12T14:19:24.372971+00:00",
+  "deadline": "2026-11-14",
+  "final_days": null,
+  "first_seen": "2026-11-11T23:20:03.150676+00:00",
+  "floor": 7,
+  "last_seen": "2026-11-12T13:19:09.871576+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-11T23:20:03.150676+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 8204,
+  "size": 39.0,
+  "type": "2 rum och kokvrå",
+  "unit": "SGS:apt:Lindholmsallén 29#1706"
  },
  "sgs-ghJPtRbmBK68YjXrq86KVWtj": {
   "address": "Prickskyttestigen 12",
