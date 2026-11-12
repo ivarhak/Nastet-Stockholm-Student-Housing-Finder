@@ -2911,6 +2911,32 @@
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:apt:Richertsgatan 2c Rum 3203#1107"
  },
+ "sgs-wTmHhrt7Qmf9VF6cgWYDDh6w": {
+  "address": "Tyghusvägen 10",
+  "area": "Kviberg",
+  "class": "1room",
+  "closed_at": "2026-11-12T13:19:09.871576+00:00",
+  "deadline": "2026-11-14",
+  "final_days": null,
+  "first_seen": "2026-11-11T23:20:03.150676+00:00",
+  "floor": 1,
+  "last_seen": "2026-11-12T12:19:38.076887+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-11T23:20:03.150676+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5503,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Tyghusvägen 10#1108"
+ },
  "sgs-whRf9Q9vbjdphv4vGBJwKVRr": {
   "address": "Volrat Thamsgatan 20",
   "area": "Volrat Tham",
