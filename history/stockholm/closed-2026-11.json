@@ -3711,6 +3711,57 @@
   "type": "1 rum & pentry",
   "unit": "sssb-Forum-Körsbärsvägen 2 B-1001"
  },
+ "sssb-Forum-Körsbärsvägen 4 A-1012": {
+  "address": "Körsbärsvägen 4 A",
+  "area": "Forum",
+  "class": "corridor",
+  "closed_at": "2026-11-13T09:18:29.230978+00:00",
+  "deadline": null,
+  "final_days": 169,
+  "first_seen": "2026-11-12T09:19:41.255372+00:00",
+  "floor": 0,
+  "last_seen": "2026-11-13T08:19:11.196691+00:00",
+  "move_in": "2026-11-16",
+  "obs": [
+   [
+    "2026-11-12T09:19:41.255372+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-12T10:19:03.591764+00:00",
+    161,
+    1
+   ],
+   [
+    "2026-11-12T14:19:05.949277+00:00",
+    161,
+    2
+   ],
+   [
+    "2026-11-12T18:19:41.143636+00:00",
+    168,
+    3
+   ],
+   [
+    "2026-11-12T22:19:44.109694+00:00",
+    168,
+    4
+   ],
+   [
+    "2026-11-12T23:19:17.133327+00:00",
+    169,
+    4
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 4909,
+  "size": 19,
+  "type": "Rum i korridor",
+  "unit": "sssb-Forum-Körsbärsvägen 4 A-1012"
+ },
  "sssb-Forum-Körsbärsvägen 4 B-1116": {
   "address": "Körsbärsvägen 4 B",
   "area": "Forum",
@@ -6487,6 +6538,47 @@
   "size": 34,
   "type": "2 rum & pentry",
   "unit": "sssb-Jerum-Studentbacken 25-1017"
+ },
+ "sssb-Jerum-Studentbacken 25-1310": {
+  "address": "Studentbacken 25",
+  "area": "Jerum",
+  "class": "corridor",
+  "closed_at": "2026-11-13T09:18:29.230978+00:00",
+  "deadline": null,
+  "final_days": 122,
+  "first_seen": "2026-11-12T13:18:57.011630+00:00",
+  "floor": 3,
+  "last_seen": "2026-11-13T08:19:11.196691+00:00",
+  "move_in": "2026-11-16",
+  "obs": [
+   [
+    "2026-11-12T13:18:57.011630+00:00",
+    0,
+    0
+   ],
+   [
+    "2026-11-12T15:18:57.624206+00:00",
+    116,
+    1
+   ],
+   [
+    "2026-11-12T22:19:44.109694+00:00",
+    121,
+    2
+   ],
+   [
+    "2026-11-12T23:19:17.133327+00:00",
+    122,
+    2
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SSSB",
+  "published_at": null,
+  "rent": 4978,
+  "size": 17,
+  "type": "Rum i korridor",
+  "unit": "sssb-Jerum-Studentbacken 25-1310"
  },
  "sssb-Jerum-Studentbacken 25-1515": {
   "address": "Studentbacken 25",
