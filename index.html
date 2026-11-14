@@ -937,6 +937,50 @@
   .row-toggle .rt-dot{ position:absolute; top:-3px; right:-3px; width:7px; height:7px; border-radius:50%; background:var(--accent-ink); }
   .row-toggle .rt-dot[hidden]{ display:none; }
   @media (prefers-reduced-motion: reduce){ .row-toggle .rt-chev{ transition:none; } }
+
+  /* The whole strip folded to one line that says what's set. */
+  #filterSummary{
+    display:flex; align-items:center; gap:12px; width:100%;
+    padding:8px 15px; background:var(--panel); color:var(--dim);
+    border:none; border-bottom:1px solid var(--rule); cursor:pointer; text-align:left;
+    font:400 9.5px/1.4 var(--mono); letter-spacing:0.1em; text-transform:uppercase;
+    position:relative; z-index:8;
+  }
+  #filterSummary[hidden]{ display:none; }
+  #filterSummary:hover{ background:var(--card); color:var(--ink); }
+  #filterSummary:focus-visible{ outline:2px solid var(--ochre); outline-offset:-2px; }
+  #filterSummary .fs-label{ flex:none; color:var(--accent-ink); font-weight:700; letter-spacing:0.16em; }
+  #filterSummary .fs-text{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink); }
+  #filterSummary .fs-hint{ flex:none; display:flex; align-items:center; gap:6px; }
+  #filterSummary .rt-chev{
+    width:5px; height:5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+    transform:translateY(-2px) rotate(45deg);
+  }
+  .map-col.strip-folded #filterBar, .map-col.strip-folded #advFilters{ display:none; }
+
+  /* Hide the listings panel: the map takes the width, the count floats on it. */
+  #sidebarHide{
+    margin-left:auto; flex:none; align-self:center; padding:4px 7px;
+    font:400 13px/1 var(--mono); color:var(--dim); background:transparent;
+    border:1px solid var(--rule); cursor:pointer; letter-spacing:0;
+  }
+  #sidebarHide:hover{ color:var(--ink); border-color:var(--border); background:var(--card); }
+  #sidebarHide:focus-visible{ outline:2px solid var(--ochre); outline-offset:1px; }
+  body.sidebar-off #sidebar{ display:none; }
+  .sidebar-badge{
+    display:flex; align-items:flex-end; gap:9px; padding:9px 12px 8px;
+    background:var(--panel); color:var(--ink); border:1px solid var(--rule); border-radius:0;
+    cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.18);
+    font:400 9.5px/1.3 var(--mono); letter-spacing:0.1em; text-transform:uppercase; text-align:left;
+  }
+  .sidebar-badge[hidden]{ display:none; }
+  .sidebar-badge b{
+    font-family:var(--figure); font-stretch:125%; font-weight:800; font-size:26px; line-height:0.85;
+    letter-spacing:-0.02em; font-variant-numeric:tabular-nums;
+  }
+  .sidebar-badge span{ color:var(--dim); }
+  .sidebar-badge:hover{ border-color:var(--ochre); }
+  .sidebar-badge:hover span{ color:var(--accent-ink); }
   #schoolSelect{
     border-radius:0; max-width:none; width:100%;
     background:transparent; border-color:var(--rule);
@@ -1711,6 +1755,8 @@
        landscape doesn't hand the whole screen to the map. */
     #map{order:-1; flex:0 0 auto; height:58vh; min-height:260px;}
 
+    #sidebarHide, .sidebar-badge{ display:none !important; }
+    body.sidebar-off #sidebar{ display:block; }
     #sidebar{
       width:auto;
       border-left:none;
@@ -1955,6 +2001,12 @@
   <!-- Filter strip lives in the map column, not the full-width bar, so the
        sidebar's tabs and listings start directly under the header. -->
   <div class="map-col">
+    <!-- The whole filter strip folded to one line: what's set, and a way back. -->
+    <button type="button" id="filterSummary" hidden aria-expanded="false" aria-controls="filterBar">
+      <span class="fs-label" data-i18n="fs_label">Filters</span>
+      <span class="fs-text" id="filterSummaryText"></span>
+      <span class="fs-hint"><span data-i18n="fs_show">show</span> <span class="rt-chev" aria-hidden="true"></span></span>
+    </button>
     <div id="filterBar">
     <div class="control">
       <label data-i18n="campus">Campus</label>
@@ -2013,6 +2065,8 @@
                 aria-expanded="true" aria-controls="providerRow"><span class="rt-label"></span><span class="rt-chev" aria-hidden="true"></span><span class="rt-dot" hidden></span></button>
         <button type="button" class="row-toggle" id="groupsRowToggle" data-row="groupsRow"
                 aria-expanded="true" aria-controls="groupsRow"><span class="rt-label"></span><span class="rt-chev" aria-hidden="true"></span><span class="rt-dot" hidden></span></button>
+        <button type="button" class="row-toggle" id="allRowToggle" data-row="__strip"
+                aria-expanded="true" aria-controls="filterBar"><span class="rt-label"></span><span class="rt-chev" aria-hidden="true"></span></button>
       </div>
     </div>
 
@@ -2102,6 +2156,7 @@
       <button id="tabListings" class="active" onclick="switchTab('listings')" data-i18n="tab_listings">LISTINGS</button>
       <button id="tabQueues" onclick="switchTab('queues')" data-i18n="tab_queues">QUEUES TO JOIN</button>
       <button id="tabMarket" onclick="switchTab('market')" data-i18n="tab_market">MARKET</button>
+      <button type="button" id="sidebarHide" title="Hide this panel — the map takes the full width" data-i18n-title="sb_hide"><span aria-hidden="true">»</span></button>
     </div>
     <div id="listingsView">
       <!-- Outside #panelHeader on purpose: renderSidebar() rewrites that on
@@ -2212,7 +2267,11 @@ const I18N = { sv: {
   bf_similar: 'liknande:',
   bf_years: 'års kötid',
   yrs_plus: ' år+',
-  rt_prov: 'Källa', rt_groups: 'Omr.',
+  rt_prov: 'Källa', rt_groups: 'Omr.', rt_all: 'Alla',
+  rt_all_t: 'Fäll ihop alla filter till en rad (F)', fs_label: 'Filter', fs_show: 'visa',
+  fs_any_queue: 'alla ködagar', fs_any_rent: 'alla hyror', fs_more: 'till', fs_hidden: 'dold',
+  fs_title: 'Visa filtren (F)',
+  sb_hide: 'Dölj panelen — kartan får hela bredden', sb_show: 'Visa listan', sb_listings: 'bostäder',
   rt_hide: 'Dölj raden', rt_show: 'Visa raden', rt_filtering: 'filtrerar just nu',
   mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
   p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
@@ -3754,6 +3813,20 @@ function initMap(){
   // discoverable. A Leaflet control rather than an absolutely-positioned div:
   // Leaflet then owns its corner, its stacking order, and keeping its clicks
   // from reaching the map underneath (which would immediately re-clear).
+  const BadgeControl = L.Control.extend({
+    options: { position: 'topright' },
+    onAdd(){
+      const el = L.DomUtil.create('button', 'sidebar-badge');
+      el.type = 'button';
+      el.hidden = true;
+      L.DomEvent.disableClickPropagation(el);
+      L.DomEvent.on(el, 'click', () => setSidebar(false));
+      sidebarBadgeEl = el;
+      return el;
+    },
+  });
+  leafletMap.addControl(new BadgeControl());
+
   const ClearControl = L.Control.extend({
     options: { position: 'topright' },
     onAdd(){
@@ -4062,6 +4135,7 @@ function renderMap(){
 }
 
 function selectArea(name){
+  if (sidebarOff) setSidebar(false);
   selectedArea = name;
   selectedListingId = null;
   browseAll = false;
@@ -4113,6 +4187,7 @@ function clearSelection(){
 // draw is decided entirely by zoom and currentData, never by this, so there's
 // nothing here for renderMap() to react to — only the sidebar changes.
 function selectListing(id){
+  if (sidebarOff) setSidebar(false);
   selectedListingId = id;
   selectedArea = null;
   // Browse-all and the queues tab both render *instead of* the selected card,
@@ -6078,8 +6153,20 @@ function campusKey(e){
   document.querySelectorAll('#campusResults .cm-hit').forEach((b, k) => b.classList.toggle('sel', k === campusSel));
 }
 
+// What the default view lists: everything the map is currently showing.
+function defaultRows(){
+  const visibleAreas = new Set(visibleAreaNames());
+  const pinVisible = new Set(visiblePinListings().map(l => l.id));
+  return currentData.listings.filter(l =>
+    (isAreaProvider(l.provider) && activeProviders.has(l.provider)
+      && visibleAreas.has(l.area) && passesFilters(l))
+    || pinVisible.has(l.id)
+  );
+}
+
 function renderSidebar(){
   syncClearChip();
+  syncSidebarBadge();
   renderWatch();
   document.getElementById('listingsView').style.display = currentTab === 'listings' ? 'block' : 'none';
   document.getElementById('queues').style.display = currentTab === 'queues' ? 'block' : 'none';
@@ -6148,13 +6235,7 @@ function renderSidebar(){
     `;
     rows = listingsInArea(selectedArea);
   } else {
-    const visibleAreas = new Set(visibleAreaNames());
-    const pinVisible = new Set(visiblePinListings().map(l => l.id));
-    rows = currentData.listings.filter(l =>
-      (isAreaProvider(l.provider) && activeProviders.has(l.provider)
-        && visibleAreas.has(l.area) && passesFilters(l))
-      || pinVisible.has(l.id)
-    );
+    rows = defaultRows();
     const mode = t('by_bike_s', 'by bike');
     const bits = [lang === 'sv'
       ? t('within', '').replace('{n}', maxCommuteMin).replace('{s}', selectedSchool) + ' ' + mode
@@ -6393,8 +6474,42 @@ function refreshAdvBadge(){
 var ROWS_KEY = 'nastet-rows-folded';
 var foldedRows = {};
 try { foldedRows = JSON.parse(localStorage.getItem(ROWS_KEY) || '{}') || {}; } catch (e) { foldedRows = {}; }
+// "KTH · 45 min by bike · any queue days · ≤ 6 000 kr · +2 more"
+function filterSummaryText(){
+  if (!currentData) return '';
+  const bits = [selectedSchool, `${maxCommuteMin} min ${t('by_bike_s', 'by bike')}`];
+  bits.push(maxQueueDays !== null ? `≤ ${num(maxQueueDays)} ${t('queue_days_f', 'queue days')}` : t('fs_any_queue', 'any queue days'));
+  bits.push(maxRentSek !== null ? `≤ ${num(maxRentSek)} kr` : t('fs_any_rent', 'any rent'));
+  const more = advancedActiveCount();
+  if (more) bits.push(`+${more} ${t('fs_more', 'more')}`);
+  Object.keys(providerInfo).filter(n => !activeProviders.has(n))
+    .forEach(n => bits.push(`${providerInfo[n].abbr || n} ${t('fs_hidden', 'hidden')}`));
+  areaGroups.filter(g => !activeGroups.has(g)).forEach(g => bits.push(`${groupLabel(g)} ${t('fs_hidden', 'hidden')}`));
+  return bits.join(' · ');
+}
+function setStripFolded(on){
+  foldedRows = foldedRows || {};
+  foldedRows.__strip = !!on;
+  try { localStorage.setItem(ROWS_KEY, JSON.stringify(foldedRows)); } catch (err) {}
+  syncRowToggles();
+  if (leafletMap) setTimeout(() => leafletMap.invalidateSize(), 0);
+}
+
 function syncRowToggles(){
+  const stripFolded = !!(foldedRows && foldedRows.__strip);
+  document.querySelector('.map-col').classList.toggle('strip-folded', stripFolded);
+  const summary = document.getElementById('filterSummary');
+  summary.hidden = !stripFolded;
+  summary.setAttribute('aria-expanded', String(!stripFolded));
+  summary.title = t('fs_title', 'Show the filters (F)');
+  if (stripFolded) document.getElementById('filterSummaryText').textContent = filterSummaryText();
   document.querySelectorAll('.row-toggle').forEach(btn => {
+    if (btn.dataset.row === '__strip') {
+      btn.querySelector('.rt-label').textContent = t('rt_all', 'All');
+      const tip = t('rt_all_t', 'Fold all the filters into one line (F)');
+      btn.title = tip; btn.setAttribute('aria-label', tip);
+      return;
+    }
     const row = document.getElementById(btn.dataset.row);
     if (!row) return;
     const groups = btn.dataset.row === 'groupsRow';
@@ -6415,12 +6530,42 @@ function syncRowToggles(){
 document.querySelector('.row-toggles').addEventListener('click', (e) => {
   const btn = e.target.closest('.row-toggle');
   if (!btn) return;
+  if (btn.dataset.row === '__strip') { setStripFolded(true); document.getElementById('filterSummary').focus(); return; }
   foldedRows[btn.dataset.row] = !foldedRows[btn.dataset.row];
   try { localStorage.setItem(ROWS_KEY, JSON.stringify(foldedRows)); } catch (err) {}
   syncRowToggles();
   // The map has a fixed-height flex parent, so a row coming or going resizes it.
   if (leafletMap) setTimeout(() => leafletMap.invalidateSize(), 0);
 });
+
+document.getElementById('filterSummary').addEventListener('click', () => {
+  setStripFolded(false);
+  document.getElementById('allRowToggle').focus();
+});
+
+// ---- hiding the listings panel ----
+// Desktop only (on a phone the panel sits under the map and there is nothing
+// to win). The count that heads the panel floats on the map instead, and is
+// the way back.
+var sidebarOff = store.get('nastet-sidebar-off', false) === true;
+var sidebarBadgeEl = null;
+function setSidebar(off){
+  sidebarOff = !!off;
+  store.set('nastet-sidebar-off', sidebarOff || null);
+  syncSidebarBadge();
+  if (leafletMap) setTimeout(() => leafletMap.invalidateSize(), 0);
+}
+function syncSidebarBadge(){
+  document.body.classList.toggle('sidebar-off', !!sidebarOff);
+  if (!sidebarBadgeEl) return;
+  sidebarBadgeEl.hidden = !sidebarOff;
+  if (!sidebarOff || !currentData) return;
+  const n = personalFilter(defaultRows()).rows.length;
+  sidebarBadgeEl.innerHTML = `<b>${n}</b><span>${t('sb_listings', 'listings')} ‹</span>`;
+  const tip = t('sb_show', 'Show the list');
+  sidebarBadgeEl.title = tip; sidebarBadgeEl.setAttribute('aria-label', `${n} ${t('sb_listings', 'listings')} — ${tip}`);
+}
+document.getElementById('sidebarHide').addEventListener('click', () => setSidebar(true));
 
 document.getElementById('advToggle').addEventListener('click', (e) => {
   const btn = e.currentTarget;
