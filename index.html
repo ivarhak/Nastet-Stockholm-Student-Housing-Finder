@@ -958,6 +958,22 @@
   }
   .map-col.strip-folded #filterBar, .map-col.strip-folded #advFilters{ display:none; }
 
+  /* Bike / transit / walk, beside the commute slider's label. */
+  .label-row{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:5px 10px; }
+  .mode-seg{ display:inline-flex; }
+  .mode-seg button{
+    font:400 8px/1 var(--mono); letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--dim); background:transparent; border:1px solid var(--rule); border-radius:0;
+    padding:3px 6px; margin-left:-1px; cursor:pointer;
+  }
+  .mode-seg button:first-child{ margin-left:0; }
+  .mode-seg button:hover{ color:var(--ink); }
+  .mode-seg button[aria-pressed="true"]{ color:var(--accent-ink); border-color:var(--accent-ink); position:relative; z-index:1; font-weight:700; }
+  .mode-seg button:focus-visible{ outline:2px solid var(--ochre); outline-offset:1px; z-index:2; }
+  @media (pointer:coarse){ .mode-seg button{ padding:7px 9px; font-size:9px; } }
+  .stats-credit{ margin:7px 0 0; font:400 9px/1.5 var(--mono); color:var(--faint); }
+  .stats-credit a{ color:var(--dim); }
+
   /* One line of what today looks like, each part a shortcut to that order. */
   .today-line{
     display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 9px; padding:0 2px 11px;
@@ -2118,7 +2134,12 @@
     </div>
 
     <div class="control">
-      <label for="maxCommute" data-i18n="max_commute" title="Routed cycling time from the area to the campus above">Max commute (bike)</label>
+      <div class="label-row">
+        <label for="maxCommute" data-i18n="max_commute_l">Max commute</label>
+        <span class="mode-seg" id="modeSeg" role="group" aria-label="Commute by" data-i18n-title="mode_l" title="How you get to campus — the minutes everywhere follow it">
+          <button type="button" data-mode="bike" aria-pressed="true" data-i18n="mode_bike">Bike</button><button type="button" data-mode="transit" aria-pressed="false" data-i18n="mode_transit">Transit</button><button type="button" data-mode="walk" aria-pressed="false" data-i18n="mode_walk">Walk</button>
+        </span>
+      </div>
       <div class="slider-row">
         <input type="range" id="maxCommute" min="5" max="90" value="45" step="5">
         <span id="maxCommuteLabel">45 min</span>
@@ -2432,7 +2453,12 @@ const I18N = { sv: {
   all_listings: 'Alla bostäder',
   refresh: 'Uppdatera',
   campus: 'Campus',
-  max_commute: 'Max restid (cykel)',
+  max_commute: 'Max restid (cykel)', max_commute_l: 'Max restid',
+  mode_bike: 'Cykel', mode_transit: 'Kollektivt', mode_walk: 'Gång', mode_l: 'Hur du tar dig till campus — alla minuter följer valet',
+  min_transit: ' min kollektivt', min_walk: ' min gång', by_transit_s: 'med kollektivtrafik', by_walk_s: 'till fots',
+  g_walk: 'Till fots', g_transit: 'Kollektivtrafik', c_transit: 'Kollektivt till campus', c_walk: 'Gång till campus',
+  tr_credit: 'Kollektivtrafik: dörr till dörr en vanlig vardagsmorgon, från <a href="https://transitous.org/sources/" target="_blank" rel="noopener noreferrer">Transitous</a>. ~ betyder uppskattat.',
+  tr_title: 'Dörr till dörr en vanlig vardagsmorgon, inklusive gång till och från hållplatsen', est_title: 'Uppskattat från avståndet — ingen rutt uppmätt ännu',
   max_queue: 'Max ködagar',
   max_rent: 'Max hyra',
   more_filters: 'Fler filter',
@@ -2882,9 +2908,52 @@ function schoolMetrics(obj){
   if (obj.coords) {
     const km = haversineKm(obj.coords, centre());
     return { distance_km: Math.round(km * 100) / 100, bike_min: Math.round(km / 15 * 60 + 3),
-             walk_min: Math.round(km / 5 * 60), bike_source: 'estimate', transit_min: null };
+             walk_min: Math.round(km * 1.3 / 5 * 60), bike_source: 'estimate', transit_min: null };
   }
   return null;
+}
+
+// ── How you get to campus: bike, public transport or on foot ─────────────
+// One mode at a time drives the slider, the list and the sort. The scrape
+// measures what it can — cycling and walking routes, and a real door-to-door
+// trip on a weekday morning — and marks the rest as estimates; an estimate is
+// always shown with a "~".
+const MODES = ['bike', 'transit', 'walk'];
+let commuteMode = 'bike';
+// Same rule of thumb as monitor.rough_transit_minutes(), for payloads written
+// before transit times were, and for places not looked up yet.
+function roughTransit(km){ return Math.round(10 + 3.5 * Math.min(km, 4) + 2.2 * Math.max(0, km - 4)); }
+function modeMinutes(m, mode = commuteMode){
+  if (!m) return null;
+  if (mode === 'walk') return typeof m.walk_min === 'number' ? m.walk_min : null;
+  if (mode === 'transit') {
+    if (typeof m.transit_min === 'number') return m.transit_min;
+    if (typeof m.distance_km !== 'number') return null;
+    const est = roughTransit(m.distance_km);
+    return typeof m.walk_min === 'number' ? Math.min(est, m.walk_min) : est;
+  }
+  return typeof m.bike_min === 'number' ? m.bike_min : null;
+}
+function modeMeasured(m, mode = commuteMode){
+  if (mode === 'walk') return m.walk_source === 'route';
+  if (mode === 'transit') return typeof m.transit_min === 'number' && m.transit_source !== 'estimate';
+  return m.bike_source === 'route';
+}
+const modeUnit = mode => ({ bike: t('min_bike', ' min bike'), transit: t('min_transit', ' min transit'), walk: t('min_walk', ' min walk') })[mode];
+const modeWord = (mode = commuteMode) => ({ bike: t('by_bike_s', 'by bike'), transit: t('by_transit_s', 'by public transport'), walk: t('by_walk_s', 'on foot') })[mode];
+// "12 min bike" for a measured time, "~12 min bike" for a guess.
+function commuteLabel(m, mode = commuteMode){
+  const v = modeMinutes(m, mode);
+  return v == null ? '' : (modeMeasured(m, mode) ? '' : '~') + v + modeUnit(mode);
+}
+function syncModeSeg(){
+  document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === commuteMode)));
+}
+function setMode(mode){
+  commuteMode = MODES.includes(mode) ? mode : 'bike';
+  store.set('nastet-mode', commuteMode === 'bike' ? null : commuteMode);
+  syncModeSeg();
+  render();
 }
 // The three SSSB area groups, named for the tunnelbana line each sits on.
 // These are token references rather than hex, so a theme switch repaints the
@@ -3645,15 +3714,14 @@ function applyDataSourceChrome(){
 function commuteMinutes(obj){
   const m = schoolMetrics(obj);
   if (!m) return Infinity;
-  if (typeof m.bike_min === 'number') return m.bike_min;
-  if (typeof m.transit_min === 'number') return m.transit_min;
-  return Infinity;
+  const v = modeMinutes(m);
+  if (v != null) return v;
+  // A place with no figure for the chosen mode is measured by its bike time
+  // rather than dropped from the map.
+  return typeof m.bike_min === 'number' ? m.bike_min : Infinity;
 }
 
-// "12 min bike" for a real routed time, "~12 min bike" for a guess.
-function bikeLabel(m){
-  return (m.bike_source === 'route' ? '' : '~') + m.bike_min + t('min_bike', ' min bike');
-}
+function bikeLabel(m){ return commuteLabel(m, 'bike'); }
 
 function listingCommute(l){
   // No provider test needed: either the listing belongs to an area we have
@@ -4432,7 +4500,8 @@ function statsBlock(obj){
   if (!body) return '';
   return `<button class="stats-toggle" onclick="toggleStats()" aria-expanded="${!statsCollapsed}">`
        + `${t('distances', 'Distances')} <span class="chev" aria-hidden="true">${statsCollapsed ? '▸' : '▾'}</span></button>`
-       + (statsCollapsed ? '' : `<div class="stats-row">${body}</div>`);
+       + (statsCollapsed ? '' : `<div class="stats-row">${body}</div>`
+           + `<p class="stats-credit">${t('tr_credit', 'Public transport: door to door on an ordinary weekday morning, from <a href="https://transitous.org/sources/" target="_blank" rel="noopener noreferrer">Transitous</a>. ~ marks an estimate.')}</p>`);
 }
 
 function fmtCommute(obj){
@@ -4452,10 +4521,17 @@ function fmtCommute(obj){
   // Same rule as the Shops chip and the city switcher: a readout that can't
   // say anything shouldn't be on screen. The commute filter is unaffected —
   // commuteMinutes() already falls back to the bike figure.
-  if (typeof m.transit_min === 'number') {
-    parts.push(`<div class="gauge"><div class="g-label">${t('transit', 'Transit (real)')}</div>` +
-      `<div class="g-value">${m.transit_min}<small> min</small></div></div>`);
-  }
+  const gauge = (mode, label, extra) => {
+    const v = modeMinutes(m, mode);
+    if (v == null) return;
+    const real = modeMeasured(m, mode);
+    const tip = real ? (mode === 'transit' ? t('tr_title', 'Door to door on an ordinary weekday morning, walking to and from the stop included') : '')
+                     : t('est_title', 'Estimated from the distance — no route measured yet');
+    parts.push(`<div class="gauge"${tip ? ` title="${esc(tip)}"` : ''}><div class="g-label">${label}</div>` +
+      `<div class="g-value">${real ? '' : '~'}${v}<small> min${extra || ''}</small></div></div>`);
+  };
+  gauge('transit', t('g_transit', 'Public transport'));
+  gauge('walk', t('g_walk', 'On foot'), m.walk_km ? ` · ${m.walk_km} km` : '');
   // Straight-line, like the distance gauge above it — labelled so, since a
   // 300 m crow-flies shop can still be a 700 m walk.
   const g = obj && obj.nearest_grocery;
@@ -4583,10 +4659,9 @@ function softBreak(name){
 function rowHtml(l, newIds, index = 0, featured = false){
   const commuteRef = currentData.areas[l.area] || l;
   const cm = schoolMetrics(commuteRef);
-  // Always the bike figure: it's what the Max commute slider filters on and
-  // what exists for every area, routed or estimated. A real transit time still
-  // shows in the area's gauges, where it's labelled as transit.
-  const commute = cm && typeof cm.bike_min === 'number' ? bikeLabel(cm) : '';
+  // The mode the Max commute slider is set to — the same figure it filters
+  // and sorts on. All three are in the area's gauges.
+  const commute = cm ? commuteLabel(cm) : '';
   const areaRow = isAreaProvider(l.provider);
   // Inside an open area every row would say the area's name; the address is
   // what tells them apart there.
@@ -4889,7 +4964,7 @@ function discordCommand(){
   // way the page does; a daily summary is the default the bot starts with.
   if (profile.union === false) bits.push('student_union:False');
   bits.push(`campus:${selectedSchool}`);
-  if (maxCommuteMin != null && maxCommuteMin < 90) bits.push(`max_commute:${maxCommuteMin}`);
+  if (commuteMode === 'bike' && maxCommuteMin != null && maxCommuteMin < 90) bits.push(`max_commute:${maxCommuteMin}`);
   bits.push('frequency:daily');
   return bits.join(' ');
 }
@@ -5355,6 +5430,7 @@ function renderProfile(){
 // ── Marks: saved / applied / hidden, per listing ──
 let marks = store.get('nastet-marks', {}) || {};
 sortMode = SORTS.includes(store.get('nastet-sort', 'best')) ? store.get('nastet-sort', 'best') : 'best';
+commuteMode = MODES.includes(store.get('nastet-mode', 'bike')) ? store.get('nastet-mode', 'bike') : 'bike';
 const MARK_KINDS = ['saved', 'applied', 'hidden'];
 let showHidden = false;
 function markOf(id){ return marks[id] && marks[id].m; }
@@ -5484,7 +5560,9 @@ function openCompare(){
     [t('c_apps', 'Applicants'), l => l.applicants],
     [t('c_deadline', 'Apply by'), l => l.deadline],
     [t('c_movein', 'Move-in'), l => l.move_in],
-    [t('c_bike', 'Bike to campus'), l => { const m = metric(l); return typeof m.bike_min === 'number' ? m.bike_min + ' min' : null; }],
+    [t('c_bike', 'Bike to campus'), l => commuteLabel(metric(l), 'bike').replace(modeUnit('bike'), ' min') || null],
+    [t('c_transit', 'Public transport to campus'), l => commuteLabel(metric(l), 'transit').replace(modeUnit('transit'), ' min') || null],
+    [t('c_walk', 'Walk to campus'), l => commuteLabel(metric(l), 'walk').replace(modeUnit('walk'), ' min') || null],
     [t('c_floor', 'Floor'), l => l.floor],
     [t('c_noise', 'Traffic noise'), l => noiseText(l.noise)],
   ];
@@ -6167,7 +6245,7 @@ let isoSeq = 0;
 async function syncIsochrones(){
   const seq = ++isoSeq;
   const wrap = document.getElementById('isoToggleWrap');
-  const has = !!(currentData && currentData.isochrones && currentData.isochrones[selectedSchool]);
+  const has = commuteMode === 'bike' && !!(currentData && currentData.isochrones && currentData.isochrones[selectedSchool]);
   if (wrap) wrap.hidden = !has;
   if (isoLayer) { leafletMap.removeLayer(isoLayer); isoLayer = null; }
   if (!showIso || !has) return;
@@ -6676,7 +6754,7 @@ function renderSidebar(){
     const shortlist = sharedIds ? 'shared' : onlySaved ? 'saved' : null;
     rows = sharedIds ? currentData.listings.filter(l => sharedIds.has(l.id))
       : onlySaved ? savedHere() : defaultRows();
-    const mode = t('by_bike_s', 'by bike');
+    const mode = modeWord();
     // The chips above the rows name every other filter; this line keeps the
     // one thing they can't say — which campus the minutes are measured to.
     const bits = [lang === 'sv'
@@ -6923,7 +7001,7 @@ try { foldedRows = JSON.parse(localStorage.getItem(ROWS_KEY) || '{}') || {}; } c
 // "KTH · 45 min by bike · any queue days · ≤ 6 000 kr · +2 more"
 function filterSummaryText(){
   if (!currentData) return '';
-  const bits = [selectedSchool, `${maxCommuteMin} min ${t('by_bike_s', 'by bike')}`];
+  const bits = [selectedSchool, `${maxCommuteMin} min ${modeWord()}`];
   bits.push(maxQueueDays !== null ? `≤ ${num(maxQueueDays)} ${t('queue_days_f', 'queue days')}` : t('fs_any_queue', 'any queue days'));
   bits.push(maxRentSek !== null ? `≤ ${num(maxRentSek)} kr` : t('fs_any_rent', 'any rent'));
   const more = advancedActiveCount();
@@ -7115,6 +7193,8 @@ document.getElementById('providerChips').addEventListener('click', (e) => {
 });
 
 document.getElementById('schoolSelect').addEventListener('change', (e) => setSchool(e.target.value));
+document.getElementById('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('button[data-mode]'); if (b) setMode(b.dataset.mode); });
+syncModeSeg();
 
 // ---- theme ----
 // Every colour the map draws with is a CSS token read through var(), so

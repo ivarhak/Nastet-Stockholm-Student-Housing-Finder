@@ -119,6 +119,19 @@ BF_ALL_ADS_URL = BF_ALL_ADS_URLS[0]  # kept for anything referencing the old nam
 # `trip.summary` and has NOT been verified against the live service from here.
 BIKE_ROUTER_URL = "https://valhalla1.openstreetmap.de/route"
 
+# Door-to-door public transport, no API key: Transitous, a community-run MOTIS
+# instance fed by Sweden's national timetable (Trafiklab GTFS Sverige). Its
+# usage policy asks for an identifying User-Agent (sent on every request, see
+# USER_AGENT), an open-source non-commercial project, a visible link to
+# https://transitous.org/sources/ wherever its answers are shown, and a word
+# with them before going past ~720 routing requests a day. So: one trip per
+# area and campus, cached for weeks, and never more than a small fixed number
+# of new lookups in a run — a cold cache fills over a day or two instead of in
+# one burst. Until an answer is in, the page shows a rough estimate marked "~".
+TRANSIT_ROUTER_URL = "https://api.transitous.org/api/v5/plan"
+TRANSIT_MAX_NEW_PER_RUN = int(os.environ.get("TRANSIT_MAX_NEW_PER_RUN", "25"))
+TRANSIT_CACHE_DAYS = 45
+
 # Sent on every outbound request. The contact URL is the point of it: a landlord
 # or a free API operator who doesn't want this traffic should be able to find the
 # person responsible and say so, rather than having to silently block an
@@ -1000,15 +1013,29 @@ def haversine_km(a: tuple, b: tuple) -> float:
     return 2 * 6371 * math.asin(math.sqrt(h))
 
 
+def rough_transit_minutes(km: float) -> int:
+    """Door-to-door public transport from the straight-line distance alone.
+
+    A stand-in until a real trip has been looked up: ten minutes of walking to
+    a stop and waiting, then 3.5 min/km while the trip is mostly bus and
+    walking, easing to 2.2 min/km once it is long enough to be on rails.
+    Checked against real trips into KTH (Lappkärrsberget 17, Kista ~33,
+    Flemingsberg ~48): within a few minutes of each. Always shown with a "~".
+    """
+    return round(10 + 3.5 * min(km, 4) + 2.2 * max(0.0, km - 4))
+
+
 def straight_line_estimate(coords: tuple, target: tuple | None = None) -> dict:
     """Rough, no-API-needed estimate. Not a real route — just a sanity check."""
     km = haversine_km(coords, target or KTH_COORDS)
     return {
         "distance_km": round(km, 2),
         # crude rule of thumb for Stockholm: biking ~15km/h + 3 min overhead,
-        # walking ~5km/h. Treat as ballpark only.
+        # walking ~5km/h along streets that run about 1.3x the straight line
+        # (measured: Lappkärrsberget–KTH is 2.6 km as the crow flies, 3.4 km on
+        # foot). Treat as ballpark only.
         "bike_min": round(km / 15 * 60 + 3),
-        "walk_min": round(km / 5 * 60),
+        "walk_min": round(km * 1.3 / 5 * 60),
     }
 
 
@@ -1017,6 +1044,13 @@ _bike_cache = None
 # waiting on ~180 timeouts. Reset per process, not per scrape.
 _bike_failures = 0
 _BIKE_GIVE_UP_AFTER = 3
+# The router is a shared community service that answers 429 past about one
+# request a second, so new routes are paced at that and capped per run: a cold
+# cache (every area, on foot as well as by bike) fills over two or three runs
+# rather than making one run several minutes longer.
+STREET_ROUTE_PAUSE_S = 1.05
+STREET_MAX_NEW_PER_RUN = int(os.environ.get("STREET_MAX_NEW_PER_RUN", "150"))
+_street_new = 0
 
 
 def _load_bike_cache() -> dict:
@@ -1039,14 +1073,26 @@ def bike_route(origin: tuple, target: tuple) -> dict | None:
     SSSB areas never move, so after the first run this is free. Delete that
     file to re-route from scratch.
     """
-    global _bike_failures
-    if _bike_failures >= _BIKE_GIVE_UP_AFTER:
-        return None
+    return _street_route(origin, target, "bicycle")
 
+
+def walk_route(origin: tuple, target: tuple) -> dict | None:
+    """Real walking time + distance, from the same router and the same cache
+    file as the cycling routes (keys prefixed "walk:", so the two never mix)."""
+    return _street_route(origin, target, "pedestrian")
+
+
+def _street_route(origin: tuple, target: tuple, costing: str) -> dict | None:
+    global _bike_failures, _street_new
     cache = _load_bike_cache()
     key = (f"{origin[0]:.5f},{origin[1]:.5f}>{target[0]:.5f},{target[1]:.5f}")
+    if costing != "bicycle":
+        key = f"walk:{key}"
     if key in cache:
         return cache[key]
+    if _bike_failures >= _BIKE_GIVE_UP_AFTER or _street_new >= STREET_MAX_NEW_PER_RUN:
+        return None
+    _street_new += 1
 
     try:
         resp = requests.post(
@@ -1056,7 +1102,7 @@ def bike_route(origin: tuple, target: tuple) -> dict | None:
                     {"lat": origin[0], "lon": origin[1]},
                     {"lat": target[0], "lon": target[1]},
                 ],
-                "costing": "bicycle",
+                "costing": costing,
                 "directions_options": {"units": "kilometers"},
             },
             headers={"User-Agent": USER_AGENT},
@@ -1070,14 +1116,86 @@ def bike_route(origin: tuple, target: tuple) -> dict | None:
         }
     except (requests.RequestException, KeyError, TypeError, ValueError) as e:
         _bike_failures += 1
-        print(f"  ! bike routing failed ({e}) — falling back to the straight-line estimate"
+        print(f"  ! {costing} routing failed ({e}) — falling back to the straight-line estimate"
               + (f"; giving up on routing for this run after {_bike_failures} failures"
                  if _bike_failures >= _BIKE_GIVE_UP_AFTER else ""))
         return None
 
     cache[key] = result
     _save_bike_cache()
-    time.sleep(0.4)  # be polite to a free community service
+    time.sleep(STREET_ROUTE_PAUSE_S)  # be polite to a free community service
+    return result
+
+
+_transit_new = 0          # new lookups made by this process, against the per-run cap
+_transit_failures = 0
+_transit_skipped = 0      # wanted, but left for a later run
+
+
+def _transit_departure(now: datetime | None = None) -> str:
+    """07:30 Stockholm time on the next Tuesday, as the UTC timestamp the API
+    takes: an ordinary term-time morning, never today's half-finished one."""
+    from datetime import timedelta
+    from zoneinfo import ZoneInfo
+    local = (now or datetime.now(timezone.utc)).astimezone(ZoneInfo("Europe/Stockholm"))
+    days = (1 - local.weekday()) % 7 or 7
+    morning = (local + timedelta(days=days)).replace(hour=7, minute=30, second=0, microsecond=0)
+    return morning.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def transit_minutes_from(payload: dict) -> int | None:
+    """The typical door-to-door time among the trips the planner offers in the
+    hour asked about: the median, so one lucky connection doesn't set it."""
+    secs = sorted(int(i["duration"]) for i in (payload.get("itineraries") or [])
+                  if isinstance(i.get("duration"), (int, float)) and i["duration"] > 0)
+    if not secs:
+        return None
+    return round(secs[len(secs) // 2] / 60)
+
+
+def transit_route(origin: tuple, target: tuple, now: datetime | None = None) -> dict | None:
+    """Door-to-door public transport between two points: {"minutes": int|None}.
+
+    None means "not looked up yet" (over this run's budget, or the service is
+    having a bad day); {"minutes": None} means it was asked and offered no
+    trip. Cached in the route cache file under "transit:" keys. Origins are
+    rounded to three decimals (~100 m) so neighbouring ads share an answer.
+    """
+    global _transit_new, _transit_failures, _transit_skipped
+    now = now or datetime.now(timezone.utc)
+    cache = _load_bike_cache()
+    key = f"transit:{origin[0]:.3f},{origin[1]:.3f}>{target[0]:.4f},{target[1]:.4f}"
+    hit = cache.get(key)
+    if hit:
+        try:
+            age = (now - datetime.fromisoformat(hit["at"])).days
+        except (KeyError, TypeError, ValueError):
+            age = TRANSIT_CACHE_DAYS + 1
+        if age <= TRANSIT_CACHE_DAYS:
+            return hit
+    if _transit_failures >= _BIKE_GIVE_UP_AFTER or _transit_new >= TRANSIT_MAX_NEW_PER_RUN:
+        _transit_skipped += 1
+        return hit           # a stale answer beats none; None if there never was one
+    _transit_new += 1
+    try:
+        resp = requests.get(
+            TRANSIT_ROUTER_URL,
+            params={"fromPlace": f"{origin[0]:.5f},{origin[1]:.5f}",
+                    "toPlace": f"{target[0]:.5f},{target[1]:.5f}",
+                    "time": _transit_departure(now), "searchWindow": 3600},
+            headers={"User-Agent": USER_AGENT},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        result = {"minutes": transit_minutes_from(resp.json()), "at": now.isoformat()}
+    except (requests.RequestException, KeyError, TypeError, ValueError) as e:
+        _transit_failures += 1
+        print(f"  ! transit lookup failed ({e})"
+              + ("; leaving the rest for a later run" if _transit_failures >= _BIKE_GIVE_UP_AFTER else ""))
+        return hit
+    cache[key] = result
+    _save_bike_cache()
+    time.sleep(0.5)  # be polite to a free community service
     return result
 
 
@@ -1104,16 +1222,33 @@ def commute_to_all_schools(coords: tuple, with_transit: bool = True,
         target = school["coords"]
         est = straight_line_estimate(coords, target)
         route = bike_route(coords, target) if with_bike_routes else None
+        walk = walk_route(coords, target) if with_bike_routes else None
+        walk_min = walk["minutes"] if walk else est["walk_min"]
+        # A Resrobot key, where someone has set one, still wins; otherwise the
+        # keyless planner; otherwise a rough figure the page marks with "~".
+        real = None
+        if with_transit:
+            real = real_transit_time(coords, target)
+            if real is None:
+                looked_up = transit_route(coords, target)
+                real = looked_up["minutes"] if looked_up else None
+        # Nobody takes a bus that is slower than walking: for a home next to
+        # campus the honest public-transport time is the walk.
+        transit_min = min(real, walk_min) if real is not None else None
         out[sid] = {
             "distance_km": est["distance_km"],       # straight line, always present
             "bike_min": route["minutes"] if route else est["bike_min"],
             "bike_km": route["distance_km"] if route else None,
-            # "route" = real cycling directions; "estimate" = haversine + a
-            # crude speed guess. Surfaced so the dashboard can avoid presenting
-            # a guess as though it were measured.
+            # "route" = real directions; "estimate" = haversine + a crude speed
+            # guess. Surfaced for each mode so the dashboard can avoid
+            # presenting a guess as though it were measured.
             "bike_source": "route" if route else "estimate",
-            "walk_min": est["walk_min"],
-            "transit_min": real_transit_time(coords, target) if with_transit else None,
+            "walk_min": walk_min,
+            "walk_km": walk["distance_km"] if walk else None,
+            "walk_source": "route" if walk else "estimate",
+            "transit_min": (transit_min if transit_min is not None
+                            else min(rough_transit_minutes(est["distance_km"]), walk_min)),
+            "transit_source": "route" if transit_min is not None else "estimate",
         }
     return out
 
@@ -3173,6 +3308,10 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
         print(f"  new: {len(new_listings)} first seen in the last "
               f"{NEW_WINDOW_HOURS:g}h ({first_time} of them this run)")
 
+    looked = [a["per_school"][conf["default_school"]] for a in area_info.values() if a["per_school"]]
+    print(f"transit times: {sum(1 for m in looked if m.get('transit_source') == 'route')} of {len(looked)} "
+          f"area(s) from real trips, the rest estimated · {_transit_new} new lookup(s) this run"
+          + (f", {_transit_skipped} left for later runs (cap {TRANSIT_MAX_NEW_PER_RUN})" if _transit_skipped else ""))
     routed = sum(1 for a in area_info.values()
                  if a["per_school"]
                  and a["per_school"][conf["default_school"]]["bike_source"] == "route")
@@ -3185,9 +3324,9 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
     # still read as "0 found" on the live site. Every earlier line here answers
     # "did the scrape work"; none of them answer "will a visitor's screen be
     # empty anyway", and those turned out to be different questions. commuteMinutes()
-    # in index.html prefers transit_min and falls back to bike_min — mirrored here
-    # rather than re-derived, so this print can't quietly drift from what the
-    # frontend actually filters on.
+    # in index.html filters on the bike figure unless the visitor picks another
+    # mode — mirrored here rather than re-derived, so this print can't quietly
+    # drift from what the frontend's default view actually filters on.
     default_school = conf["default_school"]
     if default_school not in conf["schools"]:
         # Same failure this whole block exists to catch, one step further back:
@@ -3200,9 +3339,7 @@ def _run_scrape_impl(debug: bool = False, use_login: bool = False,
               f"shows nothing until that resolves")
     else:
         commute_min = [
-            (a["per_school"][default_school]["transit_min"]
-             if isinstance(a["per_school"][default_school].get("transit_min"), (int, float))
-             else a["per_school"][default_school]["bike_min"])
+            a["per_school"][default_school]["bike_min"]
             for a in area_info.values() if a.get("per_school") and a["per_school"].get(default_school)
         ]
         if commute_min:

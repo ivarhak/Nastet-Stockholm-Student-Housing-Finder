@@ -178,3 +178,116 @@ def test_room_suffix_is_geocoded_as_its_building(monkeypatch):
     assert m.geocode_listing_address("Mejerigatan 2 B Rum 533", "Ostkupan", cache,
                                      hint="Mejerigatan 2, 41248, Göteborg, Sweden") == [57.68, 12.0]
     assert seen == ["Mejerigatan 2, 41248, Göteborg, Sweden"] and "Mejerigatan 2 B" in cache
+
+
+# ── Walking and public transport ─────────────────────────────────────────
+
+def _fresh_route_cache(monkeypatch, tmp_path):
+    monkeypatch.setattr(m, "BIKE_ROUTE_CACHE_FILE", tmp_path / "routes.json")
+    monkeypatch.setattr(m, "_bike_cache", None)
+    monkeypatch.setattr(m, "_bike_failures", 0)
+    monkeypatch.setattr(m, "_street_new", 0)
+    monkeypatch.setattr(m, "_transit_new", 0)
+    monkeypatch.setattr(m, "_transit_failures", 0)
+    monkeypatch.setattr(m, "_transit_skipped", 0)
+    monkeypatch.setattr(m.time, "sleep", lambda s: None)
+
+
+def test_transit_time_is_the_median_trip():
+    plan = {"itineraries": [{"duration": 17 * 60}, {"duration": 18 * 60}, {"duration": 41 * 60},
+                            {"duration": 17 * 60}, {"duration": 0}]}
+    assert m.transit_minutes_from(plan) == 18          # not the lucky 17, not the 41
+    assert m.transit_minutes_from({"itineraries": []}) is None
+    assert m.transit_minutes_from({}) is None
+
+
+def test_transit_departure_is_a_tuesday_morning_in_stockholm():
+    # Asked on a Tuesday afternoon: next week's, never today's.
+    assert m._transit_departure(datetime(2026, 11, 17, 14, tzinfo=timezone.utc)) == "2026-11-24T06:30:00Z"
+    # Summer time: 07:30 in Stockholm is 05:30 UTC.
+    assert m._transit_departure(datetime(2026, 6, 5, 9, tzinfo=timezone.utc)) == "2026-06-09T05:30:00Z"
+
+
+def test_transit_lookups_are_cached_and_capped(monkeypatch, tmp_path):
+    _fresh_route_cache(monkeypatch, tmp_path)
+    monkeypatch.setattr(m, "TRANSIT_MAX_NEW_PER_RUN", 2)
+    asked = []
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"itineraries": [{"duration": 1020}, {"duration": 1080}, {"duration": 1080}]}
+    monkeypatch.setattr(m.requests, "get", lambda url, params=None, **kw: (asked.append(params), R())[1])
+    now = datetime(2026, 11, 14, 8, tzinfo=timezone.utc)
+    kth = (59.3467, 18.0716)
+    assert m.transit_route((59.36971, 18.04481), kth, now=now)["minutes"] == 18
+    # ~10 m away: the same cell, so the same answer and no second request.
+    assert m.transit_route((59.36974, 18.04489), kth, now=now)["minutes"] == 18
+    assert len(asked) == 1 and asked[0]["time"] == "2026-11-17T06:30:00Z"
+    assert m.transit_route((59.40, 17.94), kth, now=now)["minutes"] == 18
+    # Third new place this run: over the cap, left for a later run.
+    assert m.transit_route((59.30, 18.10), kth, now=now) is None
+    assert len(asked) == 2 and m._transit_skipped == 1
+    # Weeks later the answer is re-asked.
+    monkeypatch.setattr(m, "_transit_new", 0)
+    m.transit_route((59.36971, 18.04481), kth, now=now + timedelta(days=m.TRANSIT_CACHE_DAYS + 1))
+    assert len(asked) == 3
+
+
+def test_commute_has_every_mode_and_says_what_is_measured(monkeypatch, tmp_path):
+    _fresh_route_cache(monkeypatch, tmp_path)
+    monkeypatch.setattr(m, "RESROBOT_API_KEY", None)
+
+    class Street:
+        def __init__(self, secs, km): self.secs, self.km = secs, km
+        def raise_for_status(self): pass
+        def json(self): return {"trip": {"summary": {"time": self.secs, "length": self.km}}}
+    monkeypatch.setattr(m.requests, "post", lambda url, json=None, **kw:
+                        Street(840, 3.9) if json["costing"] == "bicycle" else Street(2580, 3.37))
+
+    class Plan:
+        def raise_for_status(self): pass
+        def json(self): return {"itineraries": [{"duration": 1020}]}
+    monkeypatch.setattr(m.requests, "get", lambda url, **kw: Plan())
+    schools = {"KTH": {"name": "KTH", "coords": (59.3467, 18.0716)}}
+    c = m.commute_to_all_schools((59.3697, 18.0448), schools=schools)["KTH"]
+    assert (c["bike_min"], c["bike_source"]) == (14, "route")
+    assert (c["walk_min"], c["walk_km"], c["walk_source"]) == (43, 3.37, "route")
+    assert (c["transit_min"], c["transit_source"]) == (17, "route")
+
+    # Without routing (the per-ad default) every mode is an estimate, and says so.
+    _fresh_route_cache(monkeypatch, tmp_path / "b")
+    (tmp_path / "b").mkdir()
+    monkeypatch.setattr(m, "TRANSIT_MAX_NEW_PER_RUN", 0)
+    e = m.commute_to_all_schools((59.3697, 18.0448), with_bike_routes=False, schools=schools)["KTH"]
+    assert e["bike_source"] == e["walk_source"] == e["transit_source"] == "estimate"
+    assert e["transit_min"] == m.rough_transit_minutes(e["distance_km"]) and e["transit_min"] < e["walk_min"]
+
+
+def test_transit_is_never_slower_than_walking(monkeypatch, tmp_path):
+    _fresh_route_cache(monkeypatch, tmp_path)
+    monkeypatch.setattr(m, "RESROBOT_API_KEY", None)
+
+    class Plan:
+        def raise_for_status(self): pass
+        def json(self): return {"itineraries": [{"duration": 11 * 60}]}    # a bus round the corner
+    monkeypatch.setattr(m.requests, "get", lambda url, **kw: Plan())
+    schools = {"KTH": {"name": "KTH", "coords": (59.3467, 18.0716)}}
+    c = m.commute_to_all_schools((59.3486, 18.0650), with_bike_routes=False, schools=schools)["KTH"]
+    assert c["transit_min"] == c["walk_min"] < 11
+
+
+def test_new_street_routes_are_capped_per_run(monkeypatch, tmp_path):
+    _fresh_route_cache(monkeypatch, tmp_path)
+    monkeypatch.setattr(m, "STREET_MAX_NEW_PER_RUN", 2)
+    calls = []
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"trip": {"summary": {"time": 600, "length": 2.0}}}
+    monkeypatch.setattr(m.requests, "post", lambda url, json=None, **kw: (calls.append(json["costing"]), R())[1])
+    a, b, c = (59.35, 18.05), (59.36, 18.06), (59.37, 18.07)
+    assert m.bike_route(a, b) == {"minutes": 10, "distance_km": 2.0}
+    assert m.walk_route(a, b)["minutes"] == 10
+    assert m.bike_route(a, c) is None                  # third new route: next run's
+    assert m.bike_route(a, b)["minutes"] == 10         # cached ones still answer
+    assert calls == ["bicycle", "pedestrian"]
