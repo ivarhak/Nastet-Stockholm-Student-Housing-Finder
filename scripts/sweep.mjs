@@ -269,8 +269,22 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME || un
     await page.click('#langToggle'); await settle(page, 700);
   });
 
+  // Bike / transit / walk is a choice of one, not an on-off chip: each is
+  // tried, and bike has to give back the list it started with.
+  await step('commute modes', async () => {
+    const base = [await rows(page), await markers(page)];
+    for (const mode of ['transit', 'walk', 'bike']) {
+      await page.click(`#modeSeg button[data-mode=${mode}]`); await settle(page, 700);
+      const now = [await rows(page), await markers(page)];
+      const label = await page.evaluate(() => (document.querySelector('#listings .details') || {}).textContent || '');
+      note(`mode ${mode} → ${now[0]} rows, ${now[1]} markers; first card "${label.split('·').pop().trim()}"`);
+      await audit(page, `commute by ${mode}`);
+      if (mode === 'bike' && (now[0] !== base[0] || now[1] !== base[1])) find('medium', 'filters', 'Bike mode does not restore the list', `${base} → ${now}`);
+    }
+  });
+
   await step('filter chips', async () => {
-    const chips = page.locator('#filterBar button[aria-pressed], #providerChips button');
+    const chips = page.locator('#filterBar button[aria-pressed]:not([data-mode]), #providerChips button');
     const n = await chips.count();
     const base = [await rows(page), await markers(page)];
     note(`filter chips: ${n}; baseline ${base[0]} rows, ${base[1]} markers`);
