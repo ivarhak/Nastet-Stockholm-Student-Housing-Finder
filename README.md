@@ -13,7 +13,9 @@ tracked. If you want to support the work, there's a Ko-fi link in the header.
 
 **Live version:** [nästet.se](https://nästet.se) — published from this repo and
 re-scraped hourly. Read-only; run it locally for desktop notifications
-and an on-demand Refresh. See section 4.
+and an on-demand Refresh. See section 4. The interface as it was before the
+November 2026 redesign is kept at
+[nästet.se/classic.html](https://nästet.se/classic.html).
 
 The pieces:
 - `monitor.py` — runs on your machine: Selenium scraping for SSSB, plain HTTP
@@ -94,10 +96,20 @@ than copying it. To give it a nicer icon, select the file in Finder, press
 Cmd+I, and paste an image onto the small icon in the top-left of the Info window.
 </details>
 
-Optional, for **real transit times** (otherwise you'll just get the
-straight-line/bike estimate): get a free key for the **Resrobot** API at
-[trafiklab.se](https://www.trafiklab.se/) (sign up → create a project →
-add the "Resrobot v2.1" API), then:
+**Public transport times need no key.** Each area's door-to-door trip to each
+campus on a weekday morning comes from [Transitous](https://transitous.org), a
+free community-run planner fed by the national timetable. Their fair-use rules
+ask for an open-source, non-commercial project, an identifying User-Agent, a
+visible link to [their sources](https://transitous.org/sources/) and a word
+with them before going past about 720 lookups a day — so answers are cached
+for 45 days and a run makes at most 25 new ones (`TRANSIT_MAX_NEW_PER_RUN`). A
+cold cache fills over a day or two; until a place has been looked up the page
+shows a rough estimate marked `~`. Walking times are routed by the same
+service as the cycling ones.
+
+If you'd rather use Trafiklab's own planner, a free **Resrobot** key still
+takes precedence: [trafiklab.se](https://www.trafiklab.se/) (sign up → create
+a project → add the "Resrobot v2.1" API), then:
 
 ```bash
 export RESROBOT_API_KEY="your key"
@@ -344,9 +356,10 @@ the Worker setup above first; then, about fifteen minutes:
    `NOTIFY_URL` = `https://nastet.<your-subdomain>.workers.dev/notify` and
    `NOTIFY_SECRET` = the same string as in step 3.
 8. **Show it on the site:** set `DISCORD_INVITE` in `index.html` to the
-   Install Link. The watch panel then offers "Prefer Discord?" with a
-   ready-made `/watch set` command — city, queue days, rent, areas, campus and
-   commute filled in from the page.
+   Install Link. The bell above the listings then offers the bot with a
+   ready-made `/watch set` command — city, queue days, rent, campus and
+   commute filled in from the page. The bot is the site's only alert: the
+   page's own in-browser watch, which needed a tab left open, is gone.
 9. **Per-city channels (optional):** create a channel webhook and
    `wrangler secret put DIGEST_WEBHOOK_STOCKHOLM` (or `_GOTEBORG`, `_LUND`);
    each publish with new listings posts a list there.
@@ -485,10 +498,10 @@ with "Start in" set to this folder.
   unreachable the run says so and falls back to the old straight-line guess
   rather than failing; `--no-bike-routes` skips routing entirely.
 - **Filtering far-away areas**: the "Max commute" slider in the dashboard
-  hides areas beyond that many minutes (transit time if you set up
-  Resrobot, otherwise the bike estimate). Flemingsberg in particular is
-  quite far from central KTH — it'll likely get filtered out by default,
-  which is probably what you want.
+  hides areas beyond that many minutes, by bike unless you switch it to
+  Transit or Walk — the minutes on every card, the sort and the filter all
+  follow the mode. Flemingsberg in particular is quite far from central KTH —
+  it'll likely get filtered out by default, which is probably what you want.
 - **Queue-days and rent sliders**: next to "Max commute". Both start at
   "Any" (hiding nothing) and filter individual listings rather than whole
   areas, so the counts on the map roundels drop as you pull them down and an

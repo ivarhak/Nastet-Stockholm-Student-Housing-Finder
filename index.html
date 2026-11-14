@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nästet — student housing in Sweden</title>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTYuNSAyOS41QzcgNDIuNSAxNi41IDUxLjUgMzIgNTEuNVM1NyA0Mi41IDU3LjUgMjkuNSIgc3Ryb2tlLXdpZHRoPSIzLjQiLz48cGF0aCBkPSJNMTAgMjYuNUMxMiAzNy41IDIwIDQ1LjUgMzEuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48cGF0aCBkPSJNNTQgMjYuNUM1MiAzNy41IDQ0IDQ1LjUgMzIuNSA0NyIgc3Ryb2tlLXdpZHRoPSIyLjgiLz48L2c+PHBhdGggZD0iTTEzLjggMjMuNGM0LjQtMSA2LjUtMiA5LTQuNSA0LTQgOS40LTcuNCAxNS02LjEgNS4yIDEuMiA4LjYgNS4yIDguNyAxMCAuMSA1LjgtMy4yIDExLTguNyAxMy02IDIuMi0xMy42LjgtMTguMS0yLjgtMi44LTIuMi00LjktNS45LTUuOS05LjZ6IiBmaWxsPSIjNUM4QUI4Ii8+PHBhdGggZD0iTTQ2LjQgMTkuOSA1My42IDIzIDQ2LjcgMjYuMVoiIGZpbGw9IiNGNEIyM0MiLz48cGF0aCBkPSJNMzQuOCAyMS40YzEtMS45IDMuNy0xLjkgNC44IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLXdpZHRoPSIxLjkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMC44IDI5LjljNC4zIDQuNCAxMS43IDUuMSAxNy42IDEuNC0zLjIgNi0xMi41IDYuNC0xNy42LTEuNHoiIGZpbGw9IiNmZmYiLz48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5NjY5NEEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTggMzIuNUMxNiA0MS41IDI0IDQ2IDM0LjUgNDYiIHN0cm9rZS13aWR0aD0iMi42Ii8+PHBhdGggZD0iTTU2IDMyLjVDNDggNDEuNSA0MCA0NiAyOS41IDQ2IiBzdHJva2Utd2lkdGg9IjIuNiIvPjxwYXRoIGQ9Ik0xMS41IDI5LjVDMTkgMzUuNSAyNi41IDM4LjggMzUgMzkuMyIgc3Ryb2tlLXdpZHRoPSIyLjIiLz48cGF0aCBkPSJNNTIuNSAzMEM0NS41IDM2IDM4IDM5LjMgMjkuNSAzOS42IiBzdHJva2Utd2lkdGg9IjIuMiIvPjxwYXRoIGQ9Ik0xNCA0My41QzI0IDQ3LjUgMzQgNDguMyA0NiA0NS41IiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+" />
-<!-- Both of these exist for the watch. iOS exposes no Notification API to a page
-     in a Safari tab — it appears only once a site has been added to the Home
-     Screen, and a manifest with display:standalone is what makes the site
-     installable as a web app rather than a bookmark. The apple-touch-icon is
-     what iOS puts on the Home Screen; without one it screenshots the page. -->
+<!-- Lets the site be added to a phone's Home Screen as an app rather than a
+     bookmark; the apple-touch-icon is what iOS puts there, or it screenshots
+     the page. -->
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <meta name="apple-mobile-web-app-title" content="Nästet" />
@@ -1490,7 +1488,6 @@
   #watchPanel{ padding:2px 14px 14px; }
   #watchPanel p{ margin:0 0 9px; font-size:11.5px; line-height:1.5; color:var(--dim); }
   #watchPanel p b{ color:var(--ink); }
-  .watch-form{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 10px; }
   .watch-field{ display:flex; flex-direction:column; gap:4px; flex:1 1 130px; }
   .watch-field span{
     font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--dim);
@@ -1500,39 +1497,16 @@
     border:1px solid var(--rule); border-radius:2px; padding:7px 8px; width:100%;
   }
   .watch-field input:focus{ outline:none; border-color:var(--ochre); }
-  .watch-areas-l{
-    font:600 9.5px/1 var(--mono); letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--dim); margin-bottom:6px;
-  }
-  #watchAreas{ display:flex; flex-wrap:wrap; gap:5px; }
-  .watch-area{
-    display:flex; align-items:center; gap:5px; cursor:pointer;
-    font-size:11px; color:var(--ink);
-    border:1px solid var(--rule); border-radius:2px; padding:4px 7px;
-  }
-  .watch-area:hover{ border-color:var(--ochre); }
-  .watch-area input{ accent-color:var(--ochre); margin:0; }
   .watch-actions{ display:flex; gap:8px; margin-top:12px; }
-  #watchStart, #watchStop{
-    font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase;
-    padding:9px 12px; border-radius:2px; cursor:pointer;
-  }
-  #watchStart{ background:var(--ochre); color:#1a1205; border:1px solid var(--ochre); }
-  #watchStart:hover{ filter:brightness(1.08); }
-  #watchStop{ background:none; color:var(--dim); border:1px solid var(--rule); }
-  #watchStop:hover{ color:var(--ink); border-color:var(--ink); }
-  #watchStatus{
-    margin-top:10px; padding-top:9px; border-top:1px solid var(--rule);
-    font:11px/1.5 var(--mono); color:var(--dim);
-  }
-  #discordBox{ margin-top:12px; padding-top:10px; border-top:1px solid var(--rule); }
   #discordCmd{ display:block; font:11px/1.5 var(--mono); color:var(--ink); background:var(--bg);
     border:1px solid var(--rule); padding:7px 8px; word-break:break-word; }
-  #discordBox .watch-actions{ align-items:center; }
+  .dc-steps{ margin:0 0 10px; padding-left:18px; font-size:11.5px; line-height:1.5; color:var(--dim); }
+  .dc-steps li{ margin-bottom:8px; }
+  .dc-steps #discordCmd{ margin:6px 0 8px; }
   #discordCopy{ font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; padding:9px 12px;
     background:none; color:var(--accent-ink); border:1px solid var(--accent-ink); cursor:pointer; }
   #discordInvite{ font:600 10.5px/1 var(--mono); letter-spacing:0.04em; text-transform:uppercase; color:var(--accent-ink); }
-  #watchError{ margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--warn, #d9534f); }
+
 
   /* ── On this device: profile, marks, compare, last visit ───────────────── */
   .row-you{ display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
@@ -1849,12 +1823,6 @@
     .legal-card h2{ font-size:22px; }
   }
 
-  /* Set apart from the status counts: this one is an instruction, not a number. */
-  #watchPermNote{
-    margin-top:8px; padding:8px 10px; border-left:2px solid var(--ochre);
-    background:color-mix(in srgb, var(--ochre) 8%, transparent);
-    font-size:11.5px; line-height:1.5; color:var(--ink);
-  }
   @media (max-width: 760px), (max-height: 430px) and (max-width: 900px){
     html,body{height:auto;}
     body{display:block; overflow:visible;}
@@ -1979,7 +1947,7 @@
     <p data-i18n="lg_collect">There are no accounts, no sign-up, no analytics and no tracking cookies. I do not record what you search for, which listings you look at, or that you visited at all. The one exception is the optional Discord bot, described below — and only if you start it yourself.</p>
 
     <h3 data-i18n="lg_device_h">What is stored on your device</h3>
-    <p data-i18n="lg_device">Everything you set up on this site is kept in your own browser and never sent anywhere: <code>nastet-theme</code> (light or dark), <code>nastet-profile</code> (the queue days, dates, budget and move-in window you entered, and a watch), <code>nastet-marks</code> (listings you saved, applied to or hid), <code>nastet-compare</code> (your compare list), <code>nastet-seen</code> (which listings were up on your last visit, for "since your last visit"), <code>nastet-allin</code> and <code>nastet-iso</code> (two display switches). "Forget this device" under Queues to join deletes all of them. A profile link or a watch in the address bar carries those numbers inside the link itself — anyone you send it to can read them, and nobody else. Calendar reminders are built in your browser and downloaded straight to you.</p>
+    <p data-i18n="lg_device">Everything you set up on this site is kept in your own browser and never sent anywhere: <code>nastet-theme</code> (light or dark), <code>nastet-profile</code> (the queue days, dates, budget and move-in window you entered), <code>nastet-marks</code> (listings you saved, applied to or hid), <code>nastet-compare</code> (your compare list), <code>nastet-seen</code> (which listings were up on your last visit and their queue days, for "since your last visit"), and display choices: <code>nastet-allin</code>, <code>nastet-iso</code>, <code>nastet-sort</code>, <code>nastet-mode</code>, <code>nastet-sidebar-off</code> and <code>nastet-rows-folded</code>. "Forget this device" under Queues to join deletes all of them. A profile link or a shared shortlist carries its contents inside the link itself — anyone you send it to can read them, and nobody else. Calendar reminders are built in your browser and downloaded straight to you.</p>
 
     <h3 data-i18n="lg_third_h">Who your browser talks to</h3>
     <p data-i18n="lg_third">Loading any web page reveals your IP address to whoever serves it. This page is hosted on <b>GitHub Pages</b> and its map tiles come from <b>CARTO</b>; everything else — the typefaces and the map library included — is served from this site itself. Those two companies see your IP address in their own logs, under their own privacy policies. I get nothing back from them — no report, no counts, no identities.</p>
@@ -2002,7 +1970,7 @@
     <h3 data-i18n="lg_code_h">The code</h3>
     <p data-i18n="lg_code">Nästet is open source under the MIT licence, and is provided as is, without warranty of any kind. Use it at your own risk.</p>
 
-    <p class="legal-date" data-i18n="lg_updated">Last updated 2026-10-09.</p>
+    <p class="legal-date" data-i18n="lg_updated">Last updated 2026-11-14.</p>
   </div>
 </div>
 
@@ -2290,44 +2258,18 @@
       <div id="watchBox" hidden>
         <button id="watchToggle" type="button" aria-expanded="false" aria-controls="watchPanel">
           <span class="bell" aria-hidden="true">🔔</span>
-          <span data-i18n="watch_cta">Want to get notified if we find something?</span>
+          <span data-i18n="dc_cta">Get told on Discord when something turns up</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button>
         <div id="watchPanel" hidden>
-          <p data-i18n="watch_p1">Tell it how many queue days you have <em>today</em> and which areas you'd take. It adds a day per day from now on, and watches for an SSSB place whose queue-day requirement has dropped to meet your count.</p>
-          <p data-i18n="watch_p2"><b>You have to leave this page open</b> — in a pinned or background tab is fine. There's no server behind this site, so a running copy of the page is the only thing that can notice a new listing. Close it and the watch stops.</p>
-          <p data-i18n="watch_p3">A match arrives as a browser notification, so your browser will ask permission once. The watch is remembered in this browser, and also rides in the page's address — bookmark that to take the same watch to your phone.</p>
-          <p data-i18n="watch_p5"><b>On iPhone and iPad</b> a Safari tab can't show notifications at all. Use <em>Share → Add to Home Screen</em>, open Nästet from that icon and switch the watch on there. Even then iOS pauses a web app once you leave it, so treat the phone as somewhere to check the list rather than somewhere alerts reliably arrive — a desktop browser left open is what this is really built for.</p>
-          <p data-i18n="watch_p4" class="kv">SSSB only: Bostadsförmedlingen ads are decided by a deadline rather than a queue-day figure, so there's nothing for your running count to be measured against.</p>
-          <div class="watch-form">
-            <label class="watch-field">
-              <span data-i18n="watch_days_l">Your queue days today</span>
-              <input type="number" id="watchDays" min="0" max="20000" step="1" inputmode="numeric"
-                     data-i18n-ph="ph_days" placeholder="e.g. 900">
-            </label>
-            <label class="watch-field">
-              <span data-i18n="watch_rent_l">Max rent (optional)</span>
-              <input type="number" id="watchRent" min="0" max="30000" step="100" inputmode="numeric"
-                     data-i18n-ph="ph_rent" placeholder="kr / month">
-            </label>
-          </div>
-          <div class="watch-areas-l" data-i18n="watch_areas_l">Areas you'd take</div>
-          <div id="watchAreas"></div>
-          <div id="watchError" hidden></div>
-          <div class="watch-actions">
-            <button id="watchStart" type="button">Turn on notifications</button>
-            <button id="watchStop" type="button" hidden data-i18n="watch_stop">Stop watching</button>
-          </div>
-          <div id="watchStatus" hidden></div>
-          <div id="watchPermNote" hidden></div>
-          <div id="discordBox" hidden>
-            <p data-i18n="dc_p"><b>Prefer Discord?</b> Our bot sends you a daily summary instead — what's new, what fits your filters and what you'd get with your queue days. No tab to keep open. Add it, then paste this command anywhere you can talk to it (change <code>frequency</code> to <code>twice_daily</code>, <code>weekly</code> or <code>instant</code> if you like):</p>
-            <code id="discordCmd"></code>
-            <div class="watch-actions">
-              <button type="button" id="discordCopy" data-i18n="dc_copy">Copy command</button>
-              <a id="discordInvite" target="_blank" rel="noopener" data-i18n="dc_add">Add the bot ↗</a>
-            </div>
-          </div>
+          <p data-i18n="dc_p1">The Nästet bot sends you a direct message: what's new, what fits your filters, and what you'd get with your queue days — every day, twice a day, weekly, or the moment something you could get appears. Nothing to keep open.</p>
+          <ol class="dc-steps">
+            <li><a id="discordInvite" target="_blank" rel="noopener" data-i18n="dc_add">Add the bot to Discord ↗</a></li>
+            <li><span data-i18n="dc_step2">Send it this command, in a DM with the bot or any server it's in:</span>
+              <code id="discordCmd"></code>
+              <button type="button" id="discordCopy" data-i18n="dc_copy">Copy command</button></li>
+          </ol>
+          <p class="kv" data-i18n="dc_p2">The command is written from what you've set on this page — campus, commute and rent limits, and the queue days under Queues to join — so the bot filters the way the map does. Change <code>frequency</code> to <code>twice_daily</code>, <code>weekly</code> or <code>instant</code> if you like; <code>/watch set</code> again changes anything later, and <code>/watch stop</code> deletes it.</p>
         </div>
       </div>
       <div class="panel-header" id="panelHeader">
@@ -2508,13 +2450,7 @@ const I18N = { sv: {
   clear_sel: '✕ Rensa val',
   edit_num: 'Klicka för att skriva in en exakt siffra',
 
-  // Bevakning
-  watch_cta: 'Vill du få en notis när något dyker upp?',
-  watch_p1: 'Berätta hur många ködagar du har <em>idag</em> och vilka områden du skulle tacka ja till. Den räknar upp en dag per dag och håller utkik efter en SSSB-bostad vars ködagskrav sjunkit ner till din nivå.',
-  watch_p2: '<b>Du måste låta sidan vara öppen</b> — en fastnålad flik eller en flik i bakgrunden räcker. Det finns ingen server bakom den här sidan, så det enda som kan upptäcka en ny bostad är en sida som faktiskt körs. Stänger du den slutar bevakningen.',
-  watch_p3: 'En träff kommer som en webbläsarnotis, så webbläsaren frågar om lov en gång. Bevakningen sparas i den här webbläsaren och följer också med i sidans adress — spara den som bokmärke för att ta med samma bevakning till mobilen.',
-  watch_p4: 'Bara SSSB: annonserna hos Bostadsförmedlingen avgörs av en sista ansökningsdag i stället för ett antal ködagar, så det finns inget att mäta din uppräkning mot.',
-  watch_p5: '<b>På iPhone och iPad</b> kan en Safari-flik inte visa notiser alls. Använd <em>Dela → Lägg till på hemskärmen</em>, öppna Nästet från den ikonen och slå på bevakningen där. Även då pausar iOS en webbapp när du lämnar den, så se mobilen som ett ställe att kolla listan på snarare än ett ställe dit notiser säkert kommer — en dator med fliken öppen är vad det här egentligen är byggt för.',
+  // Discord-boten
   // Integritet & villkor
   legal_link: 'Integritet & villkor',
   lg_h: 'Integritet & villkor',
@@ -2525,7 +2461,7 @@ const I18N = { sv: {
   lg_device_h: 'Vad som sparas på din enhet',
   lg_discord_h: 'Discord-boten (valfri)',
   lg_discord: 'Om du använder <code>/watch set</code> sparar boten, under ditt Discord-användar-id: stad, dina ködagar och datumet du angav dem, maxhyra, områden, om du vill ha varje ny bostad, id:t för din DM-kanal med boten och vilka bostäder den redan berättat om. Inget mer — inget namn, inga meddelanden. Det lagras hos <b>Cloudflare</b> (Workers KV), som kör boten, och Discord hanterar förstås meddelandena enligt sin egen policy. <code>/watch stop</code> raderar det direkt; en bevakning som ingen rört på sex månader raderas automatiskt.',
-  lg_device: 'Allt du ställer in här sparas i din egen webbläsare och skickas ingenstans: <code>nastet-theme</code> (ljust eller mörkt), <code>nastet-profile</code> (ködagar, datum, budget och inflyttningsfönster du fyllt i, samt en bevakning), <code>nastet-marks</code> (bostäder du sparat, sökt eller dolt), <code>nastet-compare</code> (din jämförelselista), <code>nastet-seen</code> (vilka bostäder som fanns vid ditt senaste besök) och <code>nastet-allin</code> och <code>nastet-iso</code> (två visningsval). "Glöm den här enheten" under Köer att gå med i raderar allt. En profillänk eller en bevakning i adressfältet bär siffrorna i själva länken — den du skickar den till kan läsa dem, ingen annan. Kalenderpåminnelser skapas i din webbläsare och laddas ner direkt till dig.',
+  lg_device: 'Allt du ställer in här sparas i din egen webbläsare och skickas ingenstans: <code>nastet-theme</code> (ljust eller mörkt), <code>nastet-profile</code> (ködagar, datum, budget och inflyttningsfönster du fyllt i), <code>nastet-marks</code> (bostäder du sparat, sökt eller dolt), <code>nastet-compare</code> (din jämförelselista), <code>nastet-seen</code> (vilka bostäder som fanns vid ditt senaste besök och deras ködagar) samt visningsval: <code>nastet-allin</code>, <code>nastet-iso</code>, <code>nastet-sort</code>, <code>nastet-mode</code>, <code>nastet-sidebar-off</code> och <code>nastet-rows-folded</code>. "Glöm den här enheten" under Köer att gå med i raderar allt. En profillänk eller en delad lista bär sitt innehåll i själva länken — den du skickar den till kan läsa det, ingen annan. Kalenderpåminnelser skapas i din webbläsare och laddas ner direkt till dig.',
   lg_third_h: 'Vem din webbläsare pratar med',
   lg_third: 'Att ladda vilken webbsida som helst avslöjar din IP-adress för den som levererar den. Den här sidan ligger på <b>GitHub Pages</b> och kartrutorna kommer från <b>CARTO</b>; allt annat — typsnitten och kartbiblioteket också — levereras från sidan själv. De två företagen ser din IP-adress i sina egna loggar, under sina egna integritetspolicyer. Jag får ingenting tillbaka från dem — ingen rapport, inga siffror, inga identiteter.',
   lg_rights_h: 'Dina rättigheter',
@@ -2538,28 +2474,11 @@ const I18N = { sv: {
   lg_landlord: 'Är du hyresvärd eller bostadsförmedlare och hellre slipper se dina annonser här, så säg till, så tas de bort — ingen diskussion, ingen jurist behövs. Samma länk som ovan.',
   lg_code_h: 'Koden',
   lg_code: 'Nästet är öppen källkod under MIT-licens och tillhandahålls i befintligt skick, utan garantier av något slag. Använd på egen risk.',
-  lg_updated: 'Senast uppdaterad 2026-10-09.',
+  lg_updated: 'Senast uppdaterad 2026-11-14.',
 
-  perm_install: 'Den här webbläsaren visar bara notiser för en installerad app. Använd Dela → Lägg till på hemskärmen, öppna Nästet därifrån och slå på bevakningen igen.',
-  perm_denied: 'Notiser är blockerade för den här sidan — tillåt dem i webbläsarens webbplatsinställningar och slå sedan på bevakningen igen.',
-  perm_default: 'Notiser är avstängda, så träffar syns bara här. Slå på bevakningen igen för att få frågan.',
-  watch_days_l: 'Dina ködagar idag',
-  watch_rent_l: 'Max hyra (valfritt)',
-  watch_areas_l: 'Områden du skulle ta',
-  watch_on: 'Slå på notiser',
-  watch_update: 'Uppdatera bevakning',
-  watch_stop: 'Sluta bevaka',
-  watch_counting: 'Räknar ',
-  watch_hit_one: 'träff just nu',
-  watch_hit_many: 'träffar just nu',
-  watch_blocked: 'notiser är avstängda, så träffar syns bara här',
   ph_days: 't.ex. 900',
   ph_rent: 'kr / mån',
   ph_search: 'Sök område, hyra, storlek, ködagar…',
-  watch_e_days: 'Fyll i hur många ködagar du har idag.',
-  watch_e_areas: 'Välj minst ett område att bevaka.',
-  notif_one: 'En bostad du skulle kunna få — ',
-  notif_many: 'bostäder du skulle kunna få just nu',
   ground_floor: 'Botten',
   floor_f: 'våning',
   contract_f: 'års kontrakt',
@@ -2599,9 +2518,13 @@ const I18N = { sv: {
   cm_room: 'Sal', cm_level: 'plan',
   cm_house: 'hus', cm_maybe: 'Menade du',
   cm_ph_su: 'Sal eller byggnad — t.ex. D7, De Geersalen, kafé',
-  dc_p: '<b>Hellre Discord?</b> Vår bot skickar en daglig sammanfattning i stället — vad som är nytt, vad som passar dina filter och vad du skulle få med dina ködagar. Ingen flik behöver vara öppen. Lägg till den och klistra sedan in kommandot där du kan prata med den (byt <code>frequency</code> till <code>twice_daily</code>, <code>weekly</code> eller <code>instant</code> om du vill):',
+  dc_cta: 'Få besked på Discord när något dyker upp',
+  dc_p1: 'Nästets bot skickar ett direktmeddelande: vad som är nytt, vad som passar dina filter och vad du skulle få med dina ködagar — varje dag, två gånger om dagen, varje vecka, eller i samma stund som något du kan få dyker upp. Inget att ha öppet.',
+  dc_step2: 'Skicka det här kommandot till den, i ett DM med boten eller i en server där den finns:',
+  dc_p2: 'Kommandot skrivs utifrån det du ställt in på sidan — campus, restid och maxhyra, och ködagarna under Köer att gå med i — så boten filtrerar som kartan. Byt <code>frequency</code> till <code>twice_daily</code>, <code>weekly</code> eller <code>instant</code> om du vill; <code>/watch set</code> igen ändrar vad som helst senare, och <code>/watch stop</code> raderar allt.',
+  empty_none: 'Inga lediga bostäder här just nu.<br>Nya hämtas varje timme — Discord-boten (klockan ovan) kan säga till när.',
   dc_copy: 'Kopiera kommandot',
-  dc_add: 'Lägg till boten ↗',
+  dc_add: 'Lägg till boten i Discord ↗',
   nz_quiet: 'tyst', nz_moderate: 'måttligt buller', nz_noisy: 'bullrigt', nz_very: 'mycket bullrigt',
   nz_title: 'Modellerat buller från väg- och spårtrafik vid huset (dygnsmedel, Stockholms bullerkarta 2022). Ungefärligt: den vet inte åt vilket håll ett rum ligger.',
   more: 'till',
@@ -3323,11 +3246,6 @@ async function loadData(triggerRefresh){
   }
   applyDataSourceChrome();
   render();
-  // Covers the manual refresh button and the local --serve path, which reload
-  // through here rather than through pollForChanges(). A no-op until a watch is
-  // set, and on first load `announced` is seeded straight afterwards so the
-  // listings already on screen don't arrive as pop-ups.
-  announceMatches();
 }
 
 // Header label, document title and the sliders whose sensible defaults differ
@@ -4801,301 +4719,49 @@ function renderBrowseList(){
   list.innerHTML = rows.map((l, i) => rowHtml(l, newIds, i, i === 0)).join('') + hiddenFooter(personal.hiddenN);
 }
 
-// ── Watch: tell me when something I could actually get turns up ────────────
-// The settings live in the URL, so a watch is something you can bookmark, send
-// to your phone, or leave in a pinned tab — which is what this feature asks of
-// you anyway.
-//
-// What it cannot do is reach you with the page closed. There is no server here;
-// the site is static files on a CDN, so the only thing that can notice a new
-// listing is a copy of this page that is running. The panel says so in as many
-// words rather than leaving you to discover it by missing a flat.
-// There is deliberately no timer here. pollForChanges() already re-fetches the
-// payload every 60 seconds and re-renders when its generated_at moves, which is
-// precisely the event a watch cares about — so the watch listens to that rather
-// than running a second fetch loop against the same file on its own schedule.
-let watch = null;
-let announced = new Set();   // ids already notified in this session
-let watchAreaSig = '';
-
-// Areas ride as repeated ?wa= parameters rather than one comma-joined value, so
-// an area name containing a comma or an ampersand can't split or truncate the
-// list — URLSearchParams handles the encoding either way.
-function watchFromUrl(){
-  const p = new URLSearchParams(location.search);
-  const days = Number(p.get('wq'));
-  const areas = p.getAll('wa').filter(Boolean);
-  if (!p.has('wq') || !Number.isFinite(days) || days < 0 || !areas.length) return null;
-  const rent = Number(p.get('wr'));
-  const from = p.get('wf') || '';
-  return {
-    days,
-    // A malformed or absent start date counts from today rather than from the
-    // epoch, which would otherwise hand someone millions of queue days.
-    from: /^\d{4}-\d{2}-\d{2}$/.test(from) ? from : todayISO(),
-    rent: Number.isFinite(rent) && rent > 0 ? rent : null,
-    areas,
-  };
-}
-
-function watchToUrl(w){
-  const p = new URLSearchParams(location.search);
-  ['wq', 'wf', 'wr', 'wa'].forEach(k => p.delete(k));
-  if (w) {
-    p.set('wq', String(w.days));
-    p.set('wf', w.from);
-    if (w.rent != null) p.set('wr', String(w.rent));
-    w.areas.forEach(a => p.append('wa', a));
-  }
-  const qs = p.toString();
-  // The hash carries the city, so it has to survive the rewrite.
-  history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-}
-
-// One day per day, counted in Stockholm — the count ticks over at Swedish
-// midnight rather than the reader's, which is the same midnight SSSB uses.
-function watchDaysNow(w){
-  const n = w.days + Math.max(0, daysBetween(w.from, todayISO()));
-  // Without a student union SSSB stops counting at 90 — the same cap the
-  // profile applies, or a watch would announce places you can't actually get.
-  return profile.union === false ? Math.min(n, Math.max(w.days, SSSB_NO_UNION_CAP)) : n;
-}
-
-// SSSB only, by choice: the running day-count is the whole test, and
-// Bostadsförmedlingen publishes a deadline instead of queue days, so there is
-// nothing there to compare a count against. That falls out of the data rather
-// than being special-cased by name — an ad with no stated queue days can't
-// match, and the watched areas are SSSB's areas.
-function watchMatches(w, l){
-  if (l.queue_days == null) return false;
-  if (l.queue_days > watchDaysNow(w)) return false;
-  // A listing that doesn't state a rent isn't excluded by a rent cap, matching
-  // how passesFilters() treats every other unstated value.
-  if (w.rent != null && l.rent_sek != null && Number(l.rent_sek) > w.rent) return false;
-  return w.areas.includes(l.area);
-}
-
-function watchList(){
-  if (!watch || !currentData) return [];
-  return (currentData.listings || []).filter(l => watchMatches(watch, l));
-}
-
-// What this browser can do about pop-ups, feature-detected rather than sniffed.
-// 'needs-install' is the case where the Notification API is absent entirely:
-// that is iOS Safari in a tab, where it exists only for a site added to the
-// Home Screen. Telling someone there to "allow notifications" would send them
-// hunting through Settings for a switch that isn't there.
-function notifyState(){
-  if (!('Notification' in window)) return 'needs-install';
-  return Notification.permission;   // granted | denied | default
-}
-
-// Registered only once a watch is actually running — most visitors never set
-// one, and a service worker they'd never use is not worth installing on their
-// device. Safe to call repeatedly; register() resolves to the existing
-// registration if there is one.
-let swReg = null;
-async function ensureServiceWorker(){
-  if (swReg) return swReg;
-  if (!('serviceWorker' in navigator) || !window.isSecureContext) return null;
-  try {
-    swReg = await navigator.serviceWorker.register('sw.js');
-    await navigator.serviceWorker.ready;
-    return swReg;
-  } catch (e) {
-    // file:// or a browser with workers disabled. Matches still show in-panel.
-    return null;
-  }
-}
-
-// Through the service worker wherever there is one. `new Notification()` throws
-// on essentially every mobile browser — Chrome on Android answers "Illegal
-// constructor. Use ServiceWorkerRegistration.showNotification() instead" —
-// because the constructor assumes the page outlives the notification, which is
-// not how phones work. The constructor stays as the fallback for desktop
-// browsers that predate the worker path.
-async function showNote(title, options){
-  const reg = await ensureServiceWorker();
-  if (reg && reg.showNotification) {
-    try { await reg.showNotification(title, options); return true; } catch (e) {}
-  }
-  try {
-    const n = new Notification(title, options);
-    n.onclick = () => { window.focus(); n.close(); };
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function announceMatches(){
-  const fresh = watchList().filter(l => !announced.has(l.id));
-  fresh.forEach(l => announced.add(l.id));
-  if (!fresh.length) return;
-  if (notifyState() !== 'granted') return;
-  const title = fresh.length === 1
-    ? t('notif_one', 'A place you could get — ') + fresh[0].area
-    : `${fresh.length} ${t('notif_many', 'places you could get right now')}`;
-  const body = fresh.slice(0, 3).map(l => [
-    l.address || l.area,
-    l.rent_sek != null ? num(l.rent_sek) + ' kr' : null,
-    num(l.queue_days) + ' ' + t('queue_days_f', 'queue days'),
-  ].filter(Boolean).join(' · ')).join('\n');
-  showNote(title, {
-    body, tag: 'nastet-watch', icon: 'icon-192.png', badge: 'icon-192.png',
-    data: { url: location.pathname + location.search + location.hash },
-  });
-}
+// ── Alerts: the Discord bot ──────────────────────────────────────────────
+// The page used to run a watch of its own, which could only notice a listing
+// while a copy of the page was open. The bot runs on a server and reaches you
+// wherever you are, so it is the one way to be told now. An old watch link
+// (?wq=…&wa=…) still opens the site; its parameters are just dropped.
+(() => {
+  const u = new URL(location.href);
+  if (!['wq', 'wf', 'wr', 'wa'].some(k => u.searchParams.has(k))) return;
+  ['wq', 'wf', 'wr', 'wa'].forEach(k => u.searchParams.delete(k));
+  history.replaceState(null, '', u);
+})();
 
 // The bot's install link from the Discord developer portal (Installation →
 // Install Link). Empty hides the Discord option entirely.
 const DISCORD_INVITE = 'https://discord.com/oauth2/authorize?client_id=1558705495949312031';
 
-// The same watch as the form above, written as the bot's slash command.
+// What you've set on the page, written as the bot's slash command.
 function discordCommand(){
-  const days = document.getElementById('watchDays').value.trim();
-  const rent = document.getElementById('watchRent').value.trim();
-  const areas = [...document.querySelectorAll('#watchAreas input:checked')].map(i => i.value);
   const bits = [`/watch set city:${currentCity || cityIndex.default}`];
-  if (days !== '') bits.push(`days:${Math.round(Number(days))}`);
-  if (rent !== '' && Number(rent) > 0) bits.push(`max_rent:${Math.round(Number(rent))}`);
-  if (areas.length) bits.push(`areas:${areas.join(', ')}`);
-  // The map's own campus and commute limit come along, so the bot filters the
-  // way the page does; a daily summary is the default the bot starts with.
-  if (profile.union === false) bits.push('student_union:False');
+  // Queue days and the union question are SSSB's; the queue date is
+  // Bostadsförmedlingen's. Neither means anything in a city without them.
+  const days = profileDaysNow();
+  if (providerInfo['SSSB']) {
+    if (days != null) bits.push(`days:${days}`);
+    if (profile.union === false) bits.push('student_union:False');
+  }
+  if (providerInfo['Bostadsförmedlingen'] && profile.bf_since) bits.push(`bf_since:${profile.bf_since}`);
   bits.push(`campus:${selectedSchool}`);
+  // The bot measures by bike, so a cap set in another mode would mean
+  // something else there.
   if (commuteMode === 'bike' && maxCommuteMin != null && maxCommuteMin < 90) bits.push(`max_commute:${maxCommuteMin}`);
+  const rent = maxRentSek != null ? maxRentSek : profile.budget;
+  if (rent) bits.push(`max_rent:${Math.round(rent)}`);
   bits.push('frequency:daily');
   return bits.join(' ');
 }
 function renderDiscord(){
-  const box = document.getElementById('discordBox');
-  box.hidden = !DISCORD_INVITE;
+  const box = document.getElementById('watchBox');
+  if (!box) return;
+  box.hidden = !DISCORD_INVITE || !currentData;
   if (box.hidden) return;
   document.getElementById('discordInvite').href = DISCORD_INVITE;
   document.getElementById('discordCmd').textContent = discordCommand();
-}
-
-function renderWatch(){
-  const box = document.getElementById('watchBox');
-  if (!box || !currentData) return;
-  // Offered wherever the premise holds: a city with named areas is a city with
-  // a queue-days provider behind them. Deliberately not keyed on whether any
-  // listing currently states queue days — SSSB runs dry for days at a time, and
-  // that is precisely when you want to set a watch rather than find the offer
-  // has vanished with the vacancies.
-  const areas = Object.keys(currentData.areas || {});
-  box.hidden = areas.length === 0;
-  if (box.hidden) return;
-  renderWatchAreas(areas);
-  renderWatchStatus();
-  renderDiscord();
-  // Offer the profile's running count once, without fighting someone typing.
-  const days = document.getElementById('watchDays');
-  if (!watch && !watchDaysFilled && days.value === '' && profileDaysNow() != null) {
-    days.value = String(profileDaysNow());
-    if (profile.watch && profile.watch.rent) document.getElementById('watchRent').value = String(profile.watch.rent);
-  }
-  watchDaysFilled = true;
-}
-let watchDaysFilled = false;
-
-function renderWatchAreas(names){
-  const wrap = document.getElementById('watchAreas');
-  const sorted = names.slice().sort((a, b) => a.localeCompare(b, 'sv'));
-  const sig = sorted.join('|');
-  // renderSidebar() runs on every slider tick, so rebuilding unconditionally
-  // would wipe half-ticked boxes while someone was still choosing.
-  if (sig === watchAreaSig) return;
-  watchAreaSig = sig;
-  const chosen = new Set(watch ? watch.areas : []);
-  wrap.innerHTML = '';
-  sorted.forEach(name => {
-    const lab = document.createElement('label');
-    lab.className = 'watch-area';
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.value = name;
-    cb.checked = chosen.has(name);
-    lab.appendChild(cb);
-    lab.appendChild(document.createTextNode(name));
-    wrap.appendChild(lab);
-  });
-}
-
-function renderWatchStatus(){
-  const status = document.getElementById('watchStatus');
-  const stop = document.getElementById('watchStop');
-  stop.hidden = !watch;
-  document.getElementById('watchStart').textContent = watch
-    ? t('watch_update', 'Update watch') : t('watch_on', 'Turn on notifications');
-  if (!watch) {
-    status.hidden = true;
-    document.getElementById('watchPermNote').hidden = true;
-    return;
-  }
-  status.hidden = false;
-  const hits = watchList().length;
-  const bits = [
-    `${t('watch_counting', 'Counting ')}${num(watchDaysNow(watch))} ${t('queue_days_f', 'queue days')}`,
-    hits === 1 ? `1 ${t('watch_hit_one', 'match right now')}`
-               : `${hits} ${t('watch_hit_many', 'matches right now')}`,
-  ];
-  status.textContent = bits.join(' · ');
-  // Said separately from the counts, and specifically: "pop-ups are off" is no
-  // use to someone on an iPhone hunting Settings for a switch that doesn't
-  // exist in a Safari tab.
-  const note = document.getElementById('watchPermNote');
-  const state = notifyState();
-  const msg = {
-    'needs-install': t('perm_install', 'This browser only shows notifications for an installed app. Use Share → Add to Home Screen, then open Nästet from there and switch the watch on again.'),
-    denied: t('perm_denied', 'Notifications are blocked for this site — allow them in your browser\'s site settings, then switch the watch on again.'),
-    default: t('perm_default', 'Notifications are off, so matches will only show here. Switch the watch on again to be asked.'),
-  }[state];
-  note.hidden = !msg;
-  if (msg) note.textContent = msg;
-}
-
-async function startWatch(){
-  const days = Number(document.getElementById('watchDays').value);
-  const rent = Number(document.getElementById('watchRent').value);
-  const areas = [...document.querySelectorAll('#watchAreas input:checked')].map(i => i.value);
-  const err = document.getElementById('watchError');
-  const fail = (msg) => { err.textContent = msg; err.hidden = false; };
-  err.hidden = true;
-  if (document.getElementById('watchDays').value === '' || !Number.isFinite(days) || days < 0) {
-    return fail(t('watch_e_days', 'Enter how many queue days you have today.'));
-  }
-  if (!areas.length) return fail(t('watch_e_areas', 'Pick at least one area to watch.'));
-  watch = { days, from: todayISO(), rent: Number.isFinite(rent) && rent > 0 ? rent : null, areas };
-  watchToUrl(watch);
-  // The days typed here are the same fact as the profile's, so either form
-  // keeps the other current; the watch itself is remembered too.
-  saveProfile({ sssb_days: Math.round(days), sssb_days_on: todayISO(),
-                watch: { areas, rent: watch.rent && Math.round(watch.rent) } });
-  renderProfile();
-  // Whatever already matches is what you came to look at, not news — so it
-  // seeds the "already told you" set instead of firing a burst of pop-ups the
-  // instant the watch goes on. They're listed on screen either way.
-  announced = new Set(watchList().map(l => l.id));
-  // Registered before asking: on mobile the notification is shown through the
-  // worker, so a granted permission with no worker would be a permission that
-  // never produces a pop-up.
-  await ensureServiceWorker();
-  if ('Notification' in window && Notification.permission === 'default') {
-    // Must be inside the click that got us here; browsers refuse the prompt
-    // otherwise.
-    try { await Notification.requestPermission(); } catch (e) {}
-  }
-  renderSidebar();
-}
-
-function stopWatch(){
-  watch = null;
-  watchToUrl(null);
-  saveProfile({ watch: undefined });
-  announced = new Set();
-  renderSidebar();
 }
 
 // ── On this device: your profile, marks, compare list and last visit ──────
@@ -5112,7 +4778,8 @@ const store = {
     catch (e) { /* private window or sandboxed preview: works for this visit only */ }
   },
 };
-const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-allin', 'nastet-iso', 'nastet-theme'];
+const STORE_KEYS = ['nastet-profile', 'nastet-marks', 'nastet-compare', 'nastet-seen', 'nastet-allin', 'nastet-iso', 'nastet-theme',
+                    'nastet-sort', 'nastet-mode', 'nastet-sidebar-off', 'nastet-rows-folded'];
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 // Everything that reaches the profile — typed in, read back from storage, or
@@ -5128,11 +4795,6 @@ function cleanProfile(p){
   }
   if (typeof p.union === 'boolean') out.union = p.union;
   out.budget = int(p.budget, 50000);
-  if (p.watch && Array.isArray(p.watch.areas)) {
-    const areas = p.watch.areas.filter(a => typeof a === 'string' && a.length <= 80).slice(0, 100);
-    const rent = int(p.watch.rent, 50000);
-    if (areas.length) out.watch = { areas, rent: rent || null };
-  }
   Object.keys(out).forEach(k => out[k] === undefined && delete out[k]);
   return out;
 }
@@ -5150,12 +4812,6 @@ function profileDaysNow(){
   if (profile.sssb_days == null) return null;
   const n = profile.sssb_days + Math.max(0, daysBetween(profile.sssb_days_on || todayISO(), todayISO()));
   return profile.union === false ? Math.min(n, Math.max(profile.sssb_days, SSSB_NO_UNION_CAP)) : n;
-}
-
-function watchFromProfile(){
-  if (!profile.watch || profile.sssb_days == null) return null;
-  return { days: profile.sssb_days, from: profile.sssb_days_on || todayISO(),
-           rent: profile.watch.rent, areas: profile.watch.areas };
 }
 
 // ── Profile link: the whole profile in one URL, for another device ──
@@ -6018,7 +5674,8 @@ function waitCard(){
   if (!g || !g.ready) return head + gatedNote('projected_wait');
   const mine = profileDaysNow();
   if (mine == null) return head + `<p class="mk-p">${t('pw_need', 'Add your SSSB queue days under Queues to join to see this.')}</p>`;
-  const wanted = new Set((profile.watch && profile.watch.areas) || []);
+  // The areas you've starred a place in come first.
+  const wanted = new Set(savedHere().map(l => l.area));
   const segs = Object.entries(historyData.segments || {})
     .filter(([, v]) => v.n >= 3)
     .map(([k, v]) => { const [area, cls] = k.split('|'); return { area, cls, ...v }; })
@@ -6683,7 +6340,7 @@ function defaultRows(){
 function renderSidebar(){
   syncClearChip();
   syncSidebarBadge();
-  renderWatch();
+  renderDiscord();
   document.getElementById('listingsView').style.display = currentTab === 'listings' ? 'block' : 'none';
   document.getElementById('queues').style.display = currentTab === 'queues' ? 'block' : 'none';
   document.getElementById('market').style.display = currentTab === 'market' ? 'block' : 'none';
@@ -6810,7 +6467,7 @@ function renderSidebar(){
       ? `<div class="empty-state">${t('empty_filters', 'Nothing matches your filters.<br>Remove one of the chips above, or loosen a slider.')}</div>`
       : sourceFailures().length
         ? `<div class="empty-state">Nothing to show — see the note above.<br>This is a problem fetching the data, not an empty market.</div>`
-        : `<div class="empty-state">No available listings here right now.<br>Leave the local script running — you'll get a notification the moment something is published.</div>`);
+        : `<div class="empty-state">${t('empty_none', 'No available listings here right now.<br>New ones are picked up every hour — the Discord bot (the bell above) can tell you when.')}</div>`);
     return;
   }
 
@@ -7113,8 +6770,6 @@ function setMoveBy(v, persist){
 moveByEl.addEventListener('change', () => { setMoveBy(moveByEl.value, true); render(); });
 setMoveBy(profile.move_to, false);
 
-// The command follows the form as it's filled in.
-['input', 'change'].forEach(ev => document.getElementById('watchPanel').addEventListener(ev, () => renderDiscord()));
 document.getElementById('discordCopy').addEventListener('click', async (e) => {
   try { await navigator.clipboard.writeText(discordCommand()); e.target.textContent = t('link_copied', '✓ Copied'); }
   catch (err) { window.prompt(t('copy_link_prompt', 'Copy this:'), discordCommand()); }
@@ -7257,8 +6912,6 @@ document.getElementById('watchToggle').addEventListener('click', (e) => {
   btn.setAttribute('aria-expanded', String(open));
   document.getElementById('watchPanel').hidden = !open;
 });
-document.getElementById('watchStart').addEventListener('click', startWatch);
-document.getElementById('watchStop').addEventListener('click', stopWatch);
 
 // #legal is safe to use as the anchor even though the hash also names the city:
 // cityFromHash() only answers for ids that exist in the city index, so an
@@ -7268,7 +6921,7 @@ function setLegal(open){
   // A real address, so the page can be linked to — and cleared on close rather
   // than left behind, which would otherwise reopen it on the next reload.
   // replaceState rather than assigning location.hash: the query string carries
-  // any watch, and it has to survive.
+  // any selection or shared shortlist, and it has to survive.
   const base = location.pathname + location.search;
   history.replaceState(null, '', open ? base + '#legal' : base);
   if (open) document.getElementById('legalClose').focus();
@@ -7369,31 +7022,6 @@ const firstLoad = (async () => {
   if (sharedIds) { switchTab('listings'); }
   selectionUrlReady = true;
   selectionToUrl();
-  // Only after the first payload is in: watchList() needs listings to seed
-  // against, and everything already showing is what the visitor came to look at
-  // rather than news worth a pop-up.
-  // A link's watch wins over the one saved here: it's what was just opened.
-  watch = watchFromUrl() || watchFromProfile();
-  if (watch) {
-    announced = new Set(watchList().map(l => l.id));
-    // Opened rather than collapsed — arriving on a link that carries a watch,
-    // the first thing you want is confirmation it's still running and what it
-    // is counting.
-    document.getElementById('watchToggle').classList.add('open');
-    document.getElementById('watchToggle').setAttribute('aria-expanded', 'true');
-    document.getElementById('watchPanel').hidden = false;
-    document.getElementById('watchDays').value = String(watch.days);
-    if (watch.rent != null) document.getElementById('watchRent').value = String(watch.rent);
-    // The area list was already built once, by the render inside loadData(),
-    // back when `watch` was still null — so its cached signature would skip the
-    // rebuild and leave every box unticked. Clearing it forces one more pass,
-    // now that there are selections to restore.
-    watchAreaSig = '';
-    // A watch restored from a link needs the worker too — this page may be the
-    // one that ends up showing the pop-up.
-    ensureServiceWorker();
-    renderSidebar();
-  }
 })();
 
 // Pick up whatever the background --serve auto-check produces, without needing
@@ -7427,8 +7055,6 @@ async function pollForChanges(){
         applyProviderChrome();
         applyDataSourceChrome();
         render();
-        // A new scrape has landed — the one moment a watch has anything to say.
-        announceMatches();
         birdHop();
       }
     } catch (e) { /* offline; keep showing what's on screen */ }

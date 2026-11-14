@@ -324,7 +324,7 @@ for (const [city, lang] of [['goteborg', 'en'], ['lund', 'en'], ['stockholm', 's
     if (lang === 'sv') {
       // English left behind in the Swedish UI.
       const text = await page.evaluate(() => document.body.innerText);
-      const english = ['Want to get notified', 'All available', 'queue days', 'kr / month', 'Clear selection', 'pass your filters', 'Nothing matches', 'per month', 'apply before'];
+      const english = ['Get told on Discord', 'All available', 'queue days', 'kr / month', 'Clear selection', 'pass your filters', 'Nothing matches', 'per month', 'apply before'];
       const left = english.filter(w => text.includes(w));
       if (left.length) find('low', 'i18n', 'English strings on the Swedish page', left.join(' · '));
       await page.click('#tabMarket'); await settle(page); await shot(page, 'market-sv');

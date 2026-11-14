@@ -178,11 +178,10 @@ jobs:
           cp index.html _site/index.html
           # The previous interface, kept reachable at /classic.html as a fallback.
           cp classic.html _site/classic.html
-          # The watch's notifications go through sw.js, and on iOS the site has
-          # to be installable as a Home Screen web app before it may show one at
-          # all — which is what the manifest and the PNG icons are for. Missing
-          # any of these turns the feature off silently on a phone, so the build
-          # fails rather than publishes a page that quietly can't notify.
+          # The manifest and PNG icons make the site installable on a phone's
+          # Home Screen. sw.js is only used by classic.html now (its in-page
+          # watch shows notifications through it); the main page has the
+          # Discord bot instead and registers no worker.
           cp sw.js manifest.webmanifest icon-180.png icon-192.png icon-512.png _site/
           # Fonts, Leaflet and the QR encoder are served from the site itself
           # rather than Google Fonts and cdnjs — see the comment in index.html.

@@ -647,10 +647,10 @@ for (const [name, dev] of [['phone', devices['Pixel 7']], ['phone-landscape', de
 // Every visible button, toggle, checkbox and expander in each tab, one at a
 // time, re-found after each click because the page re-renders. Skipped: what
 // would act on the world or wipe the test's own state (refresh the data,
-// forget this device, stop a watch), and plain links, which are checked by
+// forget this device), and plain links, which are checked by
 // address instead. After each click: no new page errors, still on the site,
 // Escape to close whatever opened.
-const SKIP = /refresh|uppdatera|forget|glöm|stop|sluta|delete|radera|start watch|starta bevakning/i;
+const SKIP = /refresh|uppdatera|forget|glöm|stop|sluta|delete|radera/i;
 async function clickEverything(page, label) {
   const before = findings.length;
   let clicked = 0;
@@ -683,6 +683,13 @@ async function clickEverything(page, label) {
       await page.waitForTimeout(250);
       if (!page.url().startsWith(SITE)) { find('medium', label, 'A button left the site', `${d} → ${page.url()}`); await page.goBack().catch(() => {}); await settle(page, 800); }
       await page.keyboard.press('Escape').catch(() => {});
+      // Two controls put most of the others out of sight (the folded filter
+      // strip, the hidden listings panel). Bring them back so the rest still
+      // get their turn.
+      await page.evaluate(() => {
+        if (typeof sidebarOff !== 'undefined' && sidebarOff) setSidebar(false);
+        if (typeof foldedRows !== 'undefined' && foldedRows && foldedRows.__strip) setStripFolded(false);
+      }).catch(() => {});
     } catch (e) {
       find('low', label, 'Could not click', `${d}: ${e.message.split('\n')[0]}`);
     }
@@ -692,7 +699,11 @@ async function clickEverything(page, label) {
 }
 
 async function checkLinks(page, label) {
-  const hrefs = await page.evaluate(() => [...new Set([...document.querySelectorAll('a[href^="http"]')].map(a => a.href))]);
+  // Every card links to Street View at its own coordinates: one of those
+  // stands for all of them, or this would ask Google a hundred times.
+  const all = await page.evaluate(() => [...new Set([...document.querySelectorAll('a[href^="http"]')].map(a => a.href))]);
+  const pano = all.filter(h => h.includes('map_action=pano'));
+  const hrefs = all.filter(h => !h.includes('map_action=pano')).concat(pano.slice(0, 1));
   const bad = [];
   for (const h of hrefs.slice(0, 80)) {
     try {

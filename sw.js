@@ -1,5 +1,9 @@
 // Nästet's service worker exists for exactly one reason: showing a notification.
 //
+// Only classic.html registers it now. The main page dropped its in-browser
+// watch for the Discord bot, which doesn't need a tab left open, and installs
+// no worker at all.
+//
 // `new Notification()` throws on essentially every mobile browser — Chrome on
 // Android answers "Illegal constructor. Use ServiceWorkerRegistration
 // .showNotification() instead" — because the constructor assumes the page will
