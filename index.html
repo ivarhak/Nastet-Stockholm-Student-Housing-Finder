@@ -958,6 +958,53 @@
   }
   .map-col.strip-folded #filterBar, .map-col.strip-folded #advFilters{ display:none; }
 
+  /* One line of what today looks like, each part a shortcut to that order. */
+  .today-line{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 9px; padding:0 2px 11px;
+    font:400 10px/1.5 var(--mono); color:var(--dim);
+  }
+  .today-line .tl-h{ font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent-ink); font-weight:700; }
+  .today-line button{
+    font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer;
+    border-bottom:1px dotted var(--rule);
+  }
+  .today-line button:hover{ color:var(--ink); border-bottom-color:var(--accent-ink); }
+  .today-line button:focus-visible{ outline:2px solid var(--ochre); outline-offset:2px; }
+  .today-line b{ color:var(--ink); font-weight:700; }
+  .today-line .lead b{ color:var(--teal); }
+
+  /* What the last few places of this kind here went for — one bar each, oldest
+     first. Bars you'd have had the days for are drawn in the "you" colour. */
+  .trend{ display:inline-flex; align-items:flex-end; gap:1.5px; height:11px; flex:none; transform:translateY(1px); }
+  .trend i{ width:3px; min-height:1.5px; background:var(--faint); }
+  .trend i.mine{ background:var(--teal); }
+  .trend-note{ font:400 8.5px/1.4 var(--mono); letter-spacing:0.06em; color:var(--faint); margin-top:5px; display:none; }
+  .listing-row.featured .trend-note{ display:block; }
+
+  /* ── Motion ─────────────────────────────────────────────────────────────
+     Small, short and only on change: a marker that wasn't there a moment ago
+     grows in, a place listed in the last day carries a ring, and the bird hops
+     when fresh data lands. All of it stands still under reduced motion. */
+  .pin-in{ animation:pinIn .32s cubic-bezier(.2,.9,.3,1.3) both; }
+  @keyframes pinIn{ from{ transform:scale(0.2); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .has-new{ box-shadow:0 0 0 2px var(--ochre); }
+  .has-new.pin-in{ animation:pinIn .32s cubic-bezier(.2,.9,.3,1.3) both, newRing 1.6s ease-out .32s 2; }
+  @keyframes newRing{
+    0%{ box-shadow:0 0 0 2px var(--ochre), 0 0 0 2px color-mix(in srgb, var(--ochre) 60%, transparent); }
+    100%{ box-shadow:0 0 0 2px var(--ochre), 0 0 0 13px transparent; }
+  }
+  .brand .mark.hop{ animation:birdHop .7s ease; }
+  @keyframes birdHop{
+    0%,100%{ transform:translateY(0) rotate(0); }
+    30%{ transform:translateY(-7px) rotate(-6deg); }
+    55%{ transform:translateY(0) rotate(0); }
+    75%{ transform:translateY(-3px) rotate(3deg); }
+  }
+  .listing-row .fact.you.lead{ position:relative; overflow:hidden; }
+  @media (prefers-reduced-motion: reduce){
+    .pin-in, .has-new.pin-in, .brand .mark.hop{ animation:none; }
+  }
+
   /* Above the rows: how they're sorted, and each filter as a chip that removes it. */
   .list-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:2px 2px 10px; }
   .list-tools .sort{
@@ -2311,6 +2358,10 @@ const I18N = { sv: {
   rt_all_t: 'Fäll ihop alla filter till en rad (F)', fs_label: 'Filter', fs_show: 'visa',
   fs_any_queue: 'alla ködagar', fs_any_rent: 'alla hyror', fs_more: 'till', fs_hidden: 'dold',
   fs_title: 'Visa filtren (F)',
+  tl_today: 'Idag', tl_new: 'nya senaste dygnet', tl_close_today: 'stänger idag', tl_close_tomorrow: 'stänger imorgon',
+  tl_shortest: 'kortast kö', tl_youd_get: 'skulle du få idag', tl_d: 'd',
+  trend_t: 'De senaste {n} av samma slag här gick för {lo}–{hi} ködagar (median {med}), äldst först',
+  trend_note: 'senaste avsluten här: median', trend_mine: 'du hade haft dagar nog för {k} av {n}',
   empty_filters: 'Inget matchar dina filter.<br>Ta bort ett av filtren ovan, eller lätta på ett reglage.',
   sort_l: 'Sortera', sort_best: 'Bäst läge', sort_rent: 'Hyra', sort_commute: 'Restid', sort_queue: 'Ködagar',
   sort_newest: 'Nyast', sort_deadline: 'Sista dag', sort_best_t: 'Varje källa efter det den själv anger',
@@ -4055,9 +4106,24 @@ function nameMarker(marker, label){
   if (el) el.setAttribute('aria-label', label);
 }
 
+// Which markers were on the map after the last draw, so only the ones that
+// weren't there before grow in — a slider tick redraws everything, and a map
+// where every pin pops on every tick is noise.
+let prevPinKeys = new Set();
+function dressMarker(marker, key, rows, keys){
+  keys.add(key);
+  const el = marker.getElement();
+  const dot = el && el.firstElementChild;
+  if (!dot) return;
+  const newIds = currentData.new_listing_ids || [];
+  if (rows.some(l => newIds.includes(l.id))) dot.classList.add('has-new');
+  if (!prevPinKeys.has(key)) dot.classList.add('pin-in');
+}
+
 function renderMap(){
   hideHoverCard(0);
   pinLinks = []; pulsing = null;
+  const pinKeys = new Set();
   lastSplitSignature = splitSignature();
   markers.forEach(m => leafletMap.removeLayer(m));
   markers = [];
@@ -4114,6 +4180,7 @@ function renderMap(){
             else selectListing(rows[0].id);
           });
           attachHoverCard(marker, rows);
+          dressMarker(marker, `b:${name}:${address}`, rows, pinKeys);
           markers.push(marker);
         });
         return;
@@ -4146,6 +4213,7 @@ function renderMap(){
       }
       // After the tooltip is bound, so the card can replace it.
       if (count > 0) attachHoverCard(marker, inArea, name);
+      if (isVisible && count > 0) dressMarker(marker, `a:${name}`, inArea, pinKeys);
       markers.push(marker);
     });
   }
@@ -4177,8 +4245,10 @@ function renderMap(){
       else selectListing(l.id);
     });
     attachHoverCard(marker, [l]);
+    dressMarker(marker, `p:${l.id}`, [l], pinKeys);
     markers.push(marker);
   });
+  prevPinKeys = pinKeys;
 }
 
 function selectArea(name){
@@ -4547,6 +4617,7 @@ function rowHtml(l, newIds, index = 0, featured = false){
   // "apply before … apply by 16 Sep" once the row had a label of its own.
   const leaderValue = hasQueue ? badgeFor(l)
     : badgeFor(l).replace(/^(apply by|sök senast)\s*/i, '');
+  const trend = trendHtml(l);
   return `
     <div class="listing-row${featured ? ' featured' : ''}${slot ? ' rail-' + slot : ''}${markOf(l.id) ? ' marked-' + markOf(l.id) : ''}" data-lid="${esc(l.id)}" onclick="handleRowClick('${l.id.replace(/'/g,"\\'")}')">
       ${newIds.has(l.id) ? `<span class="new-tag" title="${newTagTitle(l)}">${t('new_badge', 'NEW')}</span>` : ''}
@@ -4561,8 +4632,9 @@ function rowHtml(l, newIds, index = 0, featured = false){
         </div>
         ${l.rent_sek ? `<div class="rent" title="${esc(allInTitle(allIn(l)))}"><div class="rent-fig">${num(rentShown(l))}</div><div class="rent-unit">${allInMode ? t('per_month_allin', 'kr / month all-in') : t('per_month_unit', 'kr / month')}</div></div>` : ''}
       </div>
-      ${leaderLabel ? `<div class="leader"><span>${leaderLabel}</span><span class="dots"></span><span class="leader-val${hasQueue ? '' : ' soon'}">${leaderValue}</span></div>` : ''}
+      ${leaderLabel ? `<div class="leader"><span>${leaderLabel}</span><span class="dots"></span>${trend.bars}<span class="leader-val${hasQueue ? '' : ' soon'}">${leaderValue}</span></div>` : ''}
       ${hasQueue ? `<div class="qbar" title="${num(l.queue_days)} ${t('queue_days_f', 'queue days')} ${t('qbar_of', 'on the 0–2 000 day scale the queue-days filter uses')}"><i style="width:${pct}%"></i><span class="qbar-cap">${t('qbar_cap', 'of 2 000 d')}</span></div>` : ''}
+      ${trend.note}
       ${extras.length ? `<div class="row-facts">${extras.map(e => `<span class="fact">${e}</span>`).join('')}</div>` : ''}
       ${rowPersonal(l)}
       ${tag}
@@ -5513,6 +5585,36 @@ function typeClass(l){
   return !size || size < 40 ? '1room' : '2plus';
 }
 
+// What the last few closings of this kind of home in this area went for.
+// From history's per-segment `recent` list ([final queue days, date], oldest
+// first, at most eight). null until there are three — two points aren't a
+// pattern.
+function trendFor(l){
+  if (typeof l.queue_days !== 'number' || !historyData || !historyData.segments) return null;
+  const seg = historyData.segments[`${l.area}|${typeClass(l)}`];
+  const pts = seg && Array.isArray(seg.recent) ? seg.recent.map(p => Number(p[0])).filter(Number.isFinite) : [];
+  if (pts.length < 3) return null;
+  const sorted = pts.slice().sort((a, b) => a - b);
+  const med = sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : Math.round((sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2);
+  return { pts, lo: sorted[0], hi: sorted[sorted.length - 1], med };
+}
+function trendHtml(l){
+  const tr = trendFor(l);
+  if (!tr) return { bars: '', note: '' };
+  const mine = profileDaysNow();
+  // Square-root height: a 1 500-day outlier would otherwise flatten the rest
+  // into a row of dots.
+  const top = Math.sqrt(Math.max(...tr.pts, 1));
+  const had = mine != null ? tr.pts.filter(v => mine >= v).length : null;
+  const title = t('trend_t', 'The last {n} of this kind here went for {lo}–{hi} queue days (median {med}), oldest first')
+      .replace('{n}', tr.pts.length).replace('{lo}', num(tr.lo)).replace('{hi}', num(tr.hi)).replace('{med}', num(tr.med))
+    + (had != null ? ` — ${t('trend_mine', 'you’d have had the days for {k} of {n}').replace('{k}', had).replace('{n}', tr.pts.length)}` : '');
+  const bars = `<span class="trend" role="img" aria-label="${esc(title)}" title="${esc(title)}">${tr.pts.map(v =>
+    `<i${mine != null && mine >= v ? ' class="mine"' : ''} style="height:${Math.max(14, Math.round(Math.sqrt(v) / top * 100))}%"></i>`).join('')}</span>`;
+  const note = `<div class="trend-note">${t('trend_note', 'recent closings here: median')} ${num(tr.med)} ${t('tl_d', 'd')} · ${num(tr.lo)}–${num(tr.hi)}</div>`;
+  return { bars, note };
+}
+
 // Cheapest quarter of comparable listings (same provider and kind of home,
 // open now or closed in the last 60 days) by rent per m².
 function valueBadge(l){
@@ -6311,6 +6413,53 @@ function listToolsHtml(withChips = true){
     ${chips.length > 1 ? `<button type="button" class="f-chip all" onclick="clearChip(${chips.length})">${t('chip_clear_all', 'Clear all')} ${x}</button>` : ''}
   </div>`;
 }
+// "Today · 12 new in the last day · 3 close today · shortest queue 50 d · 4 you'd get"
+// Counted over the rows on screen, so it always agrees with the big number.
+function todayLineHtml(rows){
+  if (!rows.length) return '';
+  const newIds = new Set(currentData.new_listing_ids || []);
+  const today = todayISO(), tomorrow = addDays(today, 1);
+  const fresh = rows.filter(l => newIds.has(l.id)).length;
+  const dl = d => rows.filter(l => l.deadline && String(l.deadline).slice(0, 10) === d).length;
+  const closeToday = dl(today), closeTomorrow = dl(tomorrow);
+  const queued = rows.filter(l => typeof l.queue_days === 'number');
+  const shortest = queued.length ? queued.reduce((a, b) => (a.queue_days <= b.queue_days ? a : b)) : null;
+  const mine = profileDaysNow();
+  const lead = mine != null ? queued.filter(l => mine >= l.queue_days).length : null;
+  const bits = [];
+  if (fresh) bits.push(`<button type="button" onclick="setSort('newest')"><b>${fresh}</b> ${t('tl_new', 'new in the last day')}</button>`);
+  if (closeToday) bits.push(`<button type="button" onclick="setSort('deadline')"><b>${closeToday}</b> ${t('tl_close_today', 'close today')}</button>`);
+  else if (closeTomorrow) bits.push(`<button type="button" onclick="setSort('deadline')"><b>${closeTomorrow}</b> ${t('tl_close_tomorrow', 'close tomorrow')}</button>`);
+  if (shortest) bits.push(`<button type="button" onclick="setSort('queue')" title="${esc(shortest.address || shortest.area)}">${t('tl_shortest', 'shortest queue')} <b>${num(shortest.queue_days)}</b> ${t('tl_d', 'd')}</button>`);
+  if (lead) bits.push(`<span class="lead"><b>${lead}</b> ${t('tl_youd_get', 'you’d get today')}</span>`);
+  if (!bits.length) return '';
+  return `<div class="today-line"><span class="tl-h">${t('tl_today', 'Today')}</span>${bits.join('<span aria-hidden="true">·</span>')}</div>`;
+}
+
+// The big count runs to its new value instead of jumping there.
+let shownCount = null;
+function tickCount(el, to){
+  const from = shownCount;
+  shownCount = to;
+  if (!el || from == null || from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const t0 = performance.now(), ms = 260;
+  el.textContent = String(from);
+  const step = now => {
+    if (!el.isConnected) return;
+    const k = Math.min(1, (now - t0) / ms);
+    el.textContent = String(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function birdHop(){
+  const m = document.querySelector('.brand .mark');
+  if (!m) return;
+  m.classList.remove('hop');
+  void m.getBoundingClientRect();
+  m.classList.add('hop');
+}
+
 const kbdHintHtml = () => `<p class="kbd-hint">${t('kbd_hint', 'Keys: <kbd>/</kbd> search · <kbd>F</kbd> filters · <kbd>↑</kbd><kbd>↓</kbd> step through the list')}</p>`;
 
 // What the default view lists: everything the map is currently showing.
@@ -6419,6 +6568,7 @@ function renderSidebar(){
           <div class="fig-sub">${bits.join(' · ')}</div>
         </div>
       </div>`;
+    tickCount(header.querySelector('.fig'), personalFilter(rows).rows.length);
   }
 
   rows = sortListings(rows);
@@ -6426,7 +6576,8 @@ function renderSidebar(){
   rows = personal.rows;
   // Nothing to sort or filter in a single listing's own view.
   const tools = pickedListing ? '' : listToolsHtml();
-  const strip = (selectedArea || selectedListingId ? '' : sinceStrip()) + tools;
+  const today = selectedArea || selectedListingId ? '' : todayLineHtml(rows);
+  const strip = (selectedArea || selectedListingId ? '' : sinceStrip()) + today + tools;
 
   if (rows.length === 0) {
     if (personal.hiddenN || onlySince) {
@@ -7058,6 +7209,7 @@ async function pollForChanges(){
         render();
         // A new scrape has landed — the one moment a watch has anything to say.
         announceMatches();
+        birdHop();
       }
     } catch (e) { /* offline; keep showing what's on screen */ }
     return;
