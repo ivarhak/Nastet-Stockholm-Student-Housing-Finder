@@ -1060,8 +1060,12 @@
   @media (prefers-reduced-motion: reduce){ .pin-pulse{ animation:none; } }
 
   /* Hide the listings panel: the map takes the width, the count floats on it. */
+  /* Pinned to the bar's right edge rather than laid out after the tabs: the
+     Swedish labels are longer, and a fourth flex item was pushed off the panel. */
+  .tabs{ padding-right:42px; }
+  html[lang="sv"] .tabs{ gap:15px; }
   #sidebarHide{
-    margin-left:auto; flex:none; align-self:center; padding:4px 7px;
+    position:absolute; right:8px; top:50%; transform:translateY(-50%); padding:4px 7px;
     font:400 13px/1 var(--mono); color:var(--dim); background:transparent;
     border:1px solid var(--rule); cursor:pointer; letter-spacing:0;
   }
@@ -1843,6 +1847,7 @@
     #map{order:-1; flex:0 0 auto; height:58vh; min-height:260px;}
 
     #sidebarHide, .sidebar-badge{ display:none !important; }
+    .tabs{ padding-right:18px; }
     body.sidebar-off #sidebar{ display:block; }
     #sidebar{
       width:auto;
@@ -2288,7 +2293,7 @@
         <div class="covers" data-i18n="q_sssb_c">Covers: all SSSB areas (Lappkärrsberget, Jerum, Kungshamra, …)</div>
         <p data-i18n="q_p1">Register at <a href="https://sssb.se" target="_blank">sssb.se</a>. You collect one queue day per day, and listings go to whoever applies with the most queue days — that's the number this dashboard sorts by.</p>
         <p data-i18n="q_p2">To actually sign a contract you need to be a member of an SSCO-affiliated student union (or if you aren't registered for classes, an admissions letter works as well) and meet their study-pace requirements — check their current rules on the site.</p>
-        <p data-i18n="q_p3" class="kv"><b>Do this first:</b> registering is quick and days only start counting from when you register, so every week earlier is a week higher in every future queue. You can collect a maximum of 90 days before registering with a student union (class registration required).</p>
+        <p data-i18n="q_p3" class="kv"><b>Do this first:</b> registering is quick and days only start counting from when you register, so every week earlier is a week higher in every future queue. Without a student union membership you can collect at most 90 days — and you have to park your queue place yourself (on Mina sidor) by day 90, or SSSB deletes it. A parked place keeps its days and starts counting again once a membership is registered.</p>
       </div>
       <div class="queue-card">
         <h3 data-i18n="q_bf_h"><span class="q-num plum">2</span> Bostadsförmedlingen</h3>
@@ -2356,7 +2361,7 @@ const I18N = { sv: {
   sb_hide: 'Dölj panelen — kartan får hela bredden', sb_show: 'Visa listan', sb_listings: 'bostäder',
   rt_hide: 'Dölj raden', rt_show: 'Visa raden', rt_filtering: 'filtrerar just nu',
   mk_about: 'Om det finns fler eller färre bostäder än vanligt just nu, vad de kostar och hur många ködagar de kräver.',
-  p3_about: 'SSSB låter dig söka tre bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
+  p3_about: 'SSSB låter dig söka upp till fem bostäder åt gången. Det här föreslår de tre du har bäst chans på.',
   pw_about: 'Hur många fler dagar du troligen behöver köa för en bostad i varje område, utifrån hur många ködagar bostäder där nyligen gick för.',
   df_about: 'Färgar varje område på kartan efter hur svåra bostäderna där är att få — hur många ködagar de brukar gå för.',
   rl_about: 'Bostäder som legat ute förut och kommit tillbaka — ofta ett tecken på att det första erbjudandet föll bort.',
@@ -2364,7 +2369,7 @@ const I18N = { sv: {
   pf_lead: 'Berätta var du står i varje kö. Då visar varje bostad om du skulle få den i dag, och du får påminnelser innan du tappar din plats.',
   pf_days_h: 'Står på Mina sidor på sssb.se. Fyll i den en gång — sedan räknar den upp av sig själv här, en dag per dag.',
   pf_reg_h: 'När du ställde dig i kön. Används för att räkna ut när 90-dagarsgränsen slår till.',
-  pf_union_h: 'Utan medlemskap slutar SSSB räkna dina dagar vid 90.',
+  pf_union_h: 'Utan medlemskap slutar SSSB räkna vid 90 dagar, och du måste parkera köplatsen senast då för att inte förlora den.',
   pf_bf_h: 'Kön kostar en årsavgift; missar du den tappar du din plats. Det här styr påminnelsen.',
   pf_g_want: 'Vad du letar efter',
   pf_budget_h: 'Bostäder över den märks ”över budget” — med el och hemförsäkring när Allt inräknat är på.',
@@ -2421,7 +2426,7 @@ const I18N = { sv: {
   q_sssb_c: 'Omfattar: alla SSSB-områden (Lappkärrsberget, Jerum, Kungshamra, …)',
   q_p1: 'Registrera dig på <a href="https://sssb.se" target="_blank">sssb.se</a>. Du samlar en ködag per dag, och bostäderna går till den som söker med flest ködagar — det är siffran den här sidan sorterar efter.',
   q_p2: 'För att faktiskt skriva kontrakt måste du vara medlem i en studentkår ansluten till SSCO (eller, om du inte är registrerad på kurser, ha ett antagningsbesked) och uppfylla deras krav på studietakt — kolla deras aktuella regler på sajten.',
-  q_p3: '<b>Gör det här först:</b> att registrera sig går snabbt, och ködagarna börjar räknas först när du registrerar dig — varje vecka tidigare är en vecka högre i varje framtida kö. Du kan samla högst 90 dagar innan du måste bli medlem i en studentkår (kräver kursregistrering).',
+  q_p3: '<b>Gör det här först:</b> att registrera sig går snabbt, och ködagarna börjar räknas först när du registrerar dig — varje vecka tidigare är en vecka högre i varje framtida kö. Utan kårmedlemskap kan du samla högst 90 dagar — och du måste själv parkera din köplats (på Mina sidor) senast dag 90, annars raderar SSSB den. En parkerad plats behåller sina dagar och börjar räkna igen när ett medlemskap registrerats.',
   q_bf_h: '<span class="q-num plum">2</span> Bostadsförmedlingen',
   q_bf_c: 'Omfattar: Svenska Bostäders studentlägenheter + andra hyresvärdars studentbostäder i Stockholm',
   q_p4: 'Det här är Stockholms stads bostadsförmedling — Svenska Bostäder har ingen egen studentkö, deras bostäder annonseras här. Registrera dig på <a href="https://bostad.stockholm.se" target="_blank">bostad.stockholm.se</a>; det finns en årlig köavgift, och erbjudanden går efter kötid.',
@@ -2535,10 +2540,10 @@ const I18N = { sv: {
   qh_h: 'Köhälsa',
   qh_unset: 'Fyll i dina uppgifter ovan för att kontrollera den här kön.',
   qh_cap_on: 'Dina dagar slutar räknas vid 90 den',
-  qh_cap_join: 'om du inte går med i en studentkår.',
-  qh_capped: 'Dina dagar har stannat på 90 — gå med i en studentkår för att börja räkna igen.',
-  qh_cap_nodate: 'Utan studentkår stannar dagarna på 90. Fyll i registreringsdatum för att se när.',
-  qh_ics_cap: 'SSSB: ködagarna stannar på 90 — gå med i en studentkår',
+  qh_cap_join: 'om du inte går med i en studentkår. Parkera din köplats på Mina sidor senast då, annars raderar SSSB den.',
+  qh_capped: 'Dina dagar har stannat på 90. Kontrollera på Mina sidor att köplatsen är parkerad — utan medlemskap raderas en oparkerad plats. Går du med i en studentkår börjar dagarna räknas igen.',
+  qh_cap_nodate: 'Utan studentkår stannar dagarna på 90, och köplatsen måste parkeras senast dag 90, annars raderar SSSB den. Fyll i registreringsdatum för att se när.',
+  qh_ics_cap: 'SSSB dag 90: gå med i en studentkår eller parkera köplatsen — annars raderas den',
   qh_sssb_ok: 'Räknar en dag per dag.',
   qh_bf_unset: 'Fyll i när du gick med för att få en påminnelse om den årliga köavgiften.',
   qh_bf_due: 'Årlig köavgift förfaller runt',
@@ -2569,7 +2574,7 @@ const I18N = { sv: {
   p3_higher: 'högre än den står ett dygn innan.',
   p3_rough: 'Använder en tumregel — ledande +15 % vid sista dagen — tills tillräckligt många avslut registrerats.',
   p3_rules_h: 'Så fungerar SSSB:s ansökningar',
-  p3_rules: 'Du kan ha tre ansökningar samtidigt. Står du först i kön till flera erbjuder SSSB dig en av dem — du väljer inte vilken — så sök bara sådant du verkligen skulle ta. Att tacka nej upprepade gånger kan kosta dina ködagar, och utan kårmedlemskap stannar dagarna på 90. Reglerna ändras: kontrollera på sssb.se innan du förlitar dig på det här.',
+  p3_rules: 'Du kan ha intresseanmälan på upp till fem bostäder samtidigt. Står du först i kön till flera erbjuder SSSB dig en av dem — du väljer inte vilken — så sök bara sådant du verkligen skulle ta. Du kan tacka nej till ett erbjudande; tackar du nej en andra gång raderas din köplats, och att inte svara räknas som ett nej. Reglerna ändras: kontrollera på sssb.se innan du förlitar dig på det här.',
   pw_h: 'Din väntetid, område för område',
   pw_need: 'Fyll i dina SSSB-ködagar under Köer att gå med i för att se det här.',
   pw_now: 'inom räckhåll nu', pw_in: 'om ungefär', pw_months: 'månader',
@@ -4914,10 +4919,10 @@ function queueHealth(){
       const left = capOn ? daysBetween(todayISO(), capOn) : null;
       items.push({ q: 'SSSB', state: left != null && left > 30 ? 'ok' : 'warn',
         text: capOn
-          ? (left > 0 ? `${t('qh_cap_on', 'Your days stop counting at 90 on')} <span class="nowrap">${capOn}</span> ${t('qh_cap_join', 'unless you join a student union.')}`
-                      : t('qh_capped', 'Your days have stopped at 90 — join a student union to start counting again.'))
-          : t('qh_cap_nodate', 'Without a student union your days stop at 90. Add your registration date to see when.'),
-        ics: capOn && left > 0 ? { date: capOn, title: t('qh_ics_cap', 'SSSB: queue days stop at 90 — join a student union'), yearly: false } : null });
+          ? (left > 0 ? `${t('qh_cap_on', 'Your days stop counting at 90 on')} <span class="nowrap">${capOn}</span> ${t('qh_cap_join', 'unless you join a student union. Park your queue place on Mina sidor by then, or SSSB deletes it.')}`
+                      : t('qh_capped', 'Your days have stopped at 90. Check on Mina sidor that your queue place is parked — without a membership an unparked place is deleted. Joining a student union starts the count again.'))
+          : t('qh_cap_nodate', 'Without a student union your days stop at 90, and the queue place has to be parked by day 90 or SSSB deletes it. Add your registration date to see when.'),
+        ics: capOn && left > 0 ? { date: capOn, title: t('qh_ics_cap', 'SSSB day 90: join a student union or park your queue place — or it is deleted'), yearly: false } : null });
     } else {
       items.push({ q: 'SSSB', state: 'ok', text: t('qh_sssb_ok', 'Counting a day per day.') });
     }
@@ -5046,7 +5051,7 @@ function renderProfile(){
           ${hint(t('pf_reg_h', 'When you joined the queue. Used to work out when the 90-day cap would hit.'))}</label>
         <label class="watch-field pf-check"><input type="checkbox" id="pfUnion" ${profile.union === false ? '' : 'checked'}>
           <span>${t('pf_union', 'Member of a student union')}</span></label>
-        ${hint(t('pf_union_h', 'Without a membership SSSB stops counting your days at 90.'))}
+        ${hint(t('pf_union_h', 'Without a membership SSSB stops counting at 90 days, and you have to park your queue place by then or lose it.'))}
       </fieldset>` : ''}
       ${hasB ? `<fieldset class="pf-group"><legend>Bostadsförmedlingen</legend>
         <label class="watch-field"><span>${t('pf_bf', 'In Bostadsförmedlingen’s queue since')}</span>
@@ -5645,7 +5650,7 @@ function pickThree(){
 }
 
 function pickCard(){
-  const head = `<h3>${t('p3_h', 'Pick your 3')}</h3>${cardAbout('p3_about', 'SSSB lets you apply for three places at a time. This suggests the three you have the best shot at.')}`;
+  const head = `<h3>${t('p3_h', 'Pick your 3')}</h3>${cardAbout('p3_about', 'SSSB lets you apply for up to five places at a time. This suggests the three you have the best shot at.')}`;
   const res = pickThree();
   if (!res) return head + `<p class="mk-p">${t('p3_need', 'Add your SSSB queue days under Queues to join and this suggests which three to apply for.')}</p>`;
   if (!res.picks.length) return head + `<p class="mk-p">${t('p3_none', 'No SSSB listings pass your filters right now.')}</p>`;
@@ -5663,7 +5668,7 @@ function pickCard(){
     <p class="mk-p">${basis}</p>
     ${res.up.real ? '' : gatedNote('pick3')}
     <details class="p3-rules"><summary>${t('p3_rules_h', 'How SSSB applications work')}</summary>
-      <p>${t('p3_rules', 'You can hold three applications at a time. If you end up first in line for more than one, SSSB offers you one of them — you don’t choose which — so only apply for places you would actually take. Turning down offers repeatedly can cost you your queue days, and without student union membership your days stop at 90. Rules change: check sssb.se before you rely on this.')}</p>
+      <p>${t('p3_rules', 'You can have interest registered in up to five homes at a time. If you end up first in line for more than one, SSSB offers you one of them — you don’t choose which — so only apply for places you would actually take. You can decline one offer; a second decline deletes your queue place, and not answering an offer counts as declining. Rules change: check sssb.se before you rely on this.')}</p>
     </details>`;
 }
 
