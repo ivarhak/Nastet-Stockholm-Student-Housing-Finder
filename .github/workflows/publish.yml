@@ -176,6 +176,8 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html _site/index.html
+          # The previous interface, kept reachable at /classic.html as a fallback.
+          cp classic.html _site/classic.html
           # The watch's notifications go through sw.js, and on iOS the site has
           # to be installable as a Home Screen web app before it may show one at
           # all — which is what the manifest and the PNG icons are for. Missing
