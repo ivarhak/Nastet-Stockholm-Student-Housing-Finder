@@ -1549,6 +1549,22 @@
     color:var(--dim); border-color:var(--rule);
   }
   .since-strip button.ghost{ margin-left:auto; }
+  /* What changed since the last visit, as a card: the counts, then your own
+     saved and applied places one per line. */
+  .since-strip.card{ display:block; }
+  .since-strip .sc-head{ display:flex; align-items:baseline; gap:8px; }
+  .since-strip .sc-h{ font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent-ink); font-weight:700; }
+  .since-strip .sc-counts{ margin-top:6px; line-height:1.6; }
+  .since-strip .lead b{ color:var(--teal); }
+  .since-strip ul{ list-style:none; margin:8px 0 0; padding:7px 0 0; border-top:1px solid var(--rule); }
+  .since-strip li{ display:flex; justify-content:space-between; gap:10px; line-height:1.7; color:var(--ink); }
+  .since-strip li span{ color:var(--dim); white-space:nowrap; }
+  .since-strip li .up{ color:var(--accent-ink); }
+  .since-strip li .down{ color:var(--teal); }
+  .since-strip .sc-acts{ display:flex; gap:6px; margin-top:9px; }
+  .row-acts a.mark{ text-decoration:none; }
+  .f-chip.saved{ border-color:var(--rule); }
+  .f-chip.saved.on{ color:var(--accent-ink); border-color:var(--accent-ink); }
   .link-btn{ border:none; padding:0; color:var(--faint); }
   .link-btn:hover{ color:var(--ink); }
   #compareBar{
@@ -2362,6 +2378,12 @@ const I18N = { sv: {
   tl_shortest: 'kortast kö', tl_youd_get: 'skulle du få idag', tl_d: 'd',
   trend_t: 'De senaste {n} av samma slag här gick för {lo}–{hi} ködagar (median {med}), äldst först',
   trend_note: 'senaste avsluten här: median', trend_mine: 'du hade haft dagar nog för {k} av {n}',
+  sc_rose: 'ködagarna steg på', sc_fell: 'sjönk på', sc_get: 'skulle du få', sc_closed: 'inte längre utlagd',
+  sc_saved_closed: 'av dina sparade har stängt', sv_gone_l: 'borta',
+  street_view: 'Gatuvy ↗', street_view_t: 'Öppna Google Street View vid adressen',
+  sl_saved: 'sparade', sl_share: 'Dela ⧉', sl_shared_h: 'Delad lista', sl_places: 'bostäder', sl_gone: 'inte längre utlagda',
+  sl_save_all: '★ Spara alla', sl_close: 'Visa allt', sl_cap_saved: 'sparade av dig', sl_cap_shared: 'i den delade listan',
+  sl_share_title: 'Min lista på Nästet', sl_none: 'Inget sparat här ännu — tryck ☆ Spara på en bostad.',
   empty_filters: 'Inget matchar dina filter.<br>Ta bort ett av filtren ovan, eller lätta på ett reglage.',
   sort_l: 'Sortera', sort_best: 'Bäst läge', sort_rent: 'Hyra', sort_commute: 'Restid', sort_queue: 'Ködagar',
   sort_newest: 'Nyast', sort_deadline: 'Sista dag', sort_best_t: 'Varje källa efter det den själv anger',
@@ -5338,7 +5360,10 @@ let showHidden = false;
 function markOf(id){ return marks[id] && marks[id].m; }
 function setMark(id, kind){
   if (markOf(id) === kind) delete marks[id];
-  else marks[id] = { m: kind, at: todayISO() };
+  else {
+    const l = currentData && currentData.listings.find(x => x.id === id);
+    marks[id] = { m: kind, at: todayISO(), label: l ? (l.address || l.area) : undefined, city: currentCity || undefined };
+  }
   store.set('nastet-marks', marks);
   renderSidebar();
 }
@@ -5354,6 +5379,61 @@ function pruneMarks(){
     }
   }
   if (changed) store.set('nastet-marks', marks);
+}
+
+// ── Shortlist: your saved places as a list, and as a link ──
+// `onlySaved` shows just what you've starred in this city; Share turns that
+// into a link carrying the ids (repeated ?sl= parameters, so an id with a
+// comma or an ampersand in it survives). Opening such a link shows those
+// places, whatever the filters say, until it's closed.
+let onlySaved = false;
+let sharedIds = null;           // a Set, while a shared shortlist is open
+function savedHere(){
+  return currentData ? currentData.listings.filter(l => markOf(l.id) === 'saved') : [];
+}
+function shortlistFromUrl(){
+  const ids = new URLSearchParams(location.search).getAll('sl').filter(Boolean).slice(0, 40);
+  sharedIds = ids.length ? new Set(ids) : null;
+}
+function closeShared(){
+  sharedIds = null;
+  const u = new URL(location.href);
+  u.searchParams.delete('sl');
+  history.replaceState(null, '', u);
+  renderSidebar();
+}
+function saveShared(){
+  if (!sharedIds || !currentData) return;
+  currentData.listings.forEach(l => {
+    if (sharedIds.has(l.id) && !markOf(l.id)) marks[l.id] = { m: 'saved', at: todayISO(), label: l.address || l.area, city: currentCity || undefined };
+  });
+  store.set('nastet-marks', marks);
+  closeShared();
+  onlySaved = true;
+  renderSidebar();
+}
+async function shareShortlist(btn){
+  const u = new URL(location.origin + location.pathname);
+  savedHere().forEach(l => u.searchParams.append('sl', l.id));
+  u.hash = currentCity || '';
+  const done = () => { if (btn) { const was = btn.textContent; btn.textContent = t('link_copied', '✓ Copied'); setTimeout(() => { if (btn.isConnected) btn.textContent = was; }, 1600); } };
+  // The phone's own share sheet where there is one; the clipboard elsewhere.
+  if (navigator.share && matchMedia('(pointer:coarse)').matches) {
+    try { await navigator.share({ title: t('sl_share_title', 'My Nästet shortlist'), url: u.href }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(u.href); done(); }
+  catch (e) { window.prompt(t('copy_link_prompt', 'Copy this:'), u.href); }
+}
+function sharedBannerHtml(){
+  if (!sharedIds) return '';
+  const live = currentData.listings.filter(l => sharedIds.has(l.id)).length;
+  const gone = sharedIds.size - live;
+  return `<div class="since-strip card">
+    <div class="sc-head"><span class="sc-h">${t('sl_shared_h', 'Shared shortlist')}</span>
+      <span><b>${live}</b> ${t('sl_places', 'places')}${gone ? ` · ${gone} ${t('sl_gone', 'no longer listed')}` : ''}</span></div>
+    <div class="sc-acts">${live ? `<button type="button" onclick="saveShared()">${t('sl_save_all', '★ Save all')}</button>` : ''}
+      <button type="button" class="ghost" onclick="closeShared()">${t('sl_close', 'Show everything')}</button></div>
+  </div>`;
 }
 
 // ── Compare: up to three side by side ──
@@ -5446,24 +5526,57 @@ function noteVisit(){
     if (prev && Array.isArray(prev.ids) && Date.now() - Date.parse(prev.at) > 10 * 60000) {
       const before = new Set(prev.ids);
       const now = new Set(ids);
+      const goneIds = prev.ids.filter(id => !now.has(id));
+      // Queue days as they were then (snapshots from before this was recorded
+      // have none, and the card just leaves the movement out).
+      const was = prev.q || {};
+      let rose = 0, fell = 0;
+      const mine = [];
+      currentData.listings.forEach(l => {
+        if (typeof l.queue_days !== 'number' || typeof was[l.id] !== 'number') return;
+        if (l.queue_days > was[l.id]) rose++; else if (l.queue_days < was[l.id]) fell++;
+        const m = markOf(l.id);
+        if ((m === 'saved' || m === 'applied') && l.queue_days !== was[l.id])
+          mine.push({ label: l.address || l.area, m, from: was[l.id], to: l.queue_days });
+      });
+      goneIds.forEach(id => {
+        const mk = marks[id];
+        if (mk && (mk.m === 'saved' || mk.m === 'applied')) mine.push({ label: mk.label || null, m: mk.m, closed: true });
+      });
       sinceVisit = { city: currentCity, at: prev.at,
                      fresh: new Set(ids.filter(id => !before.has(id))),
-                     gone: prev.ids.filter(id => !now.has(id)).length };
+                     gone: goneIds.length, rose, fell, mine };
     } else {
       sinceVisit = null;
     }
   }
-  seen[currentCity] = { at: new Date().toISOString(), ids };
+  const q = {};
+  currentData.listings.forEach(l => { if (typeof l.queue_days === 'number') q[l.id] = l.queue_days; });
+  seen[currentCity] = { at: new Date().toISOString(), ids, q };
   store.set('nastet-seen', seen);
 }
 function sinceStrip(){
   const sv = sinceVisit;
-  if (!sv || sv.city !== currentCity || (!sv.fresh.size && !sv.gone)) return '';
-  const bits = [`<b>${sv.fresh.size}</b> ${t('sv_new', 'new')}`];
-  if (sv.gone) bits.push(`${sv.gone} ${t('sv_gone', 'gone')}`);
-  return `<div class="since-strip"><span>${t('sv_lead', 'Since your last visit')} ${relAgo(sv.at)}: ${bits.join(' · ')}</span>
-    ${sv.fresh.size ? `<button type="button" onclick="onlySince=!onlySince;renderSidebar()">${onlySince ? t('sv_all', 'Show everything') : t('sv_only', 'Show only new')}</button>` : ''}
-    <button type="button" class="ghost" aria-label="${t('dismiss', 'Dismiss')}" onclick="sinceVisit=null;onlySince=false;renderSidebar()">✕</button></div>`;
+  if (!sv || sv.city !== currentCity || (!sv.fresh.size && !sv.gone && !(sv.mine || []).length)) return '';
+  const myDays = profileDaysNow();
+  const get = myDays == null ? 0 : currentData.listings.filter(l => sv.fresh.has(l.id) && typeof l.queue_days === 'number' && myDays >= l.queue_days).length;
+  const bits = [`<b>${sv.fresh.size}</b> ${t('sv_new', 'new')}${get ? ` <span class="lead">(<b>${get}</b> ${t('sc_get', 'you’d get')})</span>` : ''}`];
+  if (sv.gone) bits.push(`<b>${sv.gone}</b> ${t('sv_gone', 'gone')}`);
+  if (sv.rose || sv.fell) bits.push(`${t('sc_rose', 'queue days rose on')} <b>${sv.rose || 0}</b>${sv.fell ? `, ${t('sc_fell', 'fell on')} <b>${sv.fell}</b>` : ''}`);
+  const star = m => (m === 'applied' ? '✓' : '★');
+  const named = (sv.mine || []).filter(x => x.label);
+  const unnamedClosed = (sv.mine || []).filter(x => !x.label && x.closed).length;
+  const lines = named.map(x => `<li>${star(x.m)} ${esc(x.label)} ${x.closed
+      ? `<span>${t('sc_closed', 'no longer listed')}</span>`
+      : `<span class="${x.to > x.from ? 'up' : 'down'}">${num(x.from)} → ${num(x.to)} ${t('tl_d', 'd')} ${x.to > x.from ? '▲' : '▼'}</span>`}</li>`)
+    .concat(unnamedClosed ? [`<li>★ ${unnamedClosed} ${t('sc_saved_closed', 'of your saved places closed')}</li>`] : []);
+  return `<div class="since-strip card">
+    <div class="sc-head"><span class="sc-h">${t('sv_lead', 'Since your last visit')}</span><span>${relAgo(sv.at)}</span>
+      <button type="button" class="ghost" aria-label="${t('dismiss', 'Dismiss')}" onclick="sinceVisit=null;onlySince=false;renderSidebar()">✕</button></div>
+    <div class="sc-counts">${bits.join(' · ')}</div>
+    ${lines.length ? `<ul>${lines.join('')}</ul>` : ''}
+    ${sv.fresh.size ? `<div class="sc-acts"><button type="button" onclick="onlySince=!onlySince;renderSidebar()">${onlySince ? t('sv_all', 'Show everything') : t('sv_only', 'Show only new')}</button></div>` : ''}
+  </div>`;
 }
 
 // What the row knows about you: whether your running count leads it today,
@@ -5485,6 +5598,14 @@ function bfStandingChip(l){
   return st.lead
     ? `<span class="fact you lead" title="${esc(t('bf_lead_t', 'Applications stay open until the deadline — someone queued longer can still apply'))}">${st.nobody ? t('bf_nobody', 'Nobody has applied yet') : t('bf_lead', 'You’d lead so far')}</span>`
     : `<span class="fact you">${num(st.short)} ${t('days_short', 'days short')}</span>`;
+}
+
+// Google's documented Maps URL for a panorama at a point: no key, no embed,
+// just a link out to the street outside the door.
+function streetViewUrl(l){
+  const area = currentData && currentData.areas[l.area];
+  const at = l.coords || (area && area.coords);
+  return at ? `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${at[0]},${at[1]}` : null;
 }
 
 function rowPersonal(l){
@@ -5509,6 +5630,8 @@ function rowPersonal(l){
   const btn = (kind, on, off) => `<button type="button" class="mark${m === kind ? ' on' : ''}" aria-pressed="${m === kind}" onclick="event.stopPropagation();setMark('${id}','${kind}')">${m === kind ? on : off}</button>`;
   const cmp = compareIds.includes(l.id);
   const plan = l.floorplan ? `<button type="button" class="mark plan-btn" onclick="event.stopPropagation();openPlan('${id}')">${t('fp_btn', '▦ Floor plan')}</button>` : '';
+  const sv = streetViewUrl(l);
+  const street = sv ? `<a class="mark" href="${esc(sv)}" target="_blank" rel="noopener" title="${esc(t('street_view_t', 'Open Google Street View at the address'))}" onclick="event.stopPropagation()">${t('street_view', 'Street view ↗')}</a>` : '';
   return `${facts.length ? `<div class="row-you">${facts.join('')}</div>` : ''}
     <div class="row-acts">
       ${btn('saved', t('m_saved', '★ Saved'), t('m_save', '☆ Save'))}
@@ -5516,6 +5639,7 @@ function rowPersonal(l){
       ${btn('hidden', t('m_unhide', 'Unhide'), t('m_hide', 'Hide'))}
       <button type="button" class="mark${cmp ? ' on' : ''}" aria-pressed="${cmp}" onclick="event.stopPropagation();toggleCompare('${id}')">${cmp ? t('m_comparing', '✓ Compare') : t('m_compare', '+ Compare')}</button>
       ${plan}
+      ${street}
     </div>`;
 }
 
@@ -6400,7 +6524,10 @@ function activeFilterChips(){
   return chips;
 }
 function listToolsHtml(withChips = true){
-  const chips = withChips ? activeFilterChips() : [];
+  const nSaved = savedHere().length;
+  const special = sharedIds || onlySaved;
+  // In a shortlist view the filters aren't applied, so their chips would lie.
+  const chips = withChips && !special ? activeFilterChips() : [];
   chipActions = chips.map(c => c.clear);
   if (chips.length > 1) chipActions.push(() => { chips.forEach(c => c.clear()); });
   const x = `<i aria-hidden="true">✕</i>`;
@@ -6409,6 +6536,8 @@ function listToolsHtml(withChips = true){
       <select id="sortSelect" onchange="setSort(this.value)" title="${esc(sortMode === 'best' ? (sortNote() || t('sort_best_t', 'Each source by the figure it publishes')) : '')}">
         ${SORTS.map(m => `<option value="${m}"${m === sortMode ? ' selected' : ''}>${sortLabel(m)}</option>`).join('')}
       </select></label>
+    ${nSaved || onlySaved ? `<button type="button" class="f-chip saved${onlySaved ? ' on' : ''}" aria-pressed="${onlySaved}" onclick="onlySaved=!onlySaved;renderSidebar()">★ ${nSaved} ${t('sl_saved', 'saved')}</button>` : ''}
+    ${onlySaved && nSaved && !sharedIds ? `<button type="button" class="f-chip" onclick="shareShortlist(this)">${t('sl_share', 'Share ⧉')}</button>` : ''}
     ${chips.map((c, i) => `<button type="button" class="f-chip" onclick="clearChip(${i})" title="${esc(t('chip_remove', 'Remove this filter'))}">${esc(c.label)} ${x}</button>`).join('')}
     ${chips.length > 1 ? `<button type="button" class="f-chip all" onclick="clearChip(${chips.length})">${t('chip_clear_all', 'Clear all')} ${x}</button>` : ''}
   </div>`;
@@ -6544,7 +6673,9 @@ function renderSidebar(){
     `;
     rows = listingsInArea(selectedArea);
   } else {
-    rows = defaultRows();
+    const shortlist = sharedIds ? 'shared' : onlySaved ? 'saved' : null;
+    rows = sharedIds ? currentData.listings.filter(l => sharedIds.has(l.id))
+      : onlySaved ? savedHere() : defaultRows();
     const mode = t('by_bike_s', 'by bike');
     // The chips above the rows name every other filter; this line keeps the
     // one thing they can't say — which campus the minutes are measured to.
@@ -6562,10 +6693,12 @@ function renderSidebar(){
       <div class="panel-figure">
         <span class="fig">${rows.length}</span>
         <div>
-          <div class="fig-cap">${lang === 'sv'
+          <div class="fig-cap">${shortlist === 'shared' ? t('sl_cap_shared', 'in the shared shortlist')
+            : shortlist === 'saved' ? t('sl_cap_saved', 'saved by you')
+            : lang === 'sv'
             ? `av ${currentData.listings.length} matchar`
             : `of ${currentData.listings.length} pass your filters`}</div>
-          <div class="fig-sub">${bits.join(' · ')}</div>
+          <div class="fig-sub">${(shortlist ? bits.slice(1) : bits).join(' · ')}</div>
         </div>
       </div>`;
     tickCount(header.querySelector('.fig'), personalFilter(rows).rows.length);
@@ -6576,9 +6709,14 @@ function renderSidebar(){
   rows = personal.rows;
   // Nothing to sort or filter in a single listing's own view.
   const tools = pickedListing ? '' : listToolsHtml();
-  const today = selectedArea || selectedListingId ? '' : todayLineHtml(rows);
-  const strip = (selectedArea || selectedListingId ? '' : sinceStrip()) + today + tools;
+  const plain = !(selectedArea || selectedListingId);
+  const today = plain && !sharedIds && !onlySaved ? todayLineHtml(rows) : '';
+  const strip = (plain ? sharedBannerHtml() || sinceStrip() : '') + today + tools;
 
+  if (rows.length === 0 && plain && (sharedIds || onlySaved)) {
+    list.innerHTML = strip + (onlySaved && !sharedIds ? `<div class="empty-state">${t('sl_none', 'Nothing saved here yet — press ☆ Save on a listing.')}</div>` : '');
+    return;
+  }
   if (rows.length === 0) {
     if (personal.hiddenN || onlySince) {
       list.innerHTML = strip + `<div class="empty-state">${t('all_hidden', 'Nothing left once your hidden listings are set aside.')}</div>` + hiddenFooter(personal.hiddenN);
@@ -7147,6 +7285,8 @@ const firstLoad = (async () => {
   renderProfile();
   renderCompareBar();
   selectionFromUrl();
+  shortlistFromUrl();
+  if (sharedIds) { switchTab('listings'); }
   selectionUrlReady = true;
   selectionToUrl();
   // Only after the first payload is in: watchList() needs listings to seed
