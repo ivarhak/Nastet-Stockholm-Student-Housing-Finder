@@ -2625,6 +2625,32 @@
   "type": "2 rum och kök",
   "unit": "SGS:apt:Lilla Regementsvägen 8#1005"
  },
+ "sgs-dJWyWJTWQ4VvtPpBh7xGcRb9": {
+  "address": "Ametistgatan 6",
+  "area": "Opaltorget",
+  "class": "1room",
+  "closed_at": "2026-11-17T13:18:45.452752+00:00",
+  "deadline": "2026-11-18",
+  "final_days": null,
+  "first_seen": "2026-11-15T23:15:40.063811+00:00",
+  "floor": 6,
+  "last_seen": "2026-11-17T12:18:56.942432+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-15T23:15:40.063811+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5244,
+  "size": 26.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Ametistgatan 6#1617"
+ },
  "sgs-dWwvpG64pfWCfJwCyfftx6dH": {
   "address": "Brahegatan 9",
   "area": "Brahegatan",
