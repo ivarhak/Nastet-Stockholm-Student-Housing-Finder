@@ -1091,6 +1091,32 @@
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:apt:Framgången 220 Rum 22#1104"
  },
+ "sgs-HQvWdqcXXVg8DCWD7rMYVyRg": {
+  "address": "Norra Ågatan 1",
+  "area": "Norra Ågatan",
+  "class": "1room",
+  "closed_at": "2026-11-20T10:19:20.604652+00:00",
+  "deadline": "2026-11-21",
+  "final_days": null,
+  "first_seen": "2026-11-18T23:22:26.610144+00:00",
+  "floor": 1,
+  "last_seen": "2026-11-20T09:19:18.089224+00:00",
+  "move_in": "2027-02-01",
+  "obs": [
+   [
+    "2026-11-18T23:22:26.610144+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 5695,
+  "size": 27.0,
+  "type": "1 rum och kokvrå",
+  "unit": "SGS:apt:Norra Ågatan 1#1108"
+ },
  "sgs-J9fJygRJqxHxrcVy4M9dTfx9": {
   "address": "Lilla Regementsvägen 6",
   "area": "Kviberg",
