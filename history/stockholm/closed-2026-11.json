@@ -6577,6 +6577,32 @@
   "type": "Studentkorridor",
   "unit": "Bostadsförmedlingen:apt:202618663"
  },
+ "bf-308686": {
+  "address": "Nekvägen 37",
+  "area": "Spånga",
+  "class": "1room",
+  "closed_at": "2026-11-24T23:18:44.274723+00:00",
+  "deadline": "2026-11-24",
+  "final_days": null,
+  "first_seen": "2026-11-16T23:19:19.021529+00:00",
+  "floor": 0,
+  "last_seen": "2026-11-24T22:18:51.125793+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-11-16T23:19:19.021529+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 3,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-17",
+  "rent": 7131,
+  "size": 16,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202615540"
+ },
  "bf-308757": {
   "address": "Konradsbergsgatan 20A",
   "area": "Marieberg",
@@ -6602,6 +6628,84 @@
   "size": 32,
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202620401"
+ },
+ "bf-308766": {
+  "address": "Dialoggatan 22",
+  "area": "Hägersten",
+  "class": "1room",
+  "closed_at": "2026-11-24T23:18:44.274723+00:00",
+  "deadline": "2026-11-24",
+  "final_days": null,
+  "first_seen": "2026-11-17T23:19:10.588359+00:00",
+  "floor": 4,
+  "last_seen": "2026-11-24T22:18:51.125793+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-17T23:19:10.588359+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-18",
+  "rent": 5485,
+  "size": 21,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202620426"
+ },
+ "bf-308768": {
+  "address": "Hanstavägen 49",
+  "area": "Kista",
+  "class": "1room",
+  "closed_at": "2026-11-24T23:18:44.274723+00:00",
+  "deadline": "2026-11-24",
+  "final_days": null,
+  "first_seen": "2026-11-17T23:19:10.588359+00:00",
+  "floor": 9,
+  "last_seen": "2026-11-24T22:18:51.125793+00:00",
+  "move_in": "2027-01-08",
+  "obs": [
+   [
+    "2026-11-17T23:19:10.588359+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-18",
+  "rent": 5872,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202620430"
+ },
+ "bf-308769": {
+  "address": "Hanstavägen 49",
+  "area": "Kista",
+  "class": "1room",
+  "closed_at": "2026-11-24T23:18:44.274723+00:00",
+  "deadline": "2026-11-24",
+  "final_days": null,
+  "first_seen": "2026-11-17T23:19:10.588359+00:00",
+  "floor": 9,
+  "last_seen": "2026-11-24T22:18:51.125793+00:00",
+  "move_in": "2027-01-08",
+  "obs": [
+   [
+    "2026-11-17T23:19:10.588359+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-18",
+  "rent": 6303,
+  "size": 24,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202620429"
  },
  "bf-308828": {
   "address": "Albanovägen 4",
@@ -7226,6 +7330,32 @@
   "size": 26,
   "type": "Studentlägenhet",
   "unit": "Bostadsförmedlingen:apt:202620568"
+ },
+ "bf-309113": {
+  "address": "Midskeppsgatan 1",
+  "area": "Södra Hammarbyhamnen",
+  "class": "1room",
+  "closed_at": "2026-11-24T23:18:44.274723+00:00",
+  "deadline": "2026-11-24",
+  "final_days": null,
+  "first_seen": "2026-11-20T23:20:12.134885+00:00",
+  "floor": 7,
+  "last_seen": "2026-11-24T22:18:51.125793+00:00",
+  "move_in": "2027-01-01",
+  "obs": [
+   [
+    "2026-11-20T23:20:12.134885+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 0,
+  "provider": "Bostadsförmedlingen",
+  "published_at": "2026-11-21",
+  "rent": 10733,
+  "size": 45,
+  "type": "Studentlägenhet",
+  "unit": "Bostadsförmedlingen:apt:202620631"
  },
  "sssb-Birka-Simrishamnsvägen 15-1609": {
   "address": "Simrishamnsvägen 15",
