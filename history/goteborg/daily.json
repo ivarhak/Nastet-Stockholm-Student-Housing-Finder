@@ -342,10 +342,10 @@
  },
  "2026-11-25": {
   "SGS": {
-   "available": 15,
+   "available": 35,
    "median_leader_days": null,
-   "median_rent_sqm": 214.9,
-   "new": 0
+   "median_rent_sqm": 221.7,
+   "new": 35
   }
  }
 }
