@@ -347,5 +347,13 @@
    "median_rent_sqm": 221.7,
    "new": 35
   }
+ },
+ "2026-11-26": {
+  "SGS": {
+   "available": 35,
+   "median_leader_days": null,
+   "median_rent_sqm": 221.7,
+   "new": 0
+  }
  }
 }
