@@ -679,10 +679,10 @@
    "new": 0
   },
   "SSSB": {
-   "available": 30,
-   "median_leader_days": 205.0,
-   "median_rent_sqm": 265.4,
-   "new": 0
+   "available": 24,
+   "median_leader_days": 0.0,
+   "median_rent_sqm": 271.3,
+   "new": 24
   }
  }
 }
