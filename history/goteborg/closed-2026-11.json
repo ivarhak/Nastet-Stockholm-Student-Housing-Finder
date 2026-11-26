@@ -259,6 +259,32 @@
   "type": "Enkelrum med gruppkök",
   "unit": "SGS:apt:Motgången 328 Rum 82#0801"
  },
+ "sgs-6xRRmkJmfdc9VxF4KW8hrR4x": {
+  "address": "Studiegången 4 Rum 125",
+  "area": "Rosendal",
+  "class": "corridor",
+  "closed_at": "2026-11-26T23:19:54.525298+00:00",
+  "deadline": "2026-11-26",
+  "final_days": null,
+  "first_seen": "2026-11-25T23:22:08.006923+00:00",
+  "floor": 1,
+  "last_seen": "2026-11-26T22:18:54.420183+00:00",
+  "move_in": "2026-12-01",
+  "obs": [
+   [
+    "2026-11-25T23:22:08.006923+00:00",
+    null,
+    null
+   ]
+  ],
+  "prior_listings": 2,
+  "provider": "SGS",
+  "published_at": null,
+  "rent": 4871,
+  "size": 19.0,
+  "type": "Enkelrum med kokskåp",
+  "unit": "SGS:apt:Studiegången 4 Rum 125#1113"
+ },
  "sgs-7HTdGT4TTwWFqwPPvpyqVMCT": {
   "address": "Pennygången 14",
   "area": "Pennygången",
